@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Секция бокса для взрослых в Москве — первое занятие бесплатно | «Сандов Фитнес»</title>
-<meta name="description" content="Секция бокса для взрослых у метро Нижегородская: бойцовский клуб 500 м², 7 мешков, тренер ставит технику с нуля. Группы и персонально, подходит начинающим. Первое занятие — бесплатно: +7 (495) 795-69-57.">
+<meta name="description" content="Секция бокса для взрослых, м. Нижегородская: бойцовский клуб 500 м², 7 мешков, тренер ставит технику с нуля. Группы и персонально, подходит начинающим. Первое занятие — бесплатно: +7 (495) 795-69-57.">
 <link rel="canonical" href="https://lp.sandowfitness.ru/boks-metro-nizhegorodskaya/">
 <meta property="og:title" content="Секция бокса для взрослых в Москве — «Сандов Фитнес»">
-<meta property="og:description" content="Бойцовский клуб 500 м² у метро Нижегородская: 7 мешков, техника с нуля, спарринги по желанию. Первое занятие боксом — бесплатно.">
+<meta property="og:description" content="Бойцовский клуб 500 м², м. Нижегородская: 7 мешков, техника с нуля, спарринги по желанию. Первое занятие боксом — бесплатно.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -397,6 +397,19 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 @media (max-width:960px){
   .hero-grid,.pain-grid,.arena-grid{grid-template-columns:1fr;gap:40px}
   .hero-photo img{min-height:320px}
+  /* мобильный/планшетный первый экран: фото мешков — фоном, текст поверх,
+     карточка-фото ниже прячется, чтобы кадр не дублировался */
+  .hero{
+    background:url('bags-row.jpg') center 30%/cover no-repeat;
+    min-height:100svh;min-height:100vh;
+    display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:
+      linear-gradient(180deg, rgba(11,9,6,.78) 0%, rgba(11,9,6,.35) 42%, rgba(11,9,6,.88) 80%, var(--bg) 100%);
+  }
+  .hero-photo{display:none}
   .arena-grid{gap:48px}
   .corners{grid-template-columns:1fr}
   .video-row{grid-template-columns:1fr;gap:36px}
@@ -497,7 +510,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
     </div>
     <div class="arena-grid">
       <div class="arena-photo">
-        <img src="combat-wide.jpg" alt="Простор бойцовского клуба «Сандов Фитнес» — секция бокса у метро Нижегородская" loading="lazy">
+        <img src="combat-wide.jpg" alt="Простор бойцовского клуба «Сандов Фитнес» — секция бокса, м. Нижегородская" loading="lazy">
       </div>
       <div>
         <h2>Настоящий бойцовский клуб, <span class="gold">а не угол с мешком</span></h2>
@@ -606,7 +619,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
   <div class="wrap">
     <span class="label">Гонг</span>
     <h2>Первое занятие боксом — <span class="gold">бесплатно</span></h2>
-    <p>Для всех, независимо от уровня подготовки. Позвоните — запишем на бесплатное первое занятие и ответим на вопросы. Клуб — у метро Нижегородская.</p>
+    <p>Для всех, независимо от уровня подготовки. Позвоните — запишем на бесплатное первое занятие и ответим на вопросы. Метро Нижегородская.</p>
     <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
     <div class="cta-note">Позвоните — или напишите, мы ответим</div>
     <div class="cta-btns">
