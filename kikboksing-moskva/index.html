@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кикбоксинг в Москве — группы по расписанию и персонально | «Сандов Фитнес»</title>
+<meta name="description" content="Кикбоксинг в Москве рядом с метро Нижегородская: групповые занятия по расписанию и персональные тренировки. Бойцовский клуб 500 м², 7 мешков, сектор татами. Позвоните: +7 (495) 795-69-57.">
+<link rel="canonical" href="https://lp.sandowfitness.ru/kikboksing-moskva/">
+<meta property="og:title" content="Кикбоксинг в Москве — «Сандов Фитнес»">
+<meta property="og:description" content="Группы по расписанию и персональные тренировки. Бойцовский клуб 500 м²: 7 мешков, сектор татами, октагон. От первого удара до спаррингов — по желанию.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  "name": "Сандов Фитнес — кикбоксинг в Москве",
+  "url": "https://lp.sandowfitness.ru/kikboksing-moskva/",
+  "telephone": "+7 (495) 795-69-57",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Москва",
+    "streetAddress": "Нижегородская ул., 29/33, стр. 3",
+    "postalCode": "109052",
+    "addressCountry": "RU"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#0B0906;
+  --ink:#F0EADE;
+  --gold:#E9C77E;
+  --bronze:#C08B4E;
+  --muted:#9A8F7C;
+  --card:#241A0B;
+  --line:rgba(240,234,222,.13);
+  --head:'Unbounded', system-ui, sans-serif;
+  --body:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'JetBrains Mono', 'Consolas', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;background:#0B0906;overflow-x:hidden;overflow-x:clip}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:var(--gold)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ---------- типографика ---------- */
+.label{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold);
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+}
+.label::before{content:"";width:26px;height:2px;background:var(--bronze);transform:skewX(-30deg)}
+h1,h2{font-family:var(--head);text-transform:uppercase;letter-spacing:-.01em;line-height:1.14}
+h1{font-weight:900;font-size:clamp(29px,4.4vw,58px)}
+h2{font-weight:700;font-size:clamp(22px,3vw,38px);margin:14px 0 18px}
+.gold{color:var(--gold)}
+p.txt{color:var(--muted);max-width:60ch}
+
+/* ---------- кнопки ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  border-radius:999px;
+  padding:17px 34px;
+  font-family:var(--head);
+  font-weight:700;
+  font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  text-decoration:none;
+  transition:transform .15s ease;
+  white-space:nowrap;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-gold{
+  background:linear-gradient(160deg,#F3DCA6 0%, var(--gold) 55%, var(--bronze) 130%);
+  color:#141005;
+  box-shadow:0 8px 34px rgba(233,199,126,.28);
+}
+.btn-ghost{
+  border:1px solid rgba(233,199,126,.55);
+  color:var(--gold);
+  background:rgba(233,199,126,.05);
+}
+
+/* ---------- диагональные разделители ---------- */
+.slash-band{
+  height:14px;
+  background:repeating-linear-gradient(-55deg,
+    rgba(233,199,126,.22) 0 2px, transparent 2px 14px);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+/* ---------- шапка ---------- */
+header{
+  position:absolute;inset:0 0 auto 0;z-index:30;
+  padding:22px 0;
+}
+.header-in{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{
+  font-family:var(--head);font-weight:900;font-size:17px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink);text-decoration:none;line-height:1.2;
+  white-space:nowrap;
+}
+.logo em{font-style:normal;color:var(--gold)}
+.head-phone{
+  font-family:var(--mono);font-size:15px;color:var(--ink);text-decoration:none;
+  border-bottom:1px solid rgba(233,199,126,.4);padding-bottom:2px;white-space:nowrap;
+}
+.head-phone:hover{color:var(--gold)}
+
+/* ---------- герой: диагональный сплит ---------- */
+.hero{
+  position:relative;
+  min-height:100vh;
+  min-height:100svh;
+  display:flex;align-items:center;
+  isolation:isolate;
+  overflow:hidden;
+}
+/* фото справа, срезано по диагонали как след удара */
+.hero-visual{
+  position:absolute;inset:0 0 0 auto;z-index:-2;
+  width:60%;
+  background:url('combat-wide.jpg') 60% 45%/cover no-repeat;
+  clip-path:polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+}
+.hero-visual::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(78deg, var(--bg) 8%, rgba(11,9,6,.34) 46%, rgba(11,9,6,.08) 100%);
+}
+/* золотая кромка вдоль диагонального среза */
+.hero-edge{
+  position:absolute;inset:0 0 0 auto;z-index:-1;
+  width:60%;
+  clip-path:polygon(30% 0, 31.1% 0, 1.1% 100%, 0 100%);
+  background:linear-gradient(180deg, #F3DCA6 0%, var(--bronze) 52%, rgba(192,139,78,0) 84%);
+  opacity:.85;
+  filter:drop-shadow(0 0 18px rgba(233,199,126,.45));
+  pointer-events:none;
+}
+/* линии скорости за заголовком */
+.speed{
+  position:absolute;z-index:-1;left:-4vw;bottom:16vh;
+  width:56vw;height:34vh;min-width:340px;
+  pointer-events:none;opacity:.5;
+}
+.hero-inner{position:relative;width:100%;padding-top:110px;padding-bottom:64px}
+.hero .label{margin-bottom:18px}
+.hero h1{max-width:15ch;text-shadow:0 4px 40px rgba(0,0,0,.6)}
+.hero h1 .hit{
+  display:inline-block;color:var(--gold);
+  transform:skewX(-8deg);
+}
+.hero-sub{
+  margin:22px 0 30px;max-width:46ch;font-size:18px;color:var(--ink);
+  border-left:2px solid var(--bronze);padding-left:16px;
+}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+/* чипы-факты, повёрнутые как наклейки */
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:46px;max-width:640px}
+.chip{
+  font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);
+  border:1px solid rgba(233,199,126,.45);
+  background:rgba(11,9,6,.92);
+  padding:9px 18px;
+  transform:rotate(-2deg) skewX(-6deg);
+}
+.chip:nth-child(2n){transform:rotate(1.4deg) skewX(-6deg)}
+.chip b{color:var(--ink);font-weight:700}
+
+/* ---------- секция: два формата ---------- */
+section{padding:88px 0}
+.sec-head{max-width:760px}
+.fmt2{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;position:relative}
+.fmt2-card{
+  border:1px solid var(--line);
+  background:linear-gradient(170deg, rgba(36,26,11,.85), rgba(17,12,6,.9));
+  padding:38px 34px 42px;
+  position:relative;overflow:hidden;
+}
+.fmt2-card:first-child{
+  clip-path:polygon(0 0, 100% 0, calc(100% - 46px) 100%, 0 100%);
+  padding-right:70px;
+}
+.fmt2-card:last-child{
+  clip-path:polygon(46px 0, 100% 0, 100% 100%, 0 100%);
+  margin-left:-46px;
+  padding-left:80px;
+  background:linear-gradient(190deg, rgba(17,12,6,.9), rgba(36,26,11,.85));
+}
+.fmt2-card .num{
+  font-family:var(--mono);font-size:12px;letter-spacing:.24em;color:var(--bronze);
+  text-transform:uppercase;display:block;margin-bottom:20px;
+}
+.fmt2-card h3{
+  font-family:var(--head);font-weight:700;font-size:clamp(19px,2vw,24px);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.fmt2-card p{color:var(--muted);font-size:16px}
+.fmt2-card .pill{
+  display:inline-block;margin-top:22px;
+  border:1px solid rgba(233,199,126,.5);border-radius:999px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);padding:7px 14px;
+}
+.fmt2-card::before{
+  content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;
+  background:radial-gradient(circle, rgba(233,199,126,.14), transparent 70%);
+}
+
+/* ---------- секция: площадка (фото-параллелограмм) ---------- */
+.arena{background:linear-gradient(180deg,var(--bg),#0F0B06 55%,var(--bg))}
+.arena-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+.para-frame{
+  position:relative;
+  width:min(520px,100%);
+  aspect-ratio:4/3.1;
+  margin:0 auto;
+  filter:drop-shadow(0 0 44px rgba(233,199,126,.26));
+}
+.para-frame::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(210deg,#F3DCA6, var(--bronze) 70%, rgba(192,139,78,.35));
+  clip-path:polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+}
+.para-frame img{
+  position:absolute;inset:3px;
+  width:calc(100% - 6px);height:calc(100% - 6px);
+  object-fit:cover;object-position:center 45%;
+  clip-path:polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+}
+.para-tag{
+  position:absolute;left:6px;bottom:26px;
+  background:rgba(11,9,6,.85);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  border:1px solid rgba(233,199,126,.4);
+  border-radius:999px;padding:10px 20px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+}
+.arena-points{margin-top:26px}
+.arena-points li{
+  list-style:none;display:flex;gap:16px;align-items:flex-start;
+  padding:16px 0;border-top:1px solid var(--line);color:var(--muted);font-size:16px;
+}
+.arena-points li:last-child{border-bottom:1px solid var(--line)}
+.arena-points .ico{flex:0 0 auto;margin-top:3px}
+
+/* ---------- секция: путь от первого удара ---------- */
+.path{position:relative;overflow:hidden}
+.path .ghost{
+  position:absolute;left:-10px;bottom:-60px;
+  font-family:var(--head);font-weight:900;
+  font-size:clamp(120px,20vw,290px);
+  color:transparent;
+  -webkit-text-stroke:1px rgba(233,199,126,.13);
+  text-transform:uppercase;letter-spacing:-.02em;
+  pointer-events:none;user-select:none;line-height:1;
+  transform:skewX(-8deg);
+}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:52px;align-items:start}
+.step{
+  border:1px solid var(--line);
+  background:rgba(36,26,11,.42);
+  padding:26px 22px 30px;
+  position:relative;
+  clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+}
+.step:nth-child(2){margin-top:26px}
+.step:nth-child(3){margin-top:52px}
+.step:nth-child(4){margin-top:78px;background:rgba(36,26,11,.72);border-color:rgba(233,199,126,.4)}
+.step .n{
+  font-family:var(--mono);font-weight:700;font-size:26px;color:var(--gold);
+  display:block;margin-bottom:12px;
+}
+.step h3{
+  font-family:var(--head);font-weight:700;font-size:17px;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.step p{color:var(--muted);font-size:15px}
+.step .opt{
+  display:inline-block;margin-top:14px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bronze);
+}
+
+/* ---------- галерея «посмотрите сами» ---------- */
+.gallery{background:linear-gradient(180deg,var(--bg),#0F0B06 55%,var(--bg))}
+.gal-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px}
+.gal-card{
+  position:relative;margin:0;
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  background:var(--card);
+}
+.gal-card img{width:100%;height:330px;object-fit:cover;display:block}
+.gal-card figcaption{
+  position:absolute;left:14px;bottom:14px;
+  background:rgba(11,9,6,.85);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  border:1px solid rgba(233,199,126,.4);
+  border-radius:999px;padding:9px 18px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
+}
+
+/* ---------- локация ---------- */
+.loc{padding:0}
+.loc-in{
+  display:grid;grid-template-columns:auto 1fr auto;gap:34px;align-items:center;
+  border:1px solid var(--line);
+  background:linear-gradient(90deg, rgba(36,26,11,.6), rgba(11,9,6,.4));
+  padding:34px 38px;
+  margin:0 20px;
+  max-width:1140px;
+}
+@media (min-width:1181px){.loc-in{margin:0 auto}}
+.loc .m{
+  font-family:var(--mono);font-weight:700;font-size:clamp(20px,2.4vw,28px);color:var(--gold);
+  white-space:nowrap;
+}
+.loc p{color:var(--muted);font-size:16px;max-width:56ch}
+.loc a.btn{flex:0 0 auto}
+
+/* ---------- финальный призыв ---------- */
+.cta{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(70% 90% at 50% 115%, rgba(233,199,126,.20), transparent 65%),
+    linear-gradient(180deg,#0F0B06,var(--bg));
+  border-top:1px solid var(--line);
+  text-align:center;
+  padding:110px 0 100px;
+}
+.cta-lines{
+  position:absolute;inset:0;pointer-events:none;opacity:.22;
+  background:repeating-linear-gradient(-55deg,
+    rgba(233,199,126,.35) 0 1px, transparent 1px 90px);
+}
+.cta .label{justify-content:center}
+.cta .label::before{display:none}
+.cta h2{max-width:24ch;margin:16px auto 14px}
+.cta p{max-width:56ch;margin:0 auto;color:var(--muted)}
+.cta-phone{
+  display:inline-block;margin:34px 0 8px;
+  font-family:var(--head);font-weight:900;
+  font-size:clamp(23px,4vw,44px);
+  color:var(--ink);text-decoration:none;letter-spacing:.01em;
+}
+.cta-phone:hover{color:var(--gold)}
+.cta-note{font-family:var(--mono);font-size:13px;color:var(--bronze);letter-spacing:.1em;text-transform:uppercase}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+
+/* футер */
+footer{border-top:1px solid var(--line);padding:34px 0 44px}
+.foot{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.foot a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+.foot a:hover{color:var(--gold)}
+
+/* ---------- адаптив ---------- */
+@media (max-width:960px){
+  .arena-grid{grid-template-columns:1fr;gap:44px}
+  .steps{grid-template-columns:1fr 1fr}
+  .step:nth-child(n){margin-top:0}
+  .step:nth-child(2),.step:nth-child(4){margin-top:22px}
+  .loc-in{grid-template-columns:1fr;gap:18px;text-align:left}
+  .loc .m{white-space:normal}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  section{padding:64px 0}
+  .logo{font-size:clamp(11px,3.8vw,14px)}
+  .head-phone{font-size:clamp(10px,3.4vw,13px);white-space:nowrap}
+  .hero{min-height:auto;display:block}
+  .hero-visual{
+    position:relative;width:100%;height:46svh;min-height:300px;inset:auto;
+    clip-path:polygon(0 0, 100% 0, 100% 86%, 0 100%);
+    background-size:cover;
+    background-position:60% 45%;
+  }
+  .hero-visual::after{background:linear-gradient(180deg, rgba(11,9,6,.4) 0%, rgba(11,9,6,.08) 45%, var(--bg) 96%)}
+  .hero-edge{
+    width:100%;inset:auto;position:absolute;top:0;height:46svh;min-height:300px;
+    clip-path:polygon(0 99%, 100% 85%, 100% 86.6%, 0 100.6%);
+  }
+  .speed{display:none}
+  .hero-inner{padding-top:26px;padding-bottom:56px}
+  .hero-sub{font-size:16px}
+  .hero-cta .btn{width:100%}
+  .chips{margin-top:34px}
+  .fmt2{grid-template-columns:1fr}
+  .fmt2-card:first-child{clip-path:polygon(0 0,100% 0,100% calc(100% - 22px),0 100%);padding-right:34px}
+  .fmt2-card:last-child{clip-path:polygon(0 22px,100% 0,100% 100%,0 100%);margin-left:0;margin-top:-22px;padding-left:34px;padding-top:52px}
+  .steps{grid-template-columns:1fr}
+  .step:nth-child(n){margin-top:0}
+  .para-tag{left:16%}
+  .gal-grid{grid-template-columns:1fr;gap:14px}
+  .gal-card img{height:230px}
+  .cta{padding:80px 0}
+  .cta-btns .btn{width:100%}
+  .foot{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-in">
+    <a class="logo" href="#">Сандов <em>Фитнес</em></a>
+    <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
+  </div>
+</header>
+
+<!-- ГЕРОЙ: диагональный сплит -->
+<div class="hero">
+  <div class="hero-visual" role="img" aria-label="Мешки в бойцовском клубе «Сандов Фитнес»"></div>
+  <div class="hero-edge"></div>
+  <svg class="speed" viewBox="0 0 600 300" fill="none" aria-hidden="true" preserveAspectRatio="none">
+    <path d="M-20 260 L440 60" stroke="#E9C77E" stroke-width="1" opacity=".5"/>
+    <path d="M-20 300 L520 66" stroke="#C08B4E" stroke-width="1" opacity=".35"/>
+    <path d="M60 300 L600 70" stroke="#E9C77E" stroke-width=".6" opacity=".25"/>
+  </svg>
+  <div class="wrap hero-inner">
+    <span class="label">Кикбоксинг · Москва, Нижегородская</span>
+    <h1>Кикбоксинг в Москве — <span class="hit">в группе</span> и персонально</h1>
+    <p class="hero-sub">Групповые занятия по расписанию и персональные тренировки в отдельном бойцовском клубе 500 м². От первого удара до спаррингов — в своём темпе.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="tel:+74957956957">Узнать расписание</a>
+      <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Telegram</a>
+    </div>
+    <div class="chips">
+      <span class="chip"><b>500 м²</b> бойцовский клуб</span>
+      <span class="chip"><b>7</b> мешков</span>
+      <span class="chip">сектор <b>татами</b></span>
+      <span class="chip">клуб открыт <b>24/7</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="slash-band" aria-hidden="true"></div>
+
+<!-- ДВА ФОРМАТА -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Формат под вас</span>
+      <h2>Группа по расписанию или <span class="gold">один на один</span> с тренером</h2>
+      <p class="txt">Не всем подходит персональная тренировка один на один — кому-то важны атмосфера группы, соревновательный дух и постоянное расписание, на которое можно рассчитывать. Здесь есть и то и другое, выбор за вами.</p>
+    </div>
+    <div class="fmt2">
+      <div class="fmt2-card">
+        <span class="num">Формат 01</span>
+        <h3>В группе</h3>
+        <p>Занятия по постоянному расписанию: техника ударов, работа на мешках и в парах, общая физподготовка. Рядом такие же, как вы, — темп группы держит лучше любой мотивации.</p>
+        <span class="pill">По расписанию</span>
+      </div>
+      <div class="fmt2-card">
+        <span class="num">Формат 02</span>
+        <h3>Персонально</h3>
+        <p>Тренер работает только с вами: ставит технику под вашу подготовку и цели, подстраивает время под ваш график. Подходит и для первого шага, и для точечной шлифовки ударов.</p>
+        <span class="pill">Время — под ваш график</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПЛОЩАДКА -->
+<section class="arena">
+  <div class="wrap arena-grid">
+    <div class="para-frame">
+      <img src="bags-row.jpg" alt="Ряд мешков в бойцовском клубе «Сандов Фитнес» — кикбоксинг в Москве" loading="lazy">
+      <span class="para-tag">Бойцовский клуб · 500 м²</span>
+    </div>
+    <div>
+      <span class="label">Площадка</span>
+      <h2>Не угол с мешком, а <span class="gold">отдельный клуб</span></h2>
+      <p class="txt">Кикбоксинг проходит не в общем зале между тренажёрами, а в выделенном бойцовском клубе на 500 м² — со своим оснащением под ударную работу.</p>
+      <ul class="arena-points">
+        <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 2v16M10 2v16M14 2v16" stroke="#E9C77E" stroke-width="1.2"/></svg>
+          7 мешков — место для ударной работы есть всегда, без очереди</li>
+        <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="15" height="15" stroke="#E9C77E" stroke-width="1.2"/><path d="M2.5 10h15M10 2.5v15" stroke="#E9C77E" stroke-width=".8"/></svg>
+          Сектор татами — для работы в парах и отработки связок</li>
+        <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><polygon points="6,1.5 14,1.5 18.5,6 18.5,14 14,18.5 6,18.5 1.5,14 1.5,6" stroke="#E9C77E" stroke-width="1.2"/></svg>
+          Октагон, который трансформируется в ринг под ударные форматы</li>
+        <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="#E9C77E" stroke-width="1.2"/><path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#E9C77E" stroke-width="1.2"/></svg>
+          Здесь же снимали BODY MANIA (3,4 млн подписчиков) — уровень площадки подтверждён практикой</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ПУТЬ -->
+<section class="path">
+  <div class="ghost">Удар</div>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Уровень любой</span>
+      <h2>От первого удара <span class="gold">до спаррингов</span></h2>
+      <p class="txt">Группы открыты и для тех, кто никогда не надевал перчатки, и для тех, кто уже выступал. Тренер ставит технику с нуля; спарринги — по желанию, а не по обязанности.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="n">01</span>
+        <h3>Первый удар</h3>
+        <p>Стойка, перемещение, базовые удары руками и ногами. Никто не бросит новичка «в бой».</p>
+      </div>
+      <div class="step">
+        <span class="n">02</span>
+        <h3>Техника</h3>
+        <p>Связки и защита, работа на мешках и лапах — темп растёт вместе с вами.</p>
+      </div>
+      <div class="step">
+        <span class="n">03</span>
+        <h3>Работа в парах</h3>
+        <p>Контролируемая отработка на татами: дистанция, тайминг, реакция.</p>
+      </div>
+      <div class="step">
+        <span class="n">04</span>
+        <h3>Спарринги</h3>
+        <p>Для тех, кто хочет проверить себя в деле — в защите и под присмотром тренера.</p>
+        <span class="opt">Только по желанию</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ПОСМОТРИТЕ САМИ -->
+<section class="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Посмотрите сами</span>
+      <h2>2500 м², которые проще <span class="gold">увидеть</span></h2>
+      <p class="txt">Бойцовский клуб — часть «Сандов Фитнес»: рядом тренажёрный зал 1100 м², залы групповых программ, сауна и зона отдыха.</p>
+    </div>
+    <div class="gal-grid">
+      <figure class="gal-card"><img src="tatami.jpg" alt="Сектор татами и мешки в бойцовском клубе «Сандов Фитнес»" loading="lazy"><figcaption>Сектор татами</figcaption></figure>
+      <figure class="gal-card"><img src="zal-blue.jpg" alt="Тренажёрный зал «Сандов Фитнес» — 1100 м²" loading="lazy"><figcaption>Тренажёрный зал — 1100 м²</figcaption></figure>
+      <figure class="gal-card"><img src="group-hall.jpg" alt="Зал групповых программ клуба «Сандов Фитнес»" loading="lazy"><figcaption>Зал групповых программ</figcaption></figure>
+      <figure class="gal-card"><img src="razdevalka.jpg" alt="Раздевалка клуба «Сандов Фитнес»" loading="lazy"><figcaption>Раздевалки</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ЛОКАЦИЯ -->
+<div class="loc">
+  <div class="loc-in">
+    <div class="m">м. Нижегородская</div>
+    <p>Клуб — на Нижегородской ул., 29/33, стр. 3, в шаговой доступности от метро Нижегородская. Клуб работает круглосуточно: персональную тренировку можно поставить и утром, и поздним вечером.</p>
+    <a class="btn btn-ghost" href="tel:+74957956957">Позвонить</a>
+  </div>
+</div>
+
+<!-- ПРИЗЫВ -->
+<section class="cta">
+  <div class="cta-lines" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="label">Ваш выход</span>
+    <h2>Узнайте расписание — и приходите <span class="gold">на пробную</span></h2>
+    <p>Позвоните — расскажем расписание групп по кикбоксингу, ответим на вопросы и запишем на пробную тренировку.</p>
+    <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
+    <div class="cta-note">Позвоните — или напишите, мы ответим</div>
+    <div class="cta-btns">
+      <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Telegram</a>
+      <a class="btn btn-gold" href="tel:+74957956957">Узнать расписание и записаться</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
+    <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
