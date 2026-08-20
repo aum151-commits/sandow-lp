@@ -114,8 +114,9 @@ header{
 .logo{
   font-family:var(--head);font-weight:900;font-size:17px;letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);text-decoration:none;line-height:1.2;
-  white-space:nowrap;
+  white-space:nowrap;display:flex;align-items:center;gap:8px;
 }
+.logo-icon{height:22px;width:auto;display:block;flex-shrink:0}
 .logo em{font-style:normal;color:var(--gold)}
 .head-phone{
   font-family:var(--mono);font-size:15px;color:var(--ink);text-decoration:none;
@@ -191,6 +192,7 @@ section{padding:88px 0}
   pointer-events:none;user-select:none;line-height:1;
 }
 .pain-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.pain-grid>*{min-width:0}
 .pain-note{
   border:1px solid var(--line);border-radius:14px;
   padding:28px;background:rgba(36,26,11,.45);
@@ -355,6 +357,8 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
   body{font-size:16px}
   section{padding:64px 0}
   .logo{font-size:clamp(11px,3.8vw,14px)}
+  .logo{gap:3px}
+  .logo-icon{height:12px}
   .head-phone{font-size:clamp(10px,3.4vw,13px);white-space:nowrap}
   .hero{min-height:100vh;min-height:100svh}
   .hero-inner{padding-top:96px}
@@ -391,7 +395,7 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
 
 <header>
   <div class="wrap header-in">
-    <a class="logo" href="#">Сандов <em>Фитнес</em></a>
+    <a class="logo" href="#"><img class="logo-icon" src="logo-emblem.png" alt="" width="28" height="28" loading="eager">Сандов <em>Фитнес</em></a>
     <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
   </div>
 </header>
@@ -418,7 +422,7 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
       <div class="stat"><b>500 м²</b><span>отдельный бойцовский клуб</span></div>
       <div class="stat"><b>7 мешков</b><span>плюс татами и октагон</span></div>
       <div class="stat"><b>3 формата</b><span>бокс · кикбоксинг · ММА (персонально)</span></div>
-      <div class="stat"><b>24/7</b><span>клуб не закрывается</span></div>
+      <div class="stat"><b>24/7</b><span>доступ для членов клуба</span></div>
     </div>
   </div>
 </div>
