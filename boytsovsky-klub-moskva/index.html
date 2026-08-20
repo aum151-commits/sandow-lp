@@ -67,9 +67,12 @@ a{color:var(--gold)}
   display:inline-flex;
   align-items:center;
   gap:12px;
+  flex-wrap:wrap;
+  overflow-wrap:break-word;
+  max-width:100%;
 }
 .label::before{content:"";width:34px;height:1px;background:var(--bronze)}
-h1,h2{font-family:var(--head);text-transform:uppercase;letter-spacing:-.01em;line-height:1.16}
+h1,h2{font-family:var(--head);text-transform:uppercase;letter-spacing:-.01em;line-height:1.16;overflow-wrap:break-word}
 h1{font-weight:900;font-size:clamp(30px,4.6vw,62px)}
 h2{font-weight:700;font-size:clamp(22px,3vw,38px);margin:14px 0 18px}
 .gold{color:var(--gold)}
