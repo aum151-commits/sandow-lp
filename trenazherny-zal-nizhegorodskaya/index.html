@@ -65,10 +65,11 @@ a{color:var(--gold)}
   letter-spacing:.18em;
   text-transform:uppercase;
   color:var(--gold);
+  overflow-wrap:break-word;
 }
 .tag::before{content:"[ ";color:var(--bronze)}
 .tag::after{content:" ]";color:var(--bronze)}
-h1,h2{font-family:var(--head);text-transform:uppercase;letter-spacing:-.01em;line-height:1.16}
+h1,h2{font-family:var(--head);text-transform:uppercase;letter-spacing:-.01em;line-height:1.16;overflow-wrap:break-word}
 h1{font-weight:900;font-size:clamp(27px,4.1vw,54px)}
 h2{font-weight:700;font-size:clamp(22px,3vw,38px);margin:14px 0 18px}
 .gold{color:var(--gold)}
