@@ -62,7 +62,7 @@ body{
 }
 img{max-width:100%;display:block}
 a{color:var(--gold)}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;min-width:0}
 
 .label{
   font-family:var(--mono);
@@ -117,8 +117,9 @@ header{
 .logo{
   font-family:var(--head);font-weight:900;font-size:17px;letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);text-decoration:none;line-height:1.2;
-  white-space:nowrap;
+  white-space:nowrap;display:flex;align-items:center;gap:8px;
 }
+.logo-icon{height:22px;width:auto;display:block;flex-shrink:0}
 .logo em{font-style:normal;color:var(--gold)}
 .head-phone{
   font-family:var(--mono);font-size:15px;color:var(--ink);text-decoration:none;
@@ -205,6 +206,7 @@ section{padding:88px 0}
 
 /* ---------- боль: табличка-вывеска ---------- */
 .pain-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.pain-grid>*{min-width:0}
 .door-sign{
   border:1px solid var(--line);border-radius:18px;
   background:linear-gradient(170deg, rgba(23,19,16,.95), rgba(13,15,23,.9));
@@ -397,11 +399,15 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 }
 @media (max-width:600px){
   body{font-size:16px}
+  .header-in{flex-wrap:wrap;row-gap:4px}
   section{padding:64px 0}
   .logo{font-size:clamp(11px,3.8vw,14px)}
+  .logo{gap:3px}
+  .logo-icon{height:12px}
   .head-phone{font-size:clamp(10px,3.4vw,13px);white-space:nowrap}
   .hero{padding-top:146px}
   .hero-sub{font-size:16px}
+  .btn{white-space:normal;text-align:center}
   .hero-cta .btn{width:100%}
   .comfort-cards{grid-template-columns:1fr}
   .door-sign .row{padding:18px 18px}
@@ -428,7 +434,7 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
 
 <header>
   <div class="wrap header-in">
-    <a class="logo" href="#">Сандов <em>Фитнес</em></a>
+    <a class="logo" href="#"><img class="logo-icon" src="logo-emblem.png" alt="" width="28" height="28" loading="eager">Сандов <em>Фитнес</em></a>
     <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
   </div>
 </header>
@@ -440,12 +446,12 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
       <div>
         <span class="label">Круглосуточный фитнес-клуб · метро Нижегородская, выход на Рязанский проспект</span>
         <h1>24/7 — ваш зал <span class="gold">не спит</span>, даже когда спит весь город</h1>
-        <p class="hero-sub">«Сандов Фитнес» работает круглосуточно, 365 дней в году — без выходных, праздников и перерывов. Тренируйтесь тогда, когда удобно вам, а не расписанию.</p>
+        <p class="hero-sub">«Сандов Фитнес» работает круглосуточно, 365 дней в году — без выходных, праздников и перерывов. Тренируйтесь тогда, когда удобно вам, а не расписанию. Новым клиентам — бесплатная вводная тренировка: покажем зал в любое время суток.</p>
         <div class="hero-cta">
-          <a class="btn btn-gold" href="tel:+74957956957">Позвонить</a>
+          <a class="btn btn-gold" href="tel:+74957956957">Записаться бесплатно</a>
           <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=noch" rel="noopener">Написать в Telegram</a>
         </div>
-        <div class="hero-note">Москва, Нижегородская ул., 29/33, стр. 3 — у метро Нижегородская, выход на Рязанский проспект</div>
+        <div class="hero-note">Москва, Нижегородская ул., 29/33, стр. 3 — у метро Нижегородская и начала Новохохловской улицы, выход на Рязанский проспект</div>
       </div>
       <div class="dial-holder">
         <!-- 24-часовой циферблат -->
@@ -634,17 +640,23 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
   </svg>
   <div class="wrap">
     <span class="label">Первый шаг</span>
-    <h2>Посмотрите клуб <span class="gold">своими глазами</span></h2>
-    <p>Запишитесь на ознакомительную тренировку — покажем клуб, сауну и парковку, расскажем, как устроен круглосуточный доступ, и подберём формат под ваши задачи.</p>
+    <h2>Бесплатная вводная <span class="gold">тренировка</span></h2>
+    <p>Запишитесь на бесплатную вводную тренировку — покажем клуб, сауну и парковку, расскажем, как устроен круглосуточный доступ, и подберём формат под ваши задачи.</p>
     <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
     <div class="cta-note">Позвоните — или напишите, мы ответим</div>
     <div class="cta-btns">
-      <a class="btn btn-gold" href="tel:+74957956957">Позвонить</a>
+      <a class="btn btn-gold" href="tel:+74957956957">Записаться бесплатно</a>
       <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=noch" rel="noopener">Написать в Telegram</a>
     </div>
   </div>
 </section>
 
+<!-- ГЕО: РЯДОМ С НАМИ -->
+<section style="border-top:1px solid var(--line);padding:22px 0">
+  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+  </div>
+</section>
 <footer>
   <div class="wrap foot">
     <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3 · круглосуточно</div>
