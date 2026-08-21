@@ -55,7 +55,7 @@ body{
 }
 img{max-width:100%;display:block}
 a{color:var(--gold)}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;min-width:0}
 
 /* ---------- метки, заголовки ---------- */
 .label{
@@ -355,6 +355,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 }
 @media (max-width:600px){
   body{font-size:16px}
+  .header-in{flex-wrap:wrap;row-gap:4px}
   section{padding:64px 0}
   .logo{font-size:clamp(11px,3.8vw,14px)}
   .logo{gap:3px}
@@ -563,6 +564,12 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
   </div>
 </section>
 
+<!-- ГЕО: РЯДОМ С НАМИ -->
+<section style="border-top:1px solid var(--line);padding:22px 0">
+  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+  </div>
+</section>
 <footer>
   <div class="wrap foot">
     <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
