@@ -55,7 +55,7 @@ body{
 }
 img{max-width:100%;display:block}
 a{color:var(--gold)}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;min-width:0}
 
 /* ---------- типографика ---------- */
 .label{
@@ -122,8 +122,9 @@ header{
 .logo{
   font-family:var(--head);font-weight:900;font-size:17px;letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);text-decoration:none;line-height:1.2;
-  white-space:nowrap;
+  white-space:nowrap;display:flex;align-items:center;gap:8px;
 }
+.logo-icon{height:22px;width:auto;display:block;flex-shrink:0}
 .logo em{font-style:normal;color:var(--gold)}
 .head-phone{
   font-family:var(--mono);font-size:15px;color:var(--ink);text-decoration:none;
@@ -387,8 +388,11 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 }
 @media (max-width:600px){
   body{font-size:16px}
+  .header-in{flex-wrap:wrap;row-gap:4px}
   section{padding:64px 0}
   .logo{font-size:clamp(11px,3.8vw,14px)}
+  .logo{gap:3px}
+  .logo-icon{height:12px}
   .head-phone{font-size:clamp(10px,3.4vw,13px);white-space:nowrap}
   .hero{min-height:auto;display:block}
   .hero-visual{
@@ -435,7 +439,7 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
 
 <header>
   <div class="wrap header-in">
-    <a class="logo" href="#">Сандов <em>Фитнес</em></a>
+    <a class="logo" href="#"><img class="logo-icon" src="logo-emblem.png" alt="" width="28" height="28" loading="eager">Сандов <em>Фитнес</em></a>
     <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
   </div>
 </header>
@@ -452,16 +456,16 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
   <div class="wrap hero-inner">
     <span class="label">Кикбоксинг · Москва, Нижегородская / Волгоградский проспект</span>
     <h1>Кикбоксинг в Москве — <span class="hit">в группе</span> и персонально</h1>
-    <p class="hero-sub">Групповые занятия по расписанию и персональные тренировки в отдельном бойцовском клубе 500 м². От первого удара до спаррингов — в своём темпе.</p>
+    <p class="hero-sub">Групповые занятия по расписанию и персональные тренировки в отдельном бойцовском клубе 500 м². От первого удара до спаррингов — в своём темпе. <b>Первое занятие кикбоксингом — бесплатно.</b></p>
     <div class="hero-cta">
-      <a class="btn btn-gold" href="tel:+74957956957">Узнать расписание</a>
+      <a class="btn btn-gold" href="tel:+74957956957">Записаться бесплатно</a>
       <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Telegram</a>
     </div>
     <div class="chips">
       <span class="chip"><b>500 м²</b> бойцовский клуб</span>
       <span class="chip"><b>7</b> мешков</span>
       <span class="chip">сектор <b>татами</b></span>
-      <span class="chip">клуб открыт <b>24/7</b></span>
+      <span class="chip"><b>0 ₽</b> первое занятие</span>
     </div>
   </div>
 </div>
@@ -584,17 +588,23 @@ ym(46762272, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true})
   <div class="cta-lines" aria-hidden="true"></div>
   <div class="wrap">
     <span class="label">Ваш выход</span>
-    <h2>Узнайте расписание — и приходите <span class="gold">на пробную</span></h2>
-    <p>Позвоните — расскажем расписание групп по кикбоксингу, ответим на вопросы и запишем на пробную тренировку.</p>
+    <h2>Первое занятие кикбоксингом — <span class="gold">бесплатно</span></h2>
+    <p>Для всех, независимо от уровня подготовки. Позвоните — расскажем расписание групп и запишем на бесплатное первое занятие.</p>
     <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
     <div class="cta-note">Позвоните — или напишите, мы ответим</div>
     <div class="cta-btns">
       <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Telegram</a>
-      <a class="btn btn-gold" href="tel:+74957956957">Узнать расписание и записаться</a>
+      <a class="btn btn-gold" href="tel:+74957956957">Записаться бесплатно</a>
     </div>
   </div>
 </section>
 
+<!-- ГЕО: РЯДОМ С НАМИ -->
+<section style="border-top:1px solid var(--line);padding:22px 0">
+  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+  </div>
+</section>
 <footer>
   <div class="wrap foot">
     <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
