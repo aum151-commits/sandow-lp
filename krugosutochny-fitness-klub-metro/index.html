@@ -432,12 +432,41 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <style>
 .proof-sec{padding:60px 0}
 .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:28px;align-items:stretch}
-.review-card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(170deg, rgba(36,26,11,.85), rgba(11,9,6,.7));padding:30px 32px;display:flex;flex-direction:column;justify-content:center}
+.rv-carousel{position:relative;min-width:0}
+.rv-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px}
+.rv-track::-webkit-scrollbar{display:none}
+.review-card{flex:0 0 100%;scroll-snap-align:start;border:1px solid var(--line);border-radius:16px;background:linear-gradient(170deg, rgba(36,26,11,.85), rgba(11,9,6,.7));padding:28px 30px;display:flex;flex-direction:column;justify-content:center;min-height:180px}
 .review-card .stars{color:var(--gold);font-size:16px;letter-spacing:2px;margin-bottom:14px}
 .review-card p{color:var(--ink);font-size:16px;line-height:1.6;margin:0 0 16px}
 .review-card .rv-author{font-family:var(--mono);font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.rv-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.rv-dots button{width:7px;height:7px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0}
+.rv-dots button.active{background:var(--gold)}
+.rv-hint{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:10px;opacity:.7}
 @media (max-width:760px){.proof-grid{grid-template-columns:1fr}}
 </style>
+<script>
+(function(){
+  document.querySelectorAll('.rv-carousel').forEach(function(car){
+    var track = car.querySelector('.rv-track');
+    var dots = car.querySelectorAll('.rv-dots button');
+    if (!track || !dots.length) return;
+    var cards = track.querySelectorAll('.review-card');
+    function setActive(i){
+      dots.forEach(function(d,j){ d.classList.toggle('active', j===i); });
+    }
+    dots.forEach(function(d,i){
+      d.addEventListener('click', function(){
+        cards[i].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+      });
+    });
+    track.addEventListener('scroll', function(){
+      var idx = Math.round(track.scrollLeft / track.clientWidth);
+      setActive(Math.min(idx, dots.length-1));
+    }, {passive:true});
+  });
+})();
+</script>
 </head>
 <body>
 
