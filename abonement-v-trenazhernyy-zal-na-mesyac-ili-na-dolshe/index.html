@@ -158,6 +158,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 </style>
 <script>
 (function(){
+function initCarousels(){
   document.querySelectorAll('.rv-carousel').forEach(function(car){
     var track = car.querySelector('.rv-track');
     var dots = car.querySelectorAll('.rv-dots button');
@@ -176,6 +177,12 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
       setActive(Math.min(idx, dots.length-1));
     }, {passive:true});
   });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCarousels);
+} else {
+  initCarousels();
+}
 })();
 </script>
 </head>
@@ -264,7 +271,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
   <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
-    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
   </div>
 </section>
 <footer>
