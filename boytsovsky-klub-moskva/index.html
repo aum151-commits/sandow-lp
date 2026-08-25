@@ -409,6 +409,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 </style>
 <script>
 (function(){
+function initCarousels(){
   document.querySelectorAll('.rv-carousel').forEach(function(car){
     var track = car.querySelector('.rv-track');
     var dots = car.querySelectorAll('.rv-dots button');
@@ -427,6 +428,12 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
       setActive(Math.min(idx, dots.length-1));
     }, {passive:true});
   });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCarousels);
+} else {
+  initCarousels();
+}
 })();
 </script>
 </head>
@@ -577,7 +584,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
     <div class="gal-grid">
       <figure class="gal-card"><img src="bags-row.jpg" alt="Ряд мешков в зале бойцовского клуба «Сандов Фитнес»" loading="lazy"><figcaption>Зал мешков</figcaption></figure>
       <figure class="gal-card"><img src="combat-wide.jpg" alt="Простор бойцовского клуба «Сандов Фитнес» — 500 м²" loading="lazy"><figcaption>Бойцовский клуб — 500 м²</figcaption></figure>
-      <figure class="gal-card"><img src="zal-day.jpg" alt="Тренажёрный зал «Сандов Фитнес» — 1100 м²" loading="lazy"><figcaption>Тренажёрный зал — 1100 м²</figcaption></figure>
+      <figure class="gal-card"><img src="sauna.jpg" alt="Финская сауна клуба «Сандов Фитнес»" loading="lazy"><figcaption>Финская сауна</figcaption></figure>
       <figure class="gal-card"><img src="razdevalka.jpg" alt="Раздевалка клуба «Сандов Фитнес»" loading="lazy"><figcaption>Раздевалки</figcaption></figure>
     </div>
   </div>
@@ -620,7 +627,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
   <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
-    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
   </div>
 </section>
 <footer>
