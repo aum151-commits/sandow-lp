@@ -474,6 +474,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 </style>
 <script>
 (function(){
+function initCarousels(){
   document.querySelectorAll('.rv-carousel').forEach(function(car){
     var track = car.querySelector('.rv-track');
     var dots = car.querySelectorAll('.rv-dots button');
@@ -492,6 +493,12 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
       setActive(Math.min(idx, dots.length-1));
     }, {passive:true});
   });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCarousels);
+} else {
+  initCarousels();
+}
 })();
 </script>
 </head>
@@ -672,14 +679,14 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
     <div class="sec-head">
       <span class="tag">Посмотрите сами</span>
       <h2>1100 м², которые проще <span class="gold">увидеть</span></h2>
-      <p class="txt">Несколько кадров из зала — как выглядят секторы, оборудование и раздевалки.</p>
+      <p class="txt">Несколько кадров из зала — как выглядят секторы, оборудование, раздевалки и сауна клуба.</p>
     </div>
     <div class="gal-grid">
       <figure class="gal-card"><img src="zal-vdol.jpg" alt="Вид вдоль тренажёрного зала «Сандов Фитнес»: блочные и рычажные тренажёры" loading="lazy"><figcaption>Вид вдоль зала</figcaption></figure>
       <figure class="gal-card"><img src="gruzobloki.jpg" alt="Ряды грузоблочных тренажёров у окон в зале «Сандов Фитнес»" loading="lazy"><figcaption>Ряды тренажёров у окон</figcaption></figure>
       <figure class="gal-card"><img src="sektor-plechi.jpg" alt="Сектор плечи в тренажёрном зале «Сандов Фитнес»" loading="lazy"><figcaption>Сектор плечи</figcaption></figure>
       <figure class="gal-card"><img src="sektor-spina.jpg" alt="Сектор спина в тренажёрном зале «Сандов Фитнес»" loading="lazy"><figcaption>Сектор спина</figcaption></figure>
-      <figure class="gal-card"><img src="zal-blue.jpg" alt="Коридор тренажёрного зала «Сандов Фитнес» в глубину" loading="lazy"><figcaption>Зал в глубину</figcaption></figure>
+      <figure class="gal-card"><img src="sauna.jpg" alt="Финская сауна клуба «Сандов Фитнес»" loading="lazy"><figcaption>Финская сауна</figcaption></figure>
       <figure class="gal-card"><img src="razdevalka.jpg" alt="Раздевалка клуба «Сандов Фитнес»: скамьи, шкафчики, зеркала" loading="lazy" style="object-position:18% 62%"><figcaption>Раздевалки</figcaption></figure>
     </div>
   </div>
@@ -720,7 +727,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
   <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
-    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; станция Карачарово; Новохохловская улица; исторический район Хохловка.
+    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
   </div>
 </section>
 <footer>
