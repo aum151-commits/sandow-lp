@@ -15,43 +15,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Круговая тренировка в тренажёрном зале: что это такое и кому подходит",
-  "description": "Как устроена круговая тренировка, кому она подходит и как собрать круг из упражнений в зале. Чем отличается от классической силовой работы.",
-  "url": "https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/",
-  "inLanguage": "ru-RU",
-  "datePublished": "2026-08-20",
-  "dateModified": "2026-08-20",
-  "author": {
-    "@type": "Organization",
-    "name": "Сандов Фитнес",
-    "url": "https://sandowfitness.ru"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Сандов Фитнес",
-    "url": "https://sandowfitness.ru"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/"
-  }
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Круговая тренировка в тренажёрном зале: что это такое и кому подходит",
+ "description": "Как устроена круговая тренировка, кому она подходит и как собрать круг из упражнений в зале. Чем отличается от классической силовой работы.",
+ "url": "https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/",
+ "inLanguage": "ru-RU",
+ "datePublished": "2026-08-20",
+ "dateModified": "2026-08-20",
+ "author": {
+ "@type": "Organization",
+ "name": "Сандов Фитнес",
+ "url": "https://sandowfitness.ru"
+ },
+ "publisher": {
+ "@type": "Organization",
+ "name": "Сандов Фитнес",
+ "url": "https://sandowfitness.ru"
+ },
+ "mainEntityOfPage": {
+ "@type": "WebPage",
+ "@id": "https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/"
+ }
 }
 </script>
 <style>
 :root{
-  --bg:#0B0906;
-  --ink:#F0EADE;
-  --gold:#E9C77E;
-  --bronze:#C08B4E;
-  --muted:#B0AA9C;
-  --card:#241A0B;
-  --line:rgba(240,234,222,.13);
-  --gridline:rgba(233,199,126,.07);
-  --head:'Unbounded', system-ui, sans-serif;
-  --body:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono:'JetBrains Mono', 'Consolas', monospace;
+ --bg:#0B0906;
+ --ink:#F0EADE;
+ --gold:#E9C77E;
+ --bronze:#C08B4E;
+ --muted:#B0AA9C;
+ --card:#241A0B;
+ --line:rgba(240,234,222,.13);
+ --gridline:rgba(233,199,126,.07);
+ --head:'Unbounded', system-ui, sans-serif;
+ --body:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+ --mono:'JetBrains Mono', 'Consolas', monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;background:#0B0906;overflow-x:hidden;overflow-x:clip}
@@ -114,20 +114,20 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 .foot a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
 .foot a:hover{color:var(--gold)}
 @media (max-width:600px){
-  body{font-size:16px}
-  .logo{font-size:clamp(11px,3.8vw,14px);gap:3px}
-  .logo-icon{height:12px}
-  .head-phone{font-size:clamp(10px,3.4vw,13px)}
-  .article-hero{padding:36px 0 28px}
-  .article-hero h1{font-size:clamp(23px,7vw,30px)}
-  .article-lead{font-size:16px}
-  .article-body h2{font-size:clamp(19px,5.5vw,24px);margin-top:40px}
-  .lead-form{padding:24px 20px}
-  .lead-form form{flex-direction:column}
-  .lead-form input{width:100%}
-  .lead-form .btn{width:100%}
-  .cta-form{padding:64px 0 74px}
-  .foot{flex-direction:column}
+ body{font-size:16px}
+ .logo{font-size:clamp(11px,3.8vw,14px);gap:3px}
+ .logo-icon{height:12px}
+ .head-phone{font-size:clamp(10px,3.4vw,13px)}
+ .article-hero{padding:36px 0 28px}
+ .article-hero h1{font-size:clamp(23px,7vw,30px)}
+ .article-lead{font-size:16px}
+ .article-body h2{font-size:clamp(19px,5.5vw,24px);margin-top:40px}
+ .lead-form{padding:24px 20px}
+ .lead-form form{flex-direction:column}
+ .lead-form input{width:100%}
+ .lead-form .btn{width:100%}
+ .cta-form{padding:64px 0 74px}
+ .foot{flex-direction:column}
 }
 
 /* короткая заявка: для тех, кому неудобно звонить или не открывается Телеграм */
@@ -177,29 +177,29 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <script>
 (function(){
 function initCarousels(){
-  document.querySelectorAll('.rv-carousel').forEach(function(car){
-    var track = car.querySelector('.rv-track');
-    var dots = car.querySelectorAll('.rv-dots button');
-    if (!track || !dots.length) return;
-    var cards = track.querySelectorAll('.review-card');
-    function setActive(i){
-      dots.forEach(function(d,j){ d.classList.toggle('active', j===i); });
-    }
-    dots.forEach(function(d,i){
-      d.addEventListener('click', function(){
-        cards[i].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
-      });
-    });
-    track.addEventListener('scroll', function(){
-      var idx = Math.round(track.scrollLeft / track.clientWidth);
-      setActive(Math.min(idx, dots.length-1));
-    }, {passive:true});
-  });
+ document.querySelectorAll('.rv-carousel').forEach(function(car){
+ var track = car.querySelector('.rv-track');
+ var dots = car.querySelectorAll('.rv-dots button');
+ if (!track || !dots.length) return;
+ var cards = track.querySelectorAll('.review-card');
+ function setActive(i){
+ dots.forEach(function(d,j){ d.classList.toggle('active', j===i); });
+ }
+ dots.forEach(function(d,i){
+ d.addEventListener('click', function(){
+ cards[i].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+ });
+ });
+ track.addEventListener('scroll', function(){
+ var idx = Math.round(track.scrollLeft / track.clientWidth);
+ setActive(Math.min(idx, dots.length-1));
+ }, {passive:true});
+ });
 }
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCarousels);
+ document.addEventListener('DOMContentLoaded', initCarousels);
 } else {
-  initCarousels();
+ initCarousels();
 }
 })();
 </script>
@@ -207,18 +207,18 @@ if (document.readyState === 'loading') {
 <body>
 
 <header class="site-header">
-  <div class="wrap header-in">
-    <a class="logo" href="https://sandowfitness.ru"><img class="logo-icon" src="logo-emblem.png" alt="" width="22" height="22" loading="eager">Сандов <em>Фитнес</em></a>
-    <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
-  </div>
+ <div class="wrap header-in">
+ <a class="logo" href="https://sandowfitness.ru"><img class="logo-icon" src="logo-emblem.png" alt="" width="22" height="22" loading="eager">Сандов <em>Фитнес</em></a>
+ <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
+</div>
 </header>
 
 <div class="article-hero gridbg">
-  <div class="wrap">
-    <span class="tag">Статья · Сандов Фитнес</span>
-    <h1>Круговая тренировка в тренажёрном зале: что это такое и кому подходит</h1>
-    <p class="article-lead">Классическая силовая тренировка — это подход, отдых, следующий подход, снова отдых. Круговая устроена иначе: несколько упражнений идут одно за другим почти без пауз, а отдых даётся только после того, как пройден весь круг целиком. Формат нравится тем, кому скучно стоять между подходами, и тем, у кого мало времени на тренировку, но хочется проработать сразу несколько групп мышц. Разберём, как это устроено на практике и кому действительно подходит.</p>
-    <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <div class="wrap">
+ <span class="tag">Статья · Сандов Фитнес</span>
+ <h1>Круговая тренировка в тренажёрном зале: что это такое и кому подходит</h1>
+ <p class="article-lead">Классическая силовая тренировка — это подход, отдых, следующий подход, снова отдых. Круговая устроена иначе: несколько упражнений идут одно за другим почти без пауз, а отдых даётся только после того, как пройден весь круг целиком. Формат нравится тем, кому скучно стоять между подходами, и тем, у кого мало времени на тренировку, но хочется проработать сразу несколько групп мышц. Разберём, как это устроено на практике и кому действительно подходит.</p>
+ <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -228,12 +228,12 @@ if (document.readyState === 'loading') {
 <div class="qform-ok" role="status"></div>
 <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
 </div>
-  </div>
+</div>
 </div>
 
 <main>
-  <div class="wrap">
-    <article class="article-body">
+ <div class="wrap">
+ <article class="article-body">
 <h2>Что такое круговая тренировка и чем она отличается от обычной силовой</h2>
 <p>В обычной силовой тренировке вы выполняете один и тот же подход упражнения несколько раз подряд, с отдыхом между подходами — например, три подхода приседаний, потом переход к следующему упражнению. В круговой тренировке логика другая: вы выполняете одно упражнение, сразу переходите к следующему, затем к третьему и так далее — это и есть один «круг». Отдых даётся не между отдельными упражнениями, а после прохождения всего круга, и затем круг повторяется заново, обычно два-четыре раза за тренировку.</p>
 <p>Из-за такой структуры круговая тренировка держит в постоянном движении и заметно поднимает частоту пульса — она сочетает силовую нагрузку с элементом кардио, потому что паузы для полного восстановления между упражнениями короткие или отсутствуют вовсе. Именно поэтому круговую тренировку часто выбирают не только ради силы, но и ради общей физической формы за одно занятие, без необходимости отдельно ходить на кардио.</p>
@@ -250,9 +250,9 @@ if (document.readyState === 'loading') {
 <h2>Чек-лист «Как безопасно начать круговую тренировку»</h2>
 <ul><li>Освойте технику каждого упражнения по отдельности до того, как объединять их в круг.</li><li>Начните с 3–4 упражнений и 2 кругов, постепенно увеличивая нагрузку.</li><li>Чередуйте группы мышц внутри круга, а не повторяйте одну и ту же зону подряд.</li><li>Разомнитесь тщательнее, чем перед обычной силовой тренировкой.</li><li>Следите за техникой в конце круга, когда усталость уже накопилась, — именно здесь чаще всего случаются ошибки.</li><li>Дайте себе полноценный отдых между кругами, а не только между отдельными упражнениями.</li></ul>
 <div class="lead-form">
-  <span class="tag">Есть вопросы?</span>
-  <h3><strong>Интересна круговая тренировка? Напишите нам — подскажем, как безопасно включить её в вашу программу.</strong></h3>
-  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <span class="tag">Есть вопросы?</span>
+ <h3><strong>Интересна круговая тренировка? Напишите нам — подскажем, как безопасно включить её в вашу программу.</strong></h3>
+ <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -272,14 +272,14 @@ if (document.readyState === 'loading') {
 <p>Периодичность включения кругового формата в программу — вопрос индивидуальный и зависит от общей цели: кому-то достаточно одной круговой тренировки в две недели для разнообразия, а кто-то делает круговой формат основным и обращается к классической схеме лишь эпизодически. Универсального готового соотношения здесь нет — оно подбирается по ощущениям и, в идеале, вместе с тренером, который поможет сбалансировать оба формата под ваши задачи.</p>
 <h2>Итог: формат для разнообразия и экономии времени, не для максимальной силы</h2>
 <p>Круговая тренировка — рабочий формат для тех, кто хочет совместить силовую нагрузку с кардио, разнообразить программу или уложиться в ограниченное время без потери эффективности занятия. Она требует базовой уверенности в технике каждого отдельного упражнения и внимательного отношения к темпу — не в ущерб правильному движению. Для максимальной силы в конкретном упражнении классическая схема с длинным отдыхом между подходами по-прежнему работает лучше, но как дополнение к программе или самостоятельный формат круговая тренировка вполне заслуживает места в вашем расписании.</p>
-    <section class="related-sec"><span class="tag">Читайте также</span><ul><li><a href="https://lp.sandowfitness.ru/kak-pravilno-trenirovatsya-v-trenazhernom-zale/">Как правильно тренироваться в тренажёрном зале: базовые правила техники и безопасности</a></li><li><a href="https://lp.sandowfitness.ru/kak-pravilno-dyshat-vo-vremya-trenirovki/">Как правильно дышать во время силовой тренировки</a></li><li><a href="https://lp.sandowfitness.ru/kak-otslezhivat-progress-v-trenazhernom-zale/">Как отслеживать прогресс в тренажёрном зале, если весы врут</a></li><li><a href="https://lp.sandowfitness.ru/skolko-dlitsya-trenirovka-v-trenazhernom-zale/">Сколько должна длиться тренировка в тренажёрном зале</a></li></ul></section></article>
-  </div>
+ <section class="related-sec"><span class="tag">Читайте также</span><ul><li><a href="https://lp.sandowfitness.ru/kak-pravilno-trenirovatsya-v-trenazhernom-zale/">Как правильно тренироваться в тренажёрном зале: базовые правила техники и безопасности</a></li><li><a href="https://lp.sandowfitness.ru/kak-pravilno-dyshat-vo-vremya-trenirovki/">Как правильно дышать во время силовой тренировки</a></li><li><a href="https://lp.sandowfitness.ru/kak-otslezhivat-progress-v-trenazhernom-zale/">Как отслеживать прогресс в тренажёрном зале, если весы врут</a></li><li><a href="https://lp.sandowfitness.ru/skolko-dlitsya-trenirovka-v-trenazhernom-zale/">Сколько должна длиться тренировка в тренажёрном зале</a></li></ul></section></article>
+</div>
 
-  <section class="cta-form">
-    <div class="wrap">
-      <span class="tag">Записаться бесплатно</span>
-      <h2><strong>Позвоните и запишитесь на бесплатную вводную тренировку — попробуете круговой формат с тренером: +7 (495) 795-69-57.</strong></h2>
-      <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <section class="cta-form">
+ <div class="wrap">
+ <span class="tag">Записаться бесплатно</span>
+ <h2><strong>Позвоните и запишитесь на бесплатную вводную тренировку — попробуете круговой формат с тренером: +7 (495) 795-69-57.</strong></h2>
+ <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -289,75 +289,75 @@ if (document.readyState === 'loading') {
 <div class="qform-ok" role="status"></div>
 <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
 </div>
-      <div class="cta-form-note">Или позвоните: <a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
-    </div>
-  </section>
+ <div class="cta-form-note">Или позвоните: <a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+</div>
+ </section>
 </main>
 
 <!-- ОТЗЫВЫ + КАРТА -->
 <section class="proof-sec">
-  <div class="wrap">
-    <span class="tag">Реальные отзывы</span>
-    <div class="proof-grid">
-      <div class="rv-carousel">
-        <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный зал! классные тренажеры (полная линейка) хожу и радуюсь каждой тренировке!»</p><div class="rv-author">Кирилл Эккердт, Яндекс Карты, июль 2026</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный клуб! Нравится атмосфера, располагающая под продуктивные тренировки. Небольшая загрузка, людей немного — комфортно!»</p><div class="rv-author">Андрей Некрасов, Яндекс Карты, декабрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Тренажёрный зал разделён на группы, кардио зона отдельно, единоборства отдельно. Оборудование исправно и в достаточном количестве.»</p><div class="rv-author">Владислав Кравченко, Яндекс Карты, октябрь 2025</div></div></div>
-        <div class="rv-dots"><button class="active" aria-label="Отзыв 1"></button><button class="" aria-label="Отзыв 2"></button><button class="" aria-label="Отзыв 3"></button></div>
-        <div class="rv-hint">Листайте →</div>
-      </div>
-      <iframe src="https://yandex.ru/map-widget/v1/?ll=37.711725%2C55.733701&z=16&pt=37.711725,55.733701,pm2rdm" width="100%" height="360" frameborder="0" style="border-radius:14px;border:1px solid var(--line)" loading="lazy" title="Сандов Фитнес на карте"></iframe>
-    </div>
-  </div>
+ <div class="wrap">
+ <span class="tag">Реальные отзывы</span>
+ <div class="proof-grid">
+ <div class="rv-carousel">
+ <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный зал! классные тренажеры (полная линейка) хожу и радуюсь каждой тренировке!»</p><div class="rv-author">Кирилл Эккердт, Яндекс Карты, июль 2026</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный клуб! Нравится атмосфера, располагающая под продуктивные тренировки. Небольшая загрузка, людей немного — комфортно!»</p><div class="rv-author">Андрей Некрасов, Яндекс Карты, декабрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Тренажёрный зал разделён на группы, кардио зона отдельно, единоборства отдельно. Оборудование исправно и в достаточном количестве.»</p><div class="rv-author">Владислав Кравченко, Яндекс Карты, октябрь 2025</div></div></div>
+ <div class="rv-dots"><button class="active" aria-label="Отзыв 1"></button><button class="" aria-label="Отзыв 2"></button><button class="" aria-label="Отзыв 3"></button></div>
+ <div class="rv-hint">Листайте →</div>
+</div>
+ <iframe src="https://yandex.ru/map-widget/v1/?ll=37.711725%2C55.733701&z=16&pt=37.711725,55.733701,pm2rdm" width="100%" height="360" frameborder="0" style="border-radius:14px;border:1px solid var(--line)" loading="lazy" title="Сандов Фитнес на карте"></iframe>
+</div>
+</div>
 </section>
 
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
-  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
-    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
-  </div>
+ <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+ <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
+</div>
 </section>
 <footer>
-  <div class="wrap foot">
-    <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
-    <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
-  </div>
+ <div class="wrap foot">
+ <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
+ <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+</div>
 </footer>
 
 <script>
 (function(){
 function initQuickForms(){
-  document.querySelectorAll('.qform').forEach(function(form){
-    if (form.dataset.ready) return;
-    form.dataset.ready = '1';
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var input = form.querySelector('input[type=tel]');
-      var btn = form.querySelector('button');
-      var box = form.parentNode;
-      var ok = box.querySelector('.qform-ok');
-      var err = box.querySelector('.qform-err');
-      var digits = (input.value || '').replace(/\D/g, '');
-      if (digits.length < 10) {
-        if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
-        input.focus(); return;
-      }
-      if (err) err.style.display = 'none';
-      btn.disabled = true;
-      var was = btn.textContent;
-      btn.textContent = 'Отправляем…';
-      fetch('https://sandow-lead-bot.onrender.com/site-lead', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
-      }).then(function(r){ return r.json(); }).then(function(res){
-        if (res && res.ok) {
-          form.style.display = 'none';
-          if (ok) { ok.textContent = 'Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57'; ok.style.display = 'block'; }
-        } else { throw new Error('bad'); }
-      }).catch(function(){
-        btn.disabled = false; btn.textContent = was;
-        if (err) { err.innerHTML = 'Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>'; err.style.display = 'block'; }
-      });
-    });
-  });
+ document.querySelectorAll('.qform').forEach(function(form){
+ if (form.dataset.ready) return;
+ form.dataset.ready = '1';
+ form.addEventListener('submit', function(e){
+ e.preventDefault();
+ var input = form.querySelector('input[type=tel]');
+ var btn = form.querySelector('button');
+ var box = form.parentNode;
+ var ok = box.querySelector('.qform-ok');
+ var err = box.querySelector('.qform-err');
+ var digits = (input.value || '').replace(/\D/g, '');
+ if (digits.length < 10) {
+ if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
+ input.focus(); return;
+ }
+ if (err) err.style.display = 'none';
+ btn.disabled = true;
+ var was = btn.textContent;
+ btn.textContent = 'Отправляем…';
+ fetch('https://sandow-lead-bot.onrender.com/site-lead', {
+ method: 'POST', headers: {'Content-Type': 'application/json'},
+ body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
+ }).then(function(r){ return r.json(); }).then(function(res){
+ if (res && res.ok) {
+ form.style.display = 'none';
+ if (ok) { ok.textContent = 'Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57'; ok.style.display = 'block'; }
+ } else { throw new Error('bad'); }
+ }).catch(function(){
+ btn.disabled = false; btn.textContent = was;
+ if (err) { err.innerHTML = 'Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>'; err.style.display = 'block'; }
+ });
+ });
+ });
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initQuickForms); }
 else { initQuickForms(); }
