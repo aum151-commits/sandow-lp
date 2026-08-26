@@ -109,6 +109,18 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
   .cta-form{padding:64px 0 74px}
   .foot{flex-direction:column}
 }
+
+/* короткая заявка: для тех, кому неудобно звонить или не открывается Телеграм */
+.qform{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+.qform input[type=tel]{flex:1 1 220px;min-width:0;background:rgba(11,9,6,.6);border:1px solid rgba(233,199,126,.4);border-radius:999px;padding:15px 22px;color:var(--ink);font-family:var(--body);font-size:16px;outline:none}
+.qform input[type=tel]::placeholder{color:var(--muted)}
+.qform input[type=tel]:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,199,126,.16)}
+.qform button{flex:0 0 auto}
+.qform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.qform-note{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--muted)}
+.qform-ok{margin-top:14px;font-size:16px;color:var(--gold);display:none}
+.qform-err{margin-top:10px;font-size:14px;color:#E38B7B;display:none}
+@media(max-width:600px){.qform input[type=tel]{flex:1 1 100%}.qform button{width:100%}}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -180,7 +192,16 @@ if (document.readyState === 'loading') {
     <span class="tag">Статья · Сандов Фитнес</span>
     <h1>Кикбоксинг или бокс: что выбрать новичку</h1>
     <p class="article-lead">Оба направления подходят новичку без опыта — разница не в сложности, а в том, что вам интереснее: работа руками или полный арсенал ударов.</p>
-    <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Записаться бесплатно</a><a class="btn btn-ghost" href="tel:+74957956957">Позвонить</a></div>
+    <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+<form class="qform" novalidate>
+<input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
+<input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="btn btn-gold" type="submit">Жду звонка</button>
+</form>
+<div class="qform-err" role="alert"></div>
+<div class="qform-ok" role="status"></div>
+<div class="qform-note">Нажимая кнопку, вы соглашаетесь на обработку номера для ответа на обращение. Мы не рассылаем рекламу.</div>
+</div>
   </div>
 </div>
 
@@ -200,7 +221,16 @@ if (document.readyState === 'loading') {
 <div class="lead-form">
   <span class="tag">Не знаете, с чего начать?</span>
   <h3>Приходите на бесплатное первое занятие — по боксу или кикбоксингу — и решите на месте.</h3>
-  <div class="cta-btns"><a class="btn btn-gold" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Записаться бесплатно</a><a class="btn btn-ghost" href="tel:+74957956957">Позвонить</a></div>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+<form class="qform" novalidate>
+<input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
+<input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="btn btn-gold" type="submit">Жду звонка</button>
+</form>
+<div class="qform-err" role="alert"></div>
+<div class="qform-ok" role="status"></div>
+<div class="qform-note">Нажимая кнопку, вы соглашаетесь на обработку номера для ответа на обращение. Мы не рассылаем рекламу.</div>
+</div>
 </div>
 <h2>Итог</h2>
 <p>Выбор между боксом и кикбоксингом — вопрос личного интереса, а не сложности. Лучший способ решить — попробовать оба на бесплатном первом занятии.</p>
@@ -212,7 +242,16 @@ if (document.readyState === 'loading') {
       <span class="tag">Ваш выход</span>
       <h2>Готовы попробовать?</h2>
       <p>Запишитесь на бесплатную вводную тренировку — тренер подберёт формат под вашу цель.</p>
-      <div class="cta-btns"><a class="btn btn-gold" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Записаться бесплатно</a><a class="btn btn-ghost" href="tel:+74957956957">Позвонить</a></div>
+      <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+<form class="qform" novalidate>
+<input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
+<input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+<button class="btn btn-gold" type="submit">Жду звонка</button>
+</form>
+<div class="qform-err" role="alert"></div>
+<div class="qform-ok" role="status"></div>
+<div class="qform-note">Нажимая кнопку, вы соглашаетесь на обработку номера для ответа на обращение. Мы не рассылаем рекламу.</div>
+</div>
       <div class="cta-form-note">Или позвоните: <a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
     </div>
   </section>
@@ -246,5 +285,46 @@ if (document.readyState === 'loading') {
   </div>
 </footer>
 
+<script>
+(function(){
+function initQuickForms(){
+  document.querySelectorAll('.qform').forEach(function(form){
+    if (form.dataset.ready) return;
+    form.dataset.ready = '1';
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var input = form.querySelector('input[type=tel]');
+      var btn = form.querySelector('button');
+      var box = form.parentNode;
+      var ok = box.querySelector('.qform-ok');
+      var err = box.querySelector('.qform-err');
+      var digits = (input.value || '').replace(/\D/g, '');
+      if (digits.length < 10) {
+        if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
+        input.focus(); return;
+      }
+      if (err) err.style.display = 'none';
+      btn.disabled = true;
+      var was = btn.textContent;
+      btn.textContent = 'Отправляем…';
+      fetch('https://sandow-lead-bot.onrender.com/site-lead', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
+      }).then(function(r){ return r.json(); }).then(function(res){
+        if (res && res.ok) {
+          form.style.display = 'none';
+          if (ok) { ok.textContent = 'Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57'; ok.style.display = 'block'; }
+        } else { throw new Error('bad'); }
+      }).catch(function(){
+        btn.disabled = false; btn.textContent = was;
+        if (err) { err.innerHTML = 'Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>'; err.style.display = 'block'; }
+      });
+    });
+  });
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initQuickForms); }
+else { initQuickForms(); }
+})();
+</script>
 </body>
 </html>
