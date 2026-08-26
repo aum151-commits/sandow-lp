@@ -15,43 +15,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Функциональный тренинг с TRX: что это такое и кому подходит",
-  "description": "Что такое петли TRX и кому они подходят: какие мышцы включаются, чем это отличается от тренажёров и как собрать первую тренировку со своим весом.",
-  "url": "https://lp.sandowfitness.ru/funkcionalnyy-trening-s-trx/",
-  "inLanguage": "ru-RU",
-  "datePublished": "2026-08-20",
-  "dateModified": "2026-08-20",
-  "author": {
-    "@type": "Organization",
-    "name": "Сандов Фитнес",
-    "url": "https://sandowfitness.ru"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Сандов Фитнес",
-    "url": "https://sandowfitness.ru"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://lp.sandowfitness.ru/funkcionalnyy-trening-s-trx/"
-  }
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Функциональный тренинг с TRX: что это такое и кому подходит",
+ "description": "Что такое петли TRX и кому они подходят: какие мышцы включаются, чем это отличается от тренажёров и как собрать первую тренировку со своим весом.",
+ "url": "https://lp.sandowfitness.ru/funkcionalnyy-trening-s-trx/",
+ "inLanguage": "ru-RU",
+ "datePublished": "2026-08-20",
+ "dateModified": "2026-08-20",
+ "author": {
+ "@type": "Organization",
+ "name": "Сандов Фитнес",
+ "url": "https://sandowfitness.ru"
+ },
+ "publisher": {
+ "@type": "Organization",
+ "name": "Сандов Фитнес",
+ "url": "https://sandowfitness.ru"
+ },
+ "mainEntityOfPage": {
+ "@type": "WebPage",
+ "@id": "https://lp.sandowfitness.ru/funkcionalnyy-trening-s-trx/"
+ }
 }
 </script>
 <style>
 :root{
-  --bg:#0B0906;
-  --ink:#F0EADE;
-  --gold:#E9C77E;
-  --bronze:#C08B4E;
-  --muted:#B0AA9C;
-  --card:#241A0B;
-  --line:rgba(240,234,222,.13);
-  --gridline:rgba(233,199,126,.07);
-  --head:'Unbounded', system-ui, sans-serif;
-  --body:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono:'JetBrains Mono', 'Consolas', monospace;
+ --bg:#0B0906;
+ --ink:#F0EADE;
+ --gold:#E9C77E;
+ --bronze:#C08B4E;
+ --muted:#B0AA9C;
+ --card:#241A0B;
+ --line:rgba(240,234,222,.13);
+ --gridline:rgba(233,199,126,.07);
+ --head:'Unbounded', system-ui, sans-serif;
+ --body:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+ --mono:'JetBrains Mono', 'Consolas', monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;background:#0B0906;overflow-x:hidden;overflow-x:clip}
@@ -114,20 +114,20 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 .foot a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
 .foot a:hover{color:var(--gold)}
 @media (max-width:600px){
-  body{font-size:16px}
-  .logo{font-size:clamp(11px,3.8vw,14px);gap:3px}
-  .logo-icon{height:12px}
-  .head-phone{font-size:clamp(10px,3.4vw,13px)}
-  .article-hero{padding:36px 0 28px}
-  .article-hero h1{font-size:clamp(23px,7vw,30px)}
-  .article-lead{font-size:16px}
-  .article-body h2{font-size:clamp(19px,5.5vw,24px);margin-top:40px}
-  .lead-form{padding:24px 20px}
-  .lead-form form{flex-direction:column}
-  .lead-form input{width:100%}
-  .lead-form .btn{width:100%}
-  .cta-form{padding:64px 0 74px}
-  .foot{flex-direction:column}
+ body{font-size:16px}
+ .logo{font-size:clamp(11px,3.8vw,14px);gap:3px}
+ .logo-icon{height:12px}
+ .head-phone{font-size:clamp(10px,3.4vw,13px)}
+ .article-hero{padding:36px 0 28px}
+ .article-hero h1{font-size:clamp(23px,7vw,30px)}
+ .article-lead{font-size:16px}
+ .article-body h2{font-size:clamp(19px,5.5vw,24px);margin-top:40px}
+ .lead-form{padding:24px 20px}
+ .lead-form form{flex-direction:column}
+ .lead-form input{width:100%}
+ .lead-form .btn{width:100%}
+ .cta-form{padding:64px 0 74px}
+ .foot{flex-direction:column}
 }
 
 /* короткая заявка: для тех, кому неудобно звонить или не открывается Телеграм */
@@ -177,29 +177,29 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 <script>
 (function(){
 function initCarousels(){
-  document.querySelectorAll('.rv-carousel').forEach(function(car){
-    var track = car.querySelector('.rv-track');
-    var dots = car.querySelectorAll('.rv-dots button');
-    if (!track || !dots.length) return;
-    var cards = track.querySelectorAll('.review-card');
-    function setActive(i){
-      dots.forEach(function(d,j){ d.classList.toggle('active', j===i); });
-    }
-    dots.forEach(function(d,i){
-      d.addEventListener('click', function(){
-        cards[i].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
-      });
-    });
-    track.addEventListener('scroll', function(){
-      var idx = Math.round(track.scrollLeft / track.clientWidth);
-      setActive(Math.min(idx, dots.length-1));
-    }, {passive:true});
-  });
+ document.querySelectorAll('.rv-carousel').forEach(function(car){
+ var track = car.querySelector('.rv-track');
+ var dots = car.querySelectorAll('.rv-dots button');
+ if (!track || !dots.length) return;
+ var cards = track.querySelectorAll('.review-card');
+ function setActive(i){
+ dots.forEach(function(d,j){ d.classList.toggle('active', j===i); });
+ }
+ dots.forEach(function(d,i){
+ d.addEventListener('click', function(){
+ cards[i].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+ });
+ });
+ track.addEventListener('scroll', function(){
+ var idx = Math.round(track.scrollLeft / track.clientWidth);
+ setActive(Math.min(idx, dots.length-1));
+ }, {passive:true});
+ });
 }
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCarousels);
+ document.addEventListener('DOMContentLoaded', initCarousels);
 } else {
-  initCarousels();
+ initCarousels();
 }
 })();
 </script>
@@ -207,18 +207,18 @@ if (document.readyState === 'loading') {
 <body>
 
 <header class="site-header">
-  <div class="wrap header-in">
-    <a class="logo" href="https://sandowfitness.ru"><img class="logo-icon" src="logo-emblem.png" alt="" width="22" height="22" loading="eager">Сандов <em>Фитнес</em></a>
-    <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
-  </div>
+ <div class="wrap header-in">
+ <a class="logo" href="https://sandowfitness.ru"><img class="logo-icon" src="logo-emblem.png" alt="" width="22" height="22" loading="eager">Сандов <em>Фитнес</em></a>
+ <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
+</div>
 </header>
 
 <div class="article-hero gridbg">
-  <div class="wrap">
-    <span class="tag">Статья · Сандов Фитнес</span>
-    <h1>Функциональный тренинг с TRX: что это такое и кому подходит</h1>
-    <p class="article-lead">Если вы давно ходите в зал и видели раму с висящими петлями где-то в стороне от тренажёров — скорее всего, это TRX. Многие проходят мимо неё месяцами, потому что не понимают, как этим пользоваться и зачем: рядом нет привычных грузов и понятной инструкции на корпусе тренажёра, а сама конструкция выглядит непонятно. При этом именно этот формат тренировки часто оказывается тем, чего не хватает в привычной программе — особенно если вы давно занимаетесь одним и тем же набором упражнений. Разберёмся по порядку: что такое функциональный тренинг, чем петли отличаются от привычных тренажёров, кому вообще стоит попробовать и какие ошибки чаще всего совершают новички.</p>
-    <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <div class="wrap">
+ <span class="tag">Статья · Сандов Фитнес</span>
+ <h1>Функциональный тренинг с TRX: что это такое и кому подходит</h1>
+ <p class="article-lead">Если вы давно ходите в зал и видели раму с висящими петлями где-то в стороне от тренажёров — скорее всего, это TRX. Многие проходят мимо неё месяцами, потому что не понимают, как этим пользоваться и зачем: рядом нет привычных грузов и понятной инструкции на корпусе тренажёра, а сама конструкция выглядит непонятно. При этом именно этот формат тренировки часто оказывается тем, чего не хватает в привычной программе — особенно если вы давно занимаетесь одним и тем же набором упражнений. Разберёмся по порядку: что такое функциональный тренинг, чем петли отличаются от привычных тренажёров, кому вообще стоит попробовать и какие ошибки чаще всего совершают новички.</p>
+ <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -228,12 +228,12 @@ if (document.readyState === 'loading') {
 <div class="qform-ok" role="status"></div>
 <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
 </div>
-  </div>
+</div>
 </div>
 
 <main>
-  <div class="wrap">
-    <article class="article-body">
+ <div class="wrap">
+ <article class="article-body">
 <h2>Что такое функциональный тренинг и чем он отличается от обычной силовой тренировки</h2>
 <p>Классическая силовая тренировка чаще всего работает с одной группой мышц за подход: жим для груди, тяга для спины, разгибания для ног. Тренажёр фиксирует траекторию движения — вы просто прикладываете усилие в заданном направлении, а стабилизацию корпуса и суставов берёт на себя конструкция тренажёра. Это удобно и эффективно для наращивания силы конкретной мышцы, но в жизни мы редко двигаемся именно так — изолированно, по одной оси.</p>
 <p>Функциональный тренинг устроен иначе. Он тренирует не отдельную мышцу, а движение целиком — то, как тело работает в жизни и в спорте: тянуть, толкать, приседать, удерживать равновесие, стабилизировать корпус при нагрузке. В одном упражнении одновременно участвуют мышцы кора, ног, спины и рук — тело учится работать как единая система, а не как набор отдельных рычагов. Например, обычное отжимание на полу уже отчасти функциональное упражнение: в нём работают не только грудь и трицепс, но и пресс, и мышцы-стабилизаторы плеча, которые удерживают корпус в одной линии.</p>
@@ -253,9 +253,9 @@ if (document.readyState === 'loading') {
 <ul><li><strong>Слишком большой угол наклона с самого начала.</strong> Кажется, что раз веса нет, можно сразу отклониться посильнее — на деле нагрузка растёт нелинейно, и первая тренировка превращается в борьбу с формой движения, а не с мышцами. Начинать стоит с угла, при котором можно уверенно контролировать всё тело от начала до конца подхода.</li><li><strong>Провисающий корпус.</strong> Если не держать пресс и таз в одной линии с плечами, работа кора выключается, а нагрузка перераспределяется в поясницу — именно там потом чаще всего и появляется дискомфорт после тренировки.</li><li><strong>Резкие рывки вместо контролируемого движения.</strong> Петли подвижны, и рывок раскачивает всю систему — упражнение теряет смысл, а риск потерять равновесие и упасть заметно растёт. Движение на TRX всегда должно быть плавным.</li><li><strong>Не отрегулирована длина петель под рост и упражнение.</strong> Слишком длинные или короткие петли меняют биомеханику движения и делают его либо бессмысленно лёгким, либо избыточно травмоопасным для конкретного сустава.</li><li><strong>Задержка дыхания на усилии.</strong> Частая ошибка в любых силовых упражнениях, но на нестабильной опоре она особенно быстро сбивает равновесие — без ровного дыхания сложнее держать корпус собранным.</li></ul>
 <p>Первую тренировку на TRX лучше провести с тренером — он покажет, как настроить петли под ваш рост и конкретное упражнение, объяснит, как держать корпус, и сразу поставит технику, а не будет её потом переучивать после нескольких самостоятельных попыток.</p>
 <div class="lead-form">
-  <span class="tag">Есть вопросы?</span>
-  <h3><strong>Интересен функциональный тренинг? Напишите нам — расскажем подробнее.</strong></h3>
-  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <span class="tag">Есть вопросы?</span>
+ <h3><strong>Интересен функциональный тренинг? Напишите нам — расскажем подробнее.</strong></h3>
+ <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -272,19 +272,19 @@ if (document.readyState === 'loading') {
 <ol><li><strong>TRX-присед</strong> — держась за петли руками, выполняется приседание с опорой на руки для баланса. Хорошо, чтобы освоить технику приседа без страха потерять равновесие, особенно если раньше вы не делали приседания со свободным весом вообще.</li><li><strong>TRX-тяга (row)</strong> — отклонившись назад под небольшим углом, тянете корпус к петлям, работая спиной и руками. Одно из базовых упражнений, с которого стоит начинать знакомство с системой.</li><li><strong>Отжимание с ногами на петлях</strong> — ноги в петлях, руки в упоре на полу; нестабильная опора для ног добавляет работу кора и делает привычное отжимание заметно сложнее.</li><li><strong>Планка на петлях</strong> — ноги или предплечья в петлях, классическая планка становится сложнее за счёт подвижной опоры, что усиливает работу мышц живота и спины.</li><li><strong>Выпад с опорой на петлю</strong> — задняя нога в петле, выполняется выпад; помогает контролировать баланс на одной ноге и хорошо нагружает переднюю ногу.</li></ol>
 <p>Начинать стоит с 2–3 упражнений и небольшого угла наклона, постепенно увеличивая сложность по мере того, как техника становится уверенной. Полноценная тренировка на TRX может состоять из 5–6 упражнений на всё тело — это не хуже и не менее эффективно, чем стандартный набор тренажёров, просто устроено иначе.</p>
 <h2>Отдельный сектор функциональных тренировок в зале «Сандов Фитнес»</h2>
-<p>В тренажёрном зале 1100 м² «Сандов Фитнес» есть отдельный сектор для функциональных тренировок — рама с петлями для подвесного тренинга TRX. Скажем честно: это один комплект, а не отдельная большая зона, поэтому лучше заранее уточнить у тренера удобное время, если хотите позаниматься именно на TRX и не подстраиваться под чужое расписание.</p>
+<p>В тренажёрном зале 1100 м² «Сандов Фитнес» есть отдельный сектор для функциональных тренировок — рама с петлями для подвесного тренинга TRX. Комплект в зале один, поэтому удобное время для занятия на петлях стоит заранее уточнить у тренера — так вы не будете подстраиваться под чужое расписание.</p>
 <p>Зато в остальном зал даёт простор для разнообразия программы: он разбит на секторы по группам мышц, есть отдельный сектор тяжёлой атлетики с двумя подиумами и оборудование брендов Eleiko, Nautilus, TechnoGym, Precor и других. Можно совмещать функциональный тренинг с силовой работой в одной тренировке, не теряя времени на ожидание свободного тренажёра, — например, начать с TRX для разминки и активации кора, а затем перейти к основной силовой части программы.</p>
 <h2>Итог</h2>
 <p>Функциональный тренинг с TRX — доступный способ добавить в тренировки баланс, координацию и работу кора, которых часто не хватает в изолированных упражнениях на тренажёрах. Подходит и новичкам как мягкий вход в силовые тренировки, и тем, кто хочет разнообразить привычную программу, и тем, кому просто интереснее заниматься с собственным весом. Главное — начать с небольшой нагрузки и правильной техники, отрегулировать петли под себя и не спешить с углом наклона, а при восстановлении после травм — обязательно согласовать программу с врачом.</p>
 <p>Клуб «Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3.</p>
-    <section class="related-sec"><span class="tag">Читайте также</span><ul><li><a href="https://lp.sandowfitness.ru/kak-pravilno-trenirovatsya-v-trenazhernom-zale/">Как правильно тренироваться в тренажёрном зале: базовые правила техники и безопасности</a></li><li><a href="https://lp.sandowfitness.ru/kak-pravilno-dyshat-vo-vremya-trenirovki/">Как правильно дышать во время силовой тренировки</a></li><li><a href="https://lp.sandowfitness.ru/kak-otslezhivat-progress-v-trenazhernom-zale/">Как отслеживать прогресс в тренажёрном зале, если весы врут</a></li><li><a href="https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/">Круговая тренировка в тренажёрном зале: что это такое и кому подходит</a></li></ul></section></article>
-  </div>
+ <section class="related-sec"><span class="tag">Читайте также</span><ul><li><a href="https://lp.sandowfitness.ru/kak-pravilno-trenirovatsya-v-trenazhernom-zale/">Как правильно тренироваться в тренажёрном зале: базовые правила техники и безопасности</a></li><li><a href="https://lp.sandowfitness.ru/kak-pravilno-dyshat-vo-vremya-trenirovki/">Как правильно дышать во время силовой тренировки</a></li><li><a href="https://lp.sandowfitness.ru/kak-otslezhivat-progress-v-trenazhernom-zale/">Как отслеживать прогресс в тренажёрном зале, если весы врут</a></li><li><a href="https://lp.sandowfitness.ru/krugovaya-trenirovka-v-trenazhernom-zale/">Круговая тренировка в тренажёрном зале: что это такое и кому подходит</a></li></ul></section></article>
+</div>
 
-  <section class="cta-form">
-    <div class="wrap">
-      <span class="tag">Записаться бесплатно</span>
-      <h2><strong>Позвоните и запишитесь на бесплатную вводную тренировку — попробуете TRX на месте: +7 (495) 795-69-57.</strong></h2>
-      <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <section class="cta-form">
+ <div class="wrap">
+ <span class="tag">Записаться бесплатно</span>
+ <h2><strong>Позвоните и запишитесь на бесплатную вводную тренировку — попробуете TRX на месте: +7 (495) 795-69-57.</strong></h2>
+ <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -294,75 +294,75 @@ if (document.readyState === 'loading') {
 <div class="qform-ok" role="status"></div>
 <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
 </div>
-      <div class="cta-form-note">Или позвоните: <a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
-    </div>
-  </section>
+ <div class="cta-form-note">Или позвоните: <a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+</div>
+ </section>
 </main>
 
 <!-- ОТЗЫВЫ + КАРТА -->
 <section class="proof-sec">
-  <div class="wrap">
-    <span class="tag">Реальные отзывы</span>
-    <div class="proof-grid">
-      <div class="rv-carousel">
-        <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный зал! классные тренажеры (полная линейка) хожу и радуюсь каждой тренировке!»</p><div class="rv-author">Кирилл Эккердт, Яндекс Карты, июль 2026</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный клуб! Нравится атмосфера, располагающая под продуктивные тренировки. Небольшая загрузка, людей немного — комфортно!»</p><div class="rv-author">Андрей Некрасов, Яндекс Карты, декабрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Тренажёрный зал разделён на группы, кардио зона отдельно, единоборства отдельно. Оборудование исправно и в достаточном количестве.»</p><div class="rv-author">Владислав Кравченко, Яндекс Карты, октябрь 2025</div></div></div>
-        <div class="rv-dots"><button class="active" aria-label="Отзыв 1"></button><button class="" aria-label="Отзыв 2"></button><button class="" aria-label="Отзыв 3"></button></div>
-        <div class="rv-hint">Листайте →</div>
-      </div>
-      <iframe src="https://yandex.ru/map-widget/v1/?ll=37.711725%2C55.733701&z=16&pt=37.711725,55.733701,pm2rdm" width="100%" height="360" frameborder="0" style="border-radius:14px;border:1px solid var(--line)" loading="lazy" title="Сандов Фитнес на карте"></iframe>
-    </div>
-  </div>
+ <div class="wrap">
+ <span class="tag">Реальные отзывы</span>
+ <div class="proof-grid">
+ <div class="rv-carousel">
+ <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный зал! классные тренажеры (полная линейка) хожу и радуюсь каждой тренировке!»</p><div class="rv-author">Кирилл Эккердт, Яндекс Карты, июль 2026</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Шикарный клуб! Нравится атмосфера, располагающая под продуктивные тренировки. Небольшая загрузка, людей немного — комфортно!»</p><div class="rv-author">Андрей Некрасов, Яндекс Карты, декабрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Тренажёрный зал разделён на группы, кардио зона отдельно, единоборства отдельно. Оборудование исправно и в достаточном количестве.»</p><div class="rv-author">Владислав Кравченко, Яндекс Карты, октябрь 2025</div></div></div>
+ <div class="rv-dots"><button class="active" aria-label="Отзыв 1"></button><button class="" aria-label="Отзыв 2"></button><button class="" aria-label="Отзыв 3"></button></div>
+ <div class="rv-hint">Листайте →</div>
+</div>
+ <iframe src="https://yandex.ru/map-widget/v1/?ll=37.711725%2C55.733701&z=16&pt=37.711725,55.733701,pm2rdm" width="100%" height="360" frameborder="0" style="border-radius:14px;border:1px solid var(--line)" loading="lazy" title="Сандов Фитнес на карте"></iframe>
+</div>
+</div>
 </section>
 
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
-  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
-    <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
-  </div>
+ <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+ <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
+</div>
 </section>
 <footer>
-  <div class="wrap foot">
-    <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
-    <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
-  </div>
+ <div class="wrap foot">
+ <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
+ <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+</div>
 </footer>
 
 <script>
 (function(){
 function initQuickForms(){
-  document.querySelectorAll('.qform').forEach(function(form){
-    if (form.dataset.ready) return;
-    form.dataset.ready = '1';
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var input = form.querySelector('input[type=tel]');
-      var btn = form.querySelector('button');
-      var box = form.parentNode;
-      var ok = box.querySelector('.qform-ok');
-      var err = box.querySelector('.qform-err');
-      var digits = (input.value || '').replace(/\D/g, '');
-      if (digits.length < 10) {
-        if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
-        input.focus(); return;
-      }
-      if (err) err.style.display = 'none';
-      btn.disabled = true;
-      var was = btn.textContent;
-      btn.textContent = 'Отправляем…';
-      fetch('https://sandow-lead-bot.onrender.com/site-lead', {
-        method: 'POST', headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
-      }).then(function(r){ return r.json(); }).then(function(res){
-        if (res && res.ok) {
-          form.style.display = 'none';
-          if (ok) { ok.textContent = 'Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57'; ok.style.display = 'block'; }
-        } else { throw new Error('bad'); }
-      }).catch(function(){
-        btn.disabled = false; btn.textContent = was;
-        if (err) { err.innerHTML = 'Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>'; err.style.display = 'block'; }
-      });
-    });
-  });
+ document.querySelectorAll('.qform').forEach(function(form){
+ if (form.dataset.ready) return;
+ form.dataset.ready = '1';
+ form.addEventListener('submit', function(e){
+ e.preventDefault();
+ var input = form.querySelector('input[type=tel]');
+ var btn = form.querySelector('button');
+ var box = form.parentNode;
+ var ok = box.querySelector('.qform-ok');
+ var err = box.querySelector('.qform-err');
+ var digits = (input.value || '').replace(/\D/g, '');
+ if (digits.length < 10) {
+ if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
+ input.focus(); return;
+ }
+ if (err) err.style.display = 'none';
+ btn.disabled = true;
+ var was = btn.textContent;
+ btn.textContent = 'Отправляем…';
+ fetch('https://sandow-lead-bot.onrender.com/site-lead', {
+ method: 'POST', headers: {'Content-Type': 'application/json'},
+ body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
+ }).then(function(r){ return r.json(); }).then(function(res){
+ if (res && res.ok) {
+ form.style.display = 'none';
+ if (ok) { ok.textContent = 'Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57'; ok.style.display = 'block'; }
+ } else { throw new Error('bad'); }
+ }).catch(function(){
+ btn.disabled = false; btn.textContent = was;
+ if (err) { err.innerHTML = 'Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>'; err.style.display = 'block'; }
+ });
+ });
+ });
 }
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initQuickForms); }
 else { initQuickForms(); }
