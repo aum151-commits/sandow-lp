@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -561,6 +573,11 @@ if (document.readyState === 'loading') {
   <p>Столько экспертов сошлись на одном пункте, причём с первого круга обсуждения: <strong>растяжку не рекомендуется применять для изменения осанки</strong>. Панель отмечает, что изолированная растяжка на положение тела не повлияла, а сочетание укрепления и растяжки выглядело перспективнее. Оговорка: это согласованное мнение 20 специалистов из 12 стран, собранное методом Делфи, а не результат эксперимента.</p>
   <span class="cl-src">Warneke K. и соавт., Делфи-консенсус, «Journal of Sport and Health Science», 2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12305623/" target="_blank" rel="noopener nofollow">Читать консенсус</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Граница, которую в зале не переходят</h2>
 <p>Всё, что написано дальше, относится к здоровым людям без жалоб. Если есть боль, недавняя травма или поставленный врачом диагноз — сколиоз, кифоз, грыжа — программу согласуют с врачом и занимаются в рамках того, что он разрешил.</p>
@@ -701,6 +718,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
