@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -558,6 +570,11 @@ if (document.readyState === 'loading') {
 <p>Позиция ISSN описывает два пути. Быстрый — около 0,3 г на кг массы тела в сутки, разделённые на четыре приёма, на протяжении 5–7 дней, дальше 3–5 г для поддержания. Медленный — сразу 3–5 г в сутки: насыщение наступает в течение трёх-четырёх недель, но ранний эффект подтверждён хуже.</p>
 <p>После прекращения приёма запас возвращается к исходному уровню в течение 4–6 недель; падения ниже него в данных нет.</p>
 <p>Дальше начинается зона, где статья заканчивается: это цифры по группам здоровых людей. Подбор добавок под конкретного человека — с его лекарствами, состоянием почек, возрастом — зона врача или диетолога, а не тренера.</p>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Что известно о безопасности и кто это считал</h2>
 <p>Самый крупный разбор побочных эффектов вышел в 2025 году: 685 клинических испытаний, где 12 839 человек принимали креатин и 13 452 — плацебо. Средняя доза 0,166 г на кг массы тела в сутки, примерно 12,5 г; средняя длительность около 65 дней, отдельные наблюдения тянутся до 14 лет.</p>
@@ -700,6 +717,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
