@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -576,6 +588,11 @@ if (document.readyState === 'loading') {
   <p>Средняя активность широчайшей мышцы при тяге блока широким прямым и узким обратным хватом. Вывод авторов прямой: <strong>между вариантами хвата «очень мало различий»</strong>. Две оговорки: это тяга блока, а не штанги в наклоне, и активность мышцы на ЭМГ — не то же самое, что её рост.</p>
   <span class="cl-src">Lehman G.J. и соавт., «Dynamic Medicine», 2004. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC449729/" target="_blank" rel="noopener nofollow">Читать исследование</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Круглая спина и поясница: что известно на самом деле</h2>
 <p>Самое частое правило про эту тягу: спину держать прямой, поясницу не круглить никогда. Как установка оно удобно — удерживает новичка от веса, который тот не контролирует. Но доказанной истиной оно не является.</p>
@@ -693,6 +710,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
