@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -556,6 +568,11 @@ if (document.readyState === 'loading') {
   <p>Порог, за который позиция ACSM советует не выходить: задача питья на занятии — не допустить потери с потом больше 2% массы тела. Пить документ рекомендует начинать <strong>за несколько часов</strong> до нагрузки, а не залпом перед входом в зал. Оговорка: потоотделение и содержание электролитов в поту сильно различаются между людьми, поэтому план восполнения делают персональным.</p>
   <span class="cl-src">American College of Sports Medicine (Sawka M.N. и соавт.), позиция «Exercise and fluid replacement», «Medicine &amp; Science in Sports &amp; Exercise», 2007; 39(2):377–390. <a href="https://pubmed.ncbi.nlm.nih.gov/17277604/" target="_blank" rel="noopener nofollow">Читать позицию ACSM</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Когда воды становится слишком много</h2>
 <p>Обратную сторону темы обсуждают реже. Связанная с нагрузкой гипонатриемия — снижение натрия крови ниже 135 ммоль/л во время длительной активности или сразу после неё. Обзор 2017 года называет главной причиной питьё сверх жажды в сочетании с выбросом вазопрессина, не связанным с осмолярностью.</p>
@@ -698,6 +715,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
