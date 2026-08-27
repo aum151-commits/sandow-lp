@@ -378,6 +378,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -563,6 +575,11 @@ if (document.readyState === 'loading') {
   <p>Столько углеводов позиция ISSN рекомендует в первые 30 минут после нагрузки — но только когда быстрое восстановление гликогена действительно нужно, то есть <strong>до следующей нагрузки меньше четырёх часов</strong>. Дальше — столько же каждые два часа на протяжении четырёх-шести часов; альтернативная схема — 1,2 г/кг каждые полчаса на протяжении 3,5 часов. Это спортивный, а не общий сценарий: он рассчитан на двухразовые дни и соревновательный график.</p>
   <span class="cl-src">Kerksick C.M. и соавт., позиция Международного общества спортивного питания по времени приёма нутриентов, «Journal of the International Society of Sports Nutrition», 2017. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5596471/" target="_blank" rel="noopener nofollow">Читать позицию ISSN</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Что из этого следует по данным источников</h2>
 <p>Если убрать спешку, остаётся набор ориентиров. Все они взяты из перечисленных работ и не заменяют очной консультации специалиста по питанию.</p>
@@ -701,6 +718,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
