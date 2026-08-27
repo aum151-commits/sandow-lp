@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -558,6 +570,11 @@ if (document.readyState === 'loading') {
   <p>Настолько мышечная масса на растительном белке отстала от животного в мета-анализе 30 рандомизированных испытаний — небольшое преимущество животного. <strong>По силе и физической работоспособности разницы не нашли вовсе</strong>, соя и молочный белок оказались равны, а отставание дали рис, чиа, овёс и картофель.</p>
   <span class="cl-src">Reid-McCann R.J. и соавт., систематический обзор и мета-анализ, «Nutrition Reviews», 2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12166177/" target="_blank" rel="noopener nofollow">Читать обзор</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Порция: сколько и что в ней</h2>
 <p>Ориентир из позиции ISSN — 0,25 г высококачественного белка на кг массы тела за приём либо 20–40 г в абсолютных цифрах, при содержании лейцина от 700 до 3000 мг и полном наборе незаменимых аминокислот. Такие приёмы советуют распределять примерно каждые 3–4 часа.</p>
@@ -700,6 +717,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
