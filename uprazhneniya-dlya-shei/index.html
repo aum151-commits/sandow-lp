@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -558,6 +570,11 @@ if (document.readyState === 'loading') {
   <p>Столько людей суммарно охватили <strong>25 систематических обзоров</strong>, сведённых в один обзор обзоров по хронической боли в шее — боли длительностью от 12 недель. Сравнивались упражнения на моторный контроль, пилатес, силовая работа, традиционные китайские практики и йога. Против групп без упражнений все они дали краткосрочное улучшение по боли и ограничению функции: у моторного контроля SMD −1,69 (95% ДИ от −2,73 до −0,64), у йоги −1,32, у силовой работы −0,75, у китайских практик −0,63. Оговорки авторов: уверенность в данных от низкой до высокой, качество самих обзоров от критически низкого до высокого, а при сравнении видов упражнений между собой результаты противоречивы.</p>
   <span class="cl-src">Rasmussen-Barr E. и соавт., систематический обзор и мета-анализ систематических обзоров, «BMC Musculoskeletal Disorders», 2023. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10568903/" target="_blank" rel="noopener nofollow">Читать обзор</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Рабочее место и перерывы: чего от них ждать</h2>
 <p>Это та часть, которую можно менять самому, без назначений. Только ожидания стоит откалибровать: обзор Кокрейна по эргономическим вмешательствам у офисных работников собрал 15 рандомизированных испытаний и 2165 участников и не нашёл однозначно работающего решения.</p>
@@ -693,6 +710,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
