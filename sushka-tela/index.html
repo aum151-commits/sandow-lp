@@ -372,6 +372,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -557,6 +569,11 @@ if (document.readyState === 'loading') {
   <p>Доля жира по DXA у спортсменок фитнеса до диеты, к соревнованиям и после восстановительного периода длиной три-четыре месяца. За диету снизились лептин, Т3 и тестостерон (p менее 0,001) и эстрадиол (p менее 0,01); нерегулярные менструации отмечали 63% участниц диеты против 30% в контроле (p менее 0,05). После восстановления вес и большинство гормонов вернулись к исходным значениям, кроме Т3 и тестостерона. Оговорки: 27 женщин в группе диеты и 23 в контроле, все — соревнующиеся спортсменки с нормальным весом до диеты, большинство принимало контрацепцию с эстрогеном.</p>
   <span class="cl-src">Hulmi J.J. и соавт., «Frontiers in Physiology», 2016. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5222856/" target="_blank" rel="noopener nofollow">Читать работу</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Почему форма не держится</h2>
 <p>Возврат доли жира почти к исходной случился у людей, для которых подготовка — часть спорта, с планом и сопровождением. Похожее направление видно и в другой популяции: у участников телешоу с экстремальным снижением веса спустя шесть лет 14 обследованных вернули 41 кг из потерянных 58,3, а расход энергии в покое оставался ниже исходного на 704 ккал в сутки. Участники и масштаб там другие, переносить эти цифры на фитнес напрямую нельзя — но обе работы показывают одно: ответ организма на дефицит не заканчивается вместе с диетой.</p>
@@ -696,6 +713,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
