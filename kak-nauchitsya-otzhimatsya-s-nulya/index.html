@@ -360,6 +360,18 @@ table.cmp td{color:var(--muted)}
  .answer-first{font-size:17.5px}
 }
 
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -550,6 +562,11 @@ if (document.readyState === 'loading') {
   <p>Столько веса тела приходилось на руки в отжиманиях с колен — против <strong>70–76%</strong> в обычных. Замер вели на силовой платформе на разных углах сгибания локтя. Оговорки: 22 участника (18 мужчин и 4 женщины, средний возраст 28,4 года), замеряли разновидность push-up plus — отжимание с доводкой лопаток в конце движения. Это одно измерение на небольшой группе, а не норматив.</p>
   <span class="cl-src">San Juan J.G. и соавт., «BMC Musculoskeletal Disorders», 2015. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4327800/" target="_blank" rel="noopener nofollow">Читать исследование</a></span>
 </div>
+<div class="lead-form mid-cta">
+  <span class="tag">Не дочитывая до конца</span>
+  <h3>Быстрее спросить напрямую, чем гуглить дальше</h3>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+</div>
 
 <h2>Зачем отжимания, если вы не спортсмен</h2>
 <p>Упражнению не нужны ни зал, ни оборудование, и при этом через руки проходит 70–76% массы тела — удерживают этот вес грудь, трицепс и плечо, а корпус всё время держится в одной линии. Так что привычное «дома нечем нагрузить грудь» неверно. Прямого сравнения отжиманий от пола с жимом лёжа в наших источниках нет, поэтому «отжимание заменяет жим» мы не утверждаем.</p>
@@ -689,6 +706,8 @@ if (document.readyState === 'loading') {
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 
 </body>
 </html>
