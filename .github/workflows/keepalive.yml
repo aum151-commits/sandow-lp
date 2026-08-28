@@ -1,0 +1,23 @@
+# Будит бесплатные сервисы Render, чтобы клиент не ждал холодного старта.
+# Живёт в публичном репозитории: минуты GitHub Actions здесь не расходуются,
+# поэтому будильник не зависит ни от ноутбука, ни от лимита приватного репозитория.
+name: Будильник сервисов
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Разбудить лид-бота и приёмник заявок
+        run: |
+          for url in \
+            https://sandow-lead-bot.onrender.com/health \
+            https://sandow-voice-trainer.onrender.com/ \
+            https://sandow-wiki.onrender.com/ ; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 "$url" || echo timeout)
+            echo "$url -> $code"
+          done
