@@ -127,6 +127,18 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 .related-sec a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:12px;color:var(--ink);text-decoration:none;font-size:16px;line-height:1.45;transition:border-color .2s,color .2s}
 .related-sec a:hover{border-color:rgba(233,199,126,.5);color:var(--gold)}
 @media(min-width:760px){.related-sec ul{grid-template-columns:1fr 1fr}}
+
+/* ── прилипающая кнопка звонка на мобильном ── */
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{
+  display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
+ }
+ .sticky-call a{width:100%}
+}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -332,5 +344,7 @@ if (document.readyState === 'loading') { document.addEventListener('DOMContentLo
 else { initQuickForms(); }
 })();
 </script>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
 </body>
 </html>
