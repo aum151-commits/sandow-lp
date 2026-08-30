@@ -1,0 +1,124 @@
+# Сторож лид-бота «Сандов Фитнес».
+#
+# Зачем: заявки от клиентов приходят через @sandowclub_bot на бесплатный
+# Render. Будильник рядом (keepalive.yml) не даёт сервису уснуть, но если
+# бот всё-таки замолчал — потерянный вебхук, упавший сервис — этого никто
+# не замечал: заявки просто переставали доходить, молча.
+#
+# Что делает каждые 15 минут:
+#   1) проверяет /health лид-бота (три попытки — холодный старт не считается сбоем);
+#   2) сверяет адрес вебхука в Telegram с ожидаемым;
+#   3) если адрес слетел — ставит заново САМ и сообщает, что починил;
+#   4) если сервис не отвечает или копится очередь — пишет тревогу в личку.
+#
+# Живёт в публичном репозитории намеренно: здесь минуты Actions бесплатны,
+# поэтому сторож не зависит ни от ноутбука, ни от лимита приватного репо.
+# Секреты GitHub в логи не попадают и в форки не передаются; сам сторож
+# печатает только «ок» или «тревога», никаких данных клиентов.
+
+name: Сторож лид-бота
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Проверить бота и починить вебхук
+        env:
+          BOT: ${{ secrets.CLIENT_BOT_TOKEN }}
+          HOOK_SECRET: ${{ secrets.HOOK_SECRET }}
+          ALERT_BOT: ${{ secrets.ALERT_BOT_TOKEN }}
+          ALERT_CHAT: ${{ secrets.ALERT_CHAT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json, os, time, urllib.parse, urllib.request
+
+          BOT = os.environ["BOT"]
+          SECRET = os.environ["HOOK_SECRET"]
+          ALERT_BOT = os.environ["ALERT_BOT"]
+          ALERT_CHAT = os.environ["ALERT_CHAT"]
+
+          SERVICE = "https://sandow-lead-bot.onrender.com"
+          EXPECTED = f"{SERVICE}/tg/{SECRET}"
+
+          def get(url, timeout=95):
+              with urllib.request.urlopen(url, timeout=timeout) as r:
+                  return r.status, r.read().decode("utf-8", "replace")
+
+          def api(method, **params):
+              url = f"https://api.telegram.org/bot{BOT}/{method}"
+              if params:
+                  url += "?" + urllib.parse.urlencode(params)
+              return json.loads(get(url, 60)[1])
+
+          def alert(text):
+              # раз в час максимум: при долгом падении не звоним каждые 15 минут
+              if time.gmtime().tm_min >= 15:
+                  print("тревога подавлена (уже сообщали в этом часу):", text)
+                  return
+              data = urllib.parse.urlencode({"chat_id": ALERT_CHAT, "text": text}).encode()
+              urllib.request.urlopen(
+                  f"https://api.telegram.org/bot{ALERT_BOT}/sendMessage", data=data, timeout=60
+              )
+              print("тревога отправлена")
+
+          def notify(text):
+              data = urllib.parse.urlencode({"chat_id": ALERT_CHAT, "text": text}).encode()
+              urllib.request.urlopen(
+                  f"https://api.telegram.org/bot{ALERT_BOT}/sendMessage", data=data, timeout=60
+              )
+
+          # --- 1. жив ли сервис. Холодный старт занимает до минуты, поэтому три попытки
+          alive = False
+          for попытка in range(3):
+              try:
+                  code, _ = get(f"{SERVICE}/health")
+                  if code == 200:
+                      alive = True
+                      print(f"сервис отвечает (попытка {попытка + 1})")
+                      break
+                  print(f"попытка {попытка + 1}: код {code}")
+              except Exception as e:
+                  print(f"попытка {попытка + 1}: {type(e).__name__}")
+              time.sleep(20)
+
+          if not alive:
+              alert("Лид-бот не отвечает уже несколько минут.\n"
+                    "Клиенты, которые пишут боту, ответа не получают.\n"
+                    "Проверить: dashboard.render.com, сервис sandow-lead-bot.")
+
+          # --- 2. на месте ли вебхук
+          try:
+              info = api("getWebhookInfo").get("result", {})
+          except Exception as e:
+              print("не удалось спросить Telegram:", type(e).__name__)
+              raise SystemExit(0)
+
+          url = info.get("url") or ""
+          pending = info.get("pending_update_count", 0)
+          last_error = info.get("last_error_message")
+
+          print("адрес вебхука совпадает:", url == EXPECTED)
+          print("необработанных сообщений:", pending)
+          if last_error:
+              print("последняя ошибка Telegram:", last_error)
+
+          if url != EXPECTED:
+              r = api("setWebhook", url=EXPECTED, drop_pending_updates="false")
+              if r.get("ok"):
+                  notify("Вебхук лид-бота слетел — я вернул его на место.\n"
+                         "Заявки снова доходят. Так бывает после обновления бота.")
+                  print("вебхук восстановлен")
+              else:
+                  alert("Вебхук лид-бота слетел, и вернуть его не вышло:\n"
+                        f"{r.get('description')}\nЗаявки от клиентов сейчас НЕ доходят.")
+
+          # --- 3. очередь не должна копиться: значит бот не забирает сообщения
+          elif pending > 20:
+              alert(f"У лид-бота скопилось {pending} необработанных сообщений.\n"
+                    "Похоже, он получает заявки, но не отвечает на них.")
+          PY
