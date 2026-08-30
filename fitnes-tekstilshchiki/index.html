@@ -296,6 +296,17 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/111841988" style="position:absolute; left:-9999px;" alt=""></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<style>
+/* «Месяц перехода» — акция до 30.09.2026 */
+.transfer-sec{padding:64px 0;border-top:1px solid var(--line)}
+.transfer-card{position:relative;overflow:hidden;border:1px solid rgba(233,199,126,.4);border-radius:18px;padding:44px 40px;background:linear-gradient(170deg, rgba(36,26,11,.9), rgba(11,9,6,.75));box-shadow:0 0 40px rgba(233,199,126,.1)}
+.transfer-card::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(60% 90% at 85% 0%, rgba(233,199,126,.14), transparent 65%);pointer-events:none}
+.transfer-in{position:relative;z-index:1;max-width:660px}
+.transfer-card h2{margin:14px 0 14px}
+.transfer-btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+.transfer-note{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--muted);max-width:52ch}
+@media(max-width:600px){.transfer-sec{padding:48px 0}.transfer-card{padding:30px 22px}.transfer-btns .btn{flex:0 0 100%;width:100%;min-width:0;padding:16px 12px;font-size:12.5px;white-space:normal;line-height:1.4;flex-wrap:wrap;gap:4px 10px}}
+</style>
 </head>
 <body>
 
@@ -434,7 +445,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=tekstilshchiki" rel="noopener">Написать в Телеграм</a>
 </div>
  <div style="max-width:520px;margin:22px auto 0">
- <form class="qform" novalidate>
+ <form class="qform" id="zayavka" novalidate>
  <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
  <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
  <button class="btn btn-gold" type="submit">Жду звонка</button>
@@ -446,6 +457,23 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
  <div class="cta-gift">Новым гостям клуба дарим 72 часа в клубе</div>
 </div>
 </section>
+
+<!-- МЕСЯЦ ПЕРЕХОДА (акция до 30.09.2026) -->
+<section class="transfer-sec gridbg">
+ <div class="wrap">
+ <div class="transfer-card">
+ <div class="transfer-in">
+ <h2>Trade-in <span class="gold">абонемента</span></h2>
+ <p class="txt"><strong style="color:var(--ink)">Переходите из другого клуба?</strong> Покажите свою карту — добавим к абонементу Сандов Фитнес минимум месяц. Сколько именно — посчитаем по телефону, до визита.</p>
+ <div class="transfer-btns">
+ <a class="btn btn-gold" href="tel:+74957956957">Позвонить <span style="white-space:nowrap">+7 (495) 795-69-57</span></a><a class="btn btn-ghost" href="#zayavka">Оставить заявку</a>
+</div>
+ <div class="transfer-note">Позвоним, расскажем условия перехода и договоримся, когда вам удобно посмотреть клуб.</div>
+</div>
+</div>
+</div>
+</section>
+
 
 <!-- ВОПРОСЫ -->
 <section style="padding-top:70px">
@@ -497,6 +525,12 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true}
 </div>
 </section>
 
+<!-- КАК ПРОЙТИ -->
+<section style="border-top:1px solid var(--line);padding:22px 0">
+ <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
+ <strong style="color:var(--ink)">Как нас найти:</strong> от метро Нижегородская — около 12 минут пешком. Вход под чёрный козырёк «Сандов Фитнес», дальше налево и на 2-й этаж.
+</div>
+</section>
 <footer>
  <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
