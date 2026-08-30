@@ -1,0 +1,49 @@
+# Напоминания менеджерам перезвонить — очередь задач по звонкам.
+#
+# Переехало в публичный репозиторий: в приватном кончились бесплатные минуты
+# GitHub, задача не выполнялась с 25.08.2026. Код и очередь остаются в
+# приватном репозитории, берём их по токену и возвращаем обратно.
+name: Задачи по звонкам
+
+on:
+  schedule:
+    - cron: '*/10 7-18 * * *'
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и очередь из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Отправить созревшие задачи
+        working-directory: work
+        env:
+          CLIENT_BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
+          CALL_TASKS_CHAT: ${{ secrets.CALL_TASKS_CHAT }}
+        run: python send_call_tasks.py
+
+      - name: Вернуть очередь в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add data/call_tasks.json
+          git diff --staged --quiet || (
+            git commit -m "Задачи по звонкам: обновлена очередь" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
