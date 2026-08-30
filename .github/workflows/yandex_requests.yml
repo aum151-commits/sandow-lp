@@ -1,0 +1,62 @@
+# Заявки с карточки Яндекс.Бизнеса — забираем и отправляем менеджерам.
+#
+# Почему процесс живёт здесь, а не рядом с кодом: в приватном репозитории
+# закончились бесплатные минуты GitHub, и с 25.08.2026 задача не запускалась
+# ни разу — заявки клиентов не собирались пять суток. В публичном репозитории
+# минуты не расходуются вообще.
+#
+# Данные при этом наружу не уходят:
+#   * код и список уже отправленных заявок остаются в приватном репозитории —
+#     берём их по токену и туда же возвращаем;
+#   * номера заявок в лог не печатаются, только количество;
+#   * секреты GitHub в логах маскируются и в чужие копии не передаются.
+name: Заявки из карточки Яндекса
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+
+jobs:
+  requests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и состояние из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+          echo "код получен"
+
+      - name: Поставить зависимости
+        working-directory: work
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Забрать заявки
+        working-directory: work
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_ORDERS_GROUP: ${{ secrets.TELEGRAM_CHAT_ID_ORDERS_GROUP }}
+        run: python report_requests.py
+
+      - name: Вернуть список обработанных заявок в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add requests_state.json
+          git diff --staged --quiet || (
+            git commit -m "Список обработанных заявок" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
