@@ -1,0 +1,57 @@
+# Сводка конверсий отдела продаж — отправляется из облака.
+#
+# Считает конверсии компьютер Ольги: там записи звонков, транскрипты и
+# выгрузка 1С. Отправка вынесена в облако, чтобы отчёт выходил и при
+# выключенном ноутбуке — раньше в этом случае его просто не было.
+#
+# Живёт в публичном репозитории: в приватном кончились бесплатные минуты.
+# Цифры и журналы берутся из приватного репозитория по токену, в публичный
+# лог не печатается ничего, кроме служебных строк.
+#
+# Запуск каждый час намеренно: расписание GitHub опаздывает, поэтому окна
+# отправки широкие, а от повтора защищает отметка state_conversions.json.
+name: Конверсии отдела продаж
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять цифры из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Отправить сводку, если пришло время
+        working-directory: work
+        env:
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python report_conversions.py
+
+      - name: Запомнить, что сводка отправлена
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_conversions.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка отправленной сводки конверсий" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
