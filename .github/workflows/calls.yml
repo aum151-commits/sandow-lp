@@ -1,0 +1,56 @@
+# Отчёт о звонках: пропущенные и без ответа — в группу менеджеров.
+#
+# Живёт в публичном репозитории, потому что в приватном кончились бесплатные
+# минуты GitHub и с 25.08.2026 задача не запускалась ни разу. Код и состояние
+# остаются в приватном репозитории — берём их по токену и туда же возвращаем.
+# Телефоны в лог не печатаются: только последние четыре цифры.
+name: Отчёт о звонках
+
+on:
+  schedule:
+    - cron: '0,30 6-19 * * *'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Собрать отчёт
+        working-directory: work
+        env:
+          BEELINE_PBX_LOGIN: ${{ secrets.BEELINE_PBX_LOGIN }}
+          BEELINE_PBX_PASSWORD: ${{ secrets.BEELINE_PBX_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_ORDERS_GROUP: ${{ secrets.TELEGRAM_CHAT_ID_ORDERS_GROUP }}
+        run: python report_calls.py
+
+      - name: Вернуть отметку последнего звонка
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка последнего отправленного звонка" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
