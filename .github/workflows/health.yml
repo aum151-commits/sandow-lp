@@ -1,0 +1,56 @@
+# Health score новичков — еженедельный ранний сигнал оттока, из облака.
+#
+# Меньше четырёх визитов в первый месяц — ~80% вероятности не продлиться
+# (ABC Fitness), а продления — 60% выручки клуба. Отчёт по понедельникам
+# в «SF отчеты»: новички за 45 дней со светофором по «тишине» после покупки.
+#
+# Визиты по браслету автоматике недоступны (только в 1С) — отчёт честно
+# просит РОПа сверить красных по карточке клиента. Запуск каждый час в
+# понедельник: расписание GitHub опаздывает, окно держит state_health.json.
+# Телефоны — только в сообщение боту, в публичный лог — количества.
+name: Health score новичков
+
+on:
+  schedule:
+    - cron: '45 8-14 * * 1'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и журналы из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Посчитать и отправить
+        working-directory: work
+        env:
+          BEELINE_API_TOKEN: ${{ secrets.BEELINE_API_TOKEN }}
+          BEELINE_API_BASE_URL: ${{ secrets.BEELINE_API_BASE_URL }}
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python cloud_health.py
+
+      - name: Запомнить, что отправлено на этой неделе
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_health.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка health-отчёта" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
