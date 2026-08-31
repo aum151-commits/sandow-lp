@@ -1,0 +1,46 @@
+# Сторож облачных задач: замечает, что задача перестала работать.
+#
+# Повод: с 25.08.2026 задачи в приватном репозитории не запускались вовсе —
+# кончились бесплатные минуты GitHub. Пять суток не собирались заявки с
+# карточки Яндекса, и об этом не пришло ни одного сообщения.
+#
+# Живёт в публичном репозитории, поэтому не зависит ни от ноутбука, ни от
+# лимита минут — здесь они бесплатны. Состояние (о чём уже сообщали) хранится
+# рядом, персональных данных в нём нет.
+name: Сторож облачных задач
+
+on:
+  schedule:
+    - cron: '25 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install requests
+
+      - name: Проверить облачные задачи
+        env:
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          ALERT_BOT_TOKEN: ${{ secrets.ALERT_BOT_TOKEN }}
+          ALERT_CHAT_ID: ${{ secrets.ALERT_CHAT_ID }}
+        run: python guard_cloud_tasks.py
+
+      - name: Запомнить, о чём уже сообщили
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_cloud_guard.json
+          git diff --staged --quiet || git commit -m "Сторож задач: отметка отправленных тревог"
+          git push
