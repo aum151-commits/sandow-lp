@@ -1,0 +1,60 @@
+# Еженедельный трафик и статус рекламы — из облака. Тот же приём клонирования
+# приватного репозитория, что calls.yml/yandex_requests.yml (в приватном
+# sandow-automation кончились минуты GitHub Actions).
+name: Трафик — еженедельно
+
+on:
+  schedule:
+    - cron: '0 5-11 * * 1'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Отправить прямо сейчас, минуя проверку окна/дублей"
+        type: boolean
+        default: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Отправить отчёт, если пришло время
+        working-directory: work
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_OLGA: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          YANDEX_METRIKA_TOKEN: ${{ secrets.YANDEX_METRIKA_TOKEN }}
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          FORCE_SEND: ${{ github.event.inputs.force == 'true' && '1' || '' }}
+        run: python report_traffic_weekly.py
+
+      - name: Вернуть отметку в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_traffic_weekly.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка недельного трафик-отчёта" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
