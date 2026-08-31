@@ -315,7 +315,16 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  .logo-icon{height:12px}
  .head-phone{font-size:clamp(10px,3.4vw,13px)}
  .article-hero{padding:36px 0 28px}
- .article-hero h1{font-size:clamp(23px,7vw,30px)}
+ /* Заголовок на мобильном рвал длинные слова посередине: «ИССЛЕДОВАН/ИЙ»,
+    «КРУГЛОСУТОЧ/НЫЙ» — так было на половине статей, включая давно
+    опубликованные. Причины две: max-width:26ch сужал блок до 248px, а
+    кегль был велик для слов в 12–14 букв прописными. Перенос по слогам
+    (hyphens) здесь не спасает: text-transform:uppercase не даёт браузеру
+    применить словарь переносов. Поэтому блок расширен, а нижняя граница
+    кегля снижена ровно настолько, чтобы типичное длинное слово помещалось
+    в строку. */
+ .article-hero h1{font-size:clamp(21px,5.9vw,30px);max-width:none;
+   -webkit-hyphens:auto;hyphens:auto}
  .article-lead{font-size:16px}
  .article-body h2{font-size:clamp(19px,5.5vw,24px);margin-top:40px}
  .lead-form{padding:24px 20px}
