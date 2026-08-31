@@ -1,0 +1,88 @@
+# Кабинетные задачи: то, что раньше работало только на ноутбуке Ольги.
+#
+# Это задачи, которые ходят браузером в кабинеты Тильды, Яндекса и 2ГИС —
+# у этих сервисов нет открытых интерфейсов, данные забираются со страниц.
+# Раньше считалось, что перенести их нельзя. Можно: сессии кабинетов лежат
+# в секретах GitHub, браузер в облаке заходит уже авторизованным, и капча
+# не появляется — именно из-за неё 31.08 встало слежение за заявками.
+#
+# Код берём из приватного репозитория, туда же возвращаем состояние.
+# В публичный лог не печатается ничего, кроме служебных строк.
+name: Кабинетные задачи
+
+on:
+  schedule:
+    - cron: '0 5,8,11,14,17 * * *'    # 8, 11, 14, 17, 20 по Москве
+  workflow_dispatch:
+    inputs:
+      задача:
+        description: 'Какую задачу выполнить (все, заявки, отзывы, статистика)'
+        default: 'все'
+
+jobs:
+  cabinet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work/rpa
+        run: |
+          pip install requests playwright python-dotenv beautifulsoup4 openpyxl
+          playwright install --with-deps chromium
+
+      - name: Потерянные заявки (Тильда)
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          TILDA_STORAGE_STATE: ${{ secrets.TILDA_STORAGE_STATE }}
+          TILDA_LOGIN: ${{ secrets.TILDA_LOGIN }}
+          TILDA_PASSWORD: ${{ secrets.TILDA_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.lead_errors_watch
+
+      - name: Новые отзывы (Яндекс и 2ГИС)
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          GIS_STORAGE_STATE: ${{ secrets.GIS_STORAGE_STATE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.watch_new_reviews
+
+      - name: Снимок статистики карточки Яндекса
+        if: github.event.schedule == '0 17 * * *' || github.event_name == 'workflow_dispatch'
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.daily_snapshot
+
+      - name: Вернуть состояние в приватный репозиторий
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          # состояние задач: что уже отправлено, какие заявки видели
+          git add -A rpa/data 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Кабинетные задачи: обновлено состояние" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
