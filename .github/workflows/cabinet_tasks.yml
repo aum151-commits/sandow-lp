@@ -41,6 +41,35 @@ jobs:
           pip install requests playwright python-dotenv beautifulsoup4 openpyxl
           playwright install --with-deps chromium
 
+      - name: Разложить сессии кабинетов
+        working-directory: work/rpa
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          GIS_STORAGE_STATE: ${{ secrets.GIS_STORAGE_STATE }}
+          TILDA_STORAGE_STATE: ${{ secrets.TILDA_STORAGE_STATE }}
+        run: |
+          # Скрипты ждут сессии файлами в data/. В облаке файлов нет —
+          # раскладываем их из секретов один раз, до всех задач.
+          mkdir -p data
+          python - <<'PY'
+          import base64, os, pathlib
+          пары = {
+              "YANDEX_STORAGE_STATE": "data/storage_state.json",
+              "GIS_STORAGE_STATE": "data/2gis_storage_state.json",
+              "TILDA_STORAGE_STATE": "data/tilda_storage_state.json",
+          }
+          for ключ, файл in пары.items():
+              значение = os.environ.get(ключ, "").strip()
+              if not значение:
+                  print(f"{файл}: секрета нет")
+                  continue
+              данные = base64.b64decode(значение)
+              if not данные.lstrip().startswith(b"{"):
+                  данные = значение.encode("utf-8")
+              pathlib.Path(файл).write_bytes(данные)
+              print(f"{файл}: разложено, {len(данные)} байт")
+          PY
+
       - name: Потерянные заявки (Тильда)
         working-directory: work/rpa
         continue-on-error: true
