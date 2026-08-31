@@ -1,0 +1,57 @@
+# Второе касание и скорость ответа — ежедневный контроль из облака.
+#
+# По честному замеру отрасли (105 клубов, тайный покупатель, 2025) главная
+# течь — не скорость ответа, а то, что после первого разговора гостя бросают.
+# Первый же наш прогон подтвердил: 146 разговоров из 240 за неделю остались
+# без продолжения.
+#
+# Шлёт один блок в день в «SF отчеты» в утреннее окно (после 11:00 МСК,
+# к выходу РОПа). Запуск каждый час: расписание GitHub опаздывает, окно
+# держит state_followup.json. Телефоны — только в сообщение боту,
+# в публичный лог — одни количества.
+name: Второе касание
+
+on:
+  schedule:
+    - cron: '35 8-14 * * *'
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и журналы из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Посчитать и отправить
+        working-directory: work
+        env:
+          BEELINE_API_TOKEN: ${{ secrets.BEELINE_API_TOKEN }}
+          BEELINE_API_BASE_URL: ${{ secrets.BEELINE_API_BASE_URL }}
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python cloud_followup.py
+
+      - name: Запомнить, что отправлено сегодня
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_followup.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка отчёта второго касания" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
