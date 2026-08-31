@@ -1,0 +1,57 @@
+# Еженедельная сверка состава: менеджеры и тренеры.
+#
+# Зачем: по фамилиям из чата считается, кто продал и после чьей консультации
+# купили. Уволился человек или пришёл новый — его отметки тихо уходят в графу
+# «не указан» и портят статистику, а заметить это трудно.
+#
+# Работает в облаке, поэтому не зависит ни от ноутбука, ни от Claude.
+# Источник по менеджерам — 1С (там к каждому привязан телефон телефонии),
+# по тренерам — сайт клуба. Пока нет ключа внешнего приложения к 1С, шаг
+# по менеджерам честно пропускается, а не делает вид, что сверил.
+name: Сверка состава отдела
+
+on:
+  schedule:
+    - cron: '40 6 * * 1'    # понедельник, около 9:40 по Москве
+  workflow_dispatch:
+
+jobs:
+  staff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять текущий список из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Сверить состав
+        working-directory: work
+        env:
+          ALERT_BOT_TOKEN: ${{ secrets.ALERT_BOT_TOKEN }}
+          ALERT_CHAT_ID: ${{ secrets.ALERT_CHAT_ID }}
+          FITNESS_1C_LOGIN: ${{ secrets.FITNESS_1C_LOGIN }}
+          FITNESS_1C_PASSWORD: ${{ secrets.FITNESS_1C_PASSWORD }}
+          FITNESS_1C_APIKEY: ${{ secrets.FITNESS_1C_APIKEY }}
+        run: |
+          export СЕГОДНЯ=$(date +%Y-%m-%d)
+          python sync_staff.py
+
+      - name: Сохранить обновлённый список
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add data/staff/staff.json
+          git diff --staged --quiet || (
+            git commit -m "Сверка состава: список обновлён" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
