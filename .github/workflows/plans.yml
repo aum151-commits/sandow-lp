@@ -34,7 +34,7 @@ jobs:
       - name: Поставить зависимости
         working-directory: work
         run: |
-          pip install requests playwright openpyxl xlrd python-dotenv beautifulsoup4
+          pip install requests playwright openpyxl xlrd pandas python-dotenv beautifulsoup4
           playwright install --with-deps chromium
 
       - name: Сформировать и отправить планы
