@@ -1,0 +1,62 @@
+# Ежедневный трафик сайта/лендингов/карты — из облака, не зависит от
+# ноутбука и от Claude. Метрика — чистое API, браузер не нужен.
+#
+# Живёт здесь (публичный репозиторий), потому что в приватном sandow-automation
+# кончились бесплатные минуты GitHub Actions (см. calls.yml/yandex_requests.yml —
+# тот же приём). Код и состояние остаются в приватном репозитории — берём их
+# по токену и туда же возвращаем.
+#
+# Расписание GitHub опаздывает на часы, поэтому окно широкое (8-12 МСК),
+# сам скрипт решает, отправлять ли, и от повтора защищает state-файл.
+name: Трафик — ежедневно
+
+on:
+  schedule:
+    - cron: '15 5-9 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Отправить прямо сейчас, минуя проверку окна/дублей"
+        type: boolean
+        default: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        run: pip install requests
+
+      - name: Отправить отчёт, если пришло время
+        working-directory: work
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_OLGA: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          YANDEX_METRIKA_TOKEN: ${{ secrets.YANDEX_METRIKA_TOKEN }}
+          FORCE_SEND: ${{ github.event.inputs.force == 'true' && '1' || '' }}
+        run: python report_traffic_daily.py
+
+      - name: Вернуть отметку в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_traffic_daily.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка ежедневного трафик-отчёта" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
