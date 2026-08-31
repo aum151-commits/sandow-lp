@@ -1,0 +1,60 @@
+# Планы и просрочки менеджерам — теперь без ноутбука.
+#
+# Цепочка: администратор 1С присылает боту две выгрузки, сервер кладёт их в
+# очередь, а этот процесс скачивает файлы, формирует планы, делает PDF и
+# отправляет в группу менеджерам. Раньше три последних шага выполнялись
+# только на компьютере Ольги — значит выключенный ноутбук оставлял отдел
+# без планов.
+#
+# Запускается часто, потому что выгрузки приходят в разное время, а ждать
+# их полдня нельзя. Пока пришла только одна из двух — процесс тихо ждёт.
+name: Планы менеджерам
+
+on:
+  schedule:
+    - cron: '*/30 5-15 * * *'    # с 8 до 18 по Москве, каждые полчаса
+  workflow_dispatch:
+
+jobs:
+  plans:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и очередь
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work
+        run: |
+          pip install requests playwright openpyxl xlrd python-dotenv beautifulsoup4
+          playwright install --with-deps chromium
+
+      - name: Сформировать и отправить планы
+        working-directory: work
+        env:
+          INTAKE_BOT_TOKEN: ${{ secrets.INTAKE_BOT_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.INTAKE_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.PLANS_CHAT_ID }}
+        run: python plans/plans_cloud.py
+
+      - name: Запомнить обработанные выгрузки
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A data/intake 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Планы менеджерам: отмечены обработанные выгрузки" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
