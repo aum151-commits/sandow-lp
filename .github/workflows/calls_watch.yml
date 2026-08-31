@@ -1,0 +1,90 @@
+# Пропущенные звонки и ночной отчёт — то, что раньше жило на ноутбуке.
+#
+# Пропущенные проверяются часто: человек, которому не перезвонили, уходит
+# к соседям. Ночной отчёт — один раз утром, за период с 22:00 до 10:00.
+#
+# Обе задачи ходят в кабинет АТС Билайна браузером, поэтому им нужна
+# сохранённая сессия — она передана секретом.
+name: Звонки — пропущенные и ночные
+
+on:
+  schedule:
+    - cron: '*/30 7-19 * * *'   # каждые полчаса с 10:00 до 22:00 МСК
+    - cron: '10 7 * * *'        # 10:10 МСК — ночной отчёт
+  workflow_dispatch:
+
+jobs:
+  calls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work/rpa
+        run: |
+          pip install requests playwright python-dotenv openpyxl beautifulsoup4
+          playwright install --with-deps chromium
+
+      - name: Разложить сессию АТС
+        working-directory: work/rpa
+        env:
+          BEELINE_STORAGE_STATE: ${{ secrets.BEELINE_STORAGE_STATE }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import base64, os, pathlib
+          значение = os.environ.get("BEELINE_STORAGE_STATE", "").strip()
+          if значение:
+              данные = base64.b64decode(значение)
+              if not данные.lstrip().startswith(b"{"):
+                  данные = значение.encode("utf-8")
+              pathlib.Path("data/beeline_storage_state.json").write_bytes(данные)
+              print("сессия АТС разложена")
+          else:
+              print("сессии АТС нет — вход пойдёт по логину и паролю")
+          PY
+
+      - name: Пропущенные звонки
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          BEELINE_PBX_LOGIN: ${{ secrets.BEELINE_PBX_LOGIN }}
+          BEELINE_PBX_PASSWORD: ${{ secrets.BEELINE_PBX_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.missed_watch
+
+      - name: Ночной отчёт по звонкам
+        if: github.event.schedule == '10 7 * * *' || github.event_name == 'workflow_dispatch'
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          BEELINE_PBX_LOGIN: ${{ secrets.BEELINE_PBX_LOGIN }}
+          BEELINE_PBX_PASSWORD: ${{ secrets.BEELINE_PBX_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.night_calls_report
+
+      - name: Вернуть состояние
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A rpa/data 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Звонки: обновлено состояние" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
