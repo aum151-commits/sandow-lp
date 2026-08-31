@@ -1,0 +1,93 @@
+# Остальные задачи, переехавшие с ноутбука.
+#
+# Здесь собраны те, что раньше жили только на компьютере Ольги:
+# публикации в карточку Яндекса, сверка страниц с правилами клуба,
+# пропущенные звонки и ночной отчёт по звонкам.
+#
+# Каждая идёт своим шагом и не мешает соседям: упала одна — остальные
+# отработают (continue-on-error).
+name: Прочие задачи с ноутбука
+
+on:
+  schedule:
+    - cron: '20 6,9,12,15,18 * * *'   # 9:20, 12:20, 15:20, 18:20, 21:20 МСК
+  workflow_dispatch:
+
+jobs:
+  tasks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work/rpa
+        run: |
+          pip install requests playwright python-dotenv beautifulsoup4 openpyxl xlrd
+          playwright install --with-deps chromium
+
+      - name: Разложить сессии кабинетов
+        working-directory: work/rpa
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          GIS_STORAGE_STATE: ${{ secrets.GIS_STORAGE_STATE }}
+          BEELINE_STORAGE_STATE: ${{ secrets.BEELINE_STORAGE_STATE }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import base64, os, pathlib
+          пары = {
+              "YANDEX_STORAGE_STATE": "data/storage_state.json",
+              "GIS_STORAGE_STATE": "data/2gis_storage_state.json",
+              "BEELINE_STORAGE_STATE": "data/beeline_storage_state.json",
+          }
+          for ключ, файл in пары.items():
+              значение = os.environ.get(ключ, "").strip()
+              if not значение:
+                  continue
+              данные = base64.b64decode(значение)
+              if not данные.lstrip().startswith(b"{"):
+                  данные = значение.encode("utf-8")
+              pathlib.Path(файл).write_bytes(данные)
+              print(f"{файл}: разложено")
+          PY
+
+      - name: Сверка страниц с правилами клуба
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.compliance_scan
+
+      - name: Очередь публикаций в карточку
+        working-directory: work/rpa
+        continue-on-error: true
+        env:
+          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.publish_text
+
+      - name: Вернуть состояние
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A rpa/data rpa/logs 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Прочие задачи: обновлено состояние" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
