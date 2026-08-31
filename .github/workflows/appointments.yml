@@ -1,0 +1,61 @@
+# Назначенные встречи из звонков — считается в облаке.
+#
+# Последнее звено воронки, которое держало ноутбук: записи качались туда,
+# там расшифровывались и разбирались. При выключенном ноутбуке конверсия
+# «звонок → встреча назначена» просто не появлялась.
+#
+# Живёт в публичном репозитории: в приватном кончились бесплатные минуты.
+# Код и журнал — в приватном, сюда клонируются по токену. В публичный лог
+# печатаются только количества, телефоны и цитаты — никогда.
+#
+# Каждый час, потому что расписание GitHub опаздывает на часы: за прогон
+# берётся не больше 25 звонков, остаток догоняется следующим запуском.
+# Уже разобранные помнит processed_calls.json, повторно не платим.
+name: Встречи из звонков
+
+on:
+  schedule:
+    - cron: '25 * * * *'
+  workflow_dispatch:
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и журнал из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Разобрать свежие звонки
+        working-directory: work
+        env:
+          BEELINE_API_TOKEN: ${{ secrets.BEELINE_API_TOKEN }}
+          BEELINE_API_BASE_URL: ${{ secrets.BEELINE_API_BASE_URL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_ANALYSIS_MODEL: ${{ secrets.GROQ_ANALYSIS_MODEL }}
+          PAID_LLM_API_KEY: ${{ secrets.PAID_LLM_API_KEY }}
+          PAID_LLM_BASE_URL: ${{ secrets.PAID_LLM_BASE_URL }}
+        run: python cloud_appointments.py
+
+      - name: Вернуть журнал в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add data/conversions/appointments.jsonl data/conversions/processed_calls.json
+          git diff --staged --quiet || (
+            git commit -m "Назначенные встречи из звонков" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
