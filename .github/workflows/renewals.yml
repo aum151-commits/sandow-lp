@@ -1,0 +1,48 @@
+# Управленческий отчёт по звонкам в 13:00 и 17:00 — в группу «SF отчёты».
+#
+# Разбирает звонки за смену: действующие члены клуба, бывшие и новые
+# контакты, баллы по скрипту, сильные и слабые места. Это главная точка
+# контроля РОПа, и раньше отчёт выходил только при включённом ноутбуке.
+#
+# Расшифровка и разбор идут через Groq — из облака он доступен напрямую,
+# без ВПН, в отличие от запуска с компьютера в России.
+name: Отчёт по звонкам 13 и 17
+
+on:
+  schedule:
+    - cron: '5 10 * * *'    # 13:05 по Москве
+    - cron: '5 14 * * *'    # 17:05 по Москве
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work/calls
+        run: pip install requests xlrd openpyxl python-dotenv groq
+
+      - name: Собрать и отправить отчёт
+        working-directory: work/calls
+        env:
+          BEELINE_API_TOKEN: ${{ secrets.BEELINE_API_TOKEN }}
+          BEELINE_API_BASE_URL: ${{ secrets.BEELINE_API_BASE_URL }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_ANALYSIS_MODEL: ${{ secrets.GROQ_ANALYSIS_MODEL }}
+          PAID_LLM_API_KEY: ${{ secrets.PAID_LLM_API_KEY }}
+          PAID_LLM_BASE_URL: ${{ secrets.PAID_LLM_BASE_URL }}
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python daily_report_13_17.py
