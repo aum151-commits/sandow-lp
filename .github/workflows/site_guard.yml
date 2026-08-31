@@ -1,0 +1,56 @@
+# Охрана сайта и всех страниц клуба.
+#
+# Проверяет 53 посадочные страницы плюс всё из карты сайта: не вернулся ли
+# чужой контейнер аналитики, нет ли подключений к сторонним хранилищам
+# скриптов, признаков обфускации, чужих скриптов вне белого списка, а также
+# смотрит адрес главной и срок сертификата.
+#
+# Повод для существования: 13.08.2026 на сайте подменили доставку скриптов.
+# До сегодняшнего дня охрана держалась на компьютере Ольги и на облачной
+# задаче внутри Claude — то есть зависела и от ноутбука, и от ИИ. Здесь она
+# не зависит ни от того, ни от другого.
+name: Охрана сайта
+
+on:
+  schedule:
+    - cron: '40 */2 * * *'    # каждые два часа
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests python-dotenv
+
+      - name: Проверить страницы
+        working-directory: work/rpa
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.site_guard
+
+      - name: Запомнить состояние
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A rpa/logs 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Охрана сайта: состояние проверки" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
