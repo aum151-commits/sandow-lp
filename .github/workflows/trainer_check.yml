@@ -1,0 +1,38 @@
+# Ежедневная проверка голосового тренажёра: проходит всю цепочку и сообщает,
+# если она сломалась.
+#
+# Переехало в публичный репозиторий вслед за остальными: в приватном кончились
+# бесплатные минуты, проверка не выполнялась шесть суток. Код и звуковой образец
+# остаются в приватном репозитории, берём их по токену.
+name: Проверка голосового тренажёра
+
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Прогнать тренажёр
+        working-directory: work
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.ALERT_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.ALERT_CHAT_ID }}
+          TRAINER_BASIC: ${{ secrets.TRAINER_BASIC }}
+        run: python check_trainer.py
