@@ -10,8 +10,10 @@ name: Отчёт по звонкам 13 и 17
 
 on:
   schedule:
-    - cron: '5 10 * * *'    # 13:05 по Москве
-    - cron: '5 14 * * *'    # 17:05 по Москве
+    # Часто и с запасом: расписание в облаке опаздывает на часы, а отчёт
+    # привязан к окнам 13:00 и 17:00. Скрипт сам решает, его ли сейчас
+    # время, и дважды за окно не отправит — есть отметка.
+    - cron: '5 10-18 * * *'
   workflow_dispatch:
 
 jobs:
@@ -49,3 +51,17 @@ jobs:
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
         run: python daily_report_13_17.py
+
+      - name: Запомнить, что отчёт отправлен
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A calls/data 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Отчёт по звонкам: отметка отправки" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+          )
