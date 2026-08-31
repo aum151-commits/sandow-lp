@@ -56,5 +56,7 @@ jobs:
           git add state_traffic_weekly.json
           git diff --staged --quiet || (
             git commit -m "Отметка недельного трафик-отчёта" &&
-            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main ||
+            (git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+             git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main)
           )
