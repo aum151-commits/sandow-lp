@@ -40,7 +40,8 @@ jobs:
           FITNESS_1C_PASSWORD: ${{ secrets.FITNESS_1C_PASSWORD }}
           FITNESS_1C_APIKEY: ${{ secrets.FITNESS_1C_APIKEY }}
         run: |
-          export СЕГОДНЯ=$(date +%Y-%m-%d)
+          # имя переменной только латиницей: bash кириллицу за имя не считает
+          export TODAY=$(date +%Y-%m-%d)
           python sync_staff.py
 
       - name: Сохранить обновлённый список
