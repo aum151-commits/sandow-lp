@@ -32,7 +32,10 @@ jobs:
 
       - name: Поставить зависимости
         working-directory: work/calls
-        run: pip install requests xlrd openpyxl python-dotenv groq
+        run: |
+          # ffmpeg нужен pydub для работы с записями разговоров
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install requests xlrd openpyxl python-dotenv groq pydub
 
       - name: Собрать и отправить отчёт
         working-directory: work/calls
