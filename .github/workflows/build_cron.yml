@@ -1,0 +1,36 @@
+# Сборка образа будильника и отправка его в реестр GitHub.
+#
+# Зачем: у Render перестала работать связь с GitHub — сборка «из репозитория»
+# падает на всех сервисах клуба (проверено 02.09.2026 на четырёх сразу,
+# включая публичные). Готовый образ Render забирает из реестра напрямую,
+# и эта дорога от сломанной связи не зависит.
+name: Образ будильника
+
+on:
+  push:
+    paths:
+      - 'cron/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Войти в реестр GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Собрать и отправить
+        uses: docker/build-push-action@v6
+        with:
+          context: ./cron
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/sandow-cron:latest
