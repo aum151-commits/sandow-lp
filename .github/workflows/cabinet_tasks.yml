@@ -121,5 +121,11 @@ jobs:
           git add -A rpa/data 2>/dev/null || true
           git diff --staged --quiet || (
             git commit -m "Кабинетные задачи: обновлено состояние" &&
-            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            # Задачи идут одновременно и пишут состояние в один репозиторий.
+            # Кто пришёл вторым, получал отказ «fetch first» и терял свою
+            # запись — тогда следующий запуск слал те же уведомления заново.
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
+              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            )
           )
