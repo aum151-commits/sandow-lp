@@ -48,6 +48,7 @@ jobs:
           BEELINE_API_BASE_URL: ${{ secrets.BEELINE_API_BASE_URL }}
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
         run: python cloud_health.py
 
       - name: Запомнить, что отправлено на этой неделе
