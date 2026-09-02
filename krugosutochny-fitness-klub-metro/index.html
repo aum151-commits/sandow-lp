@@ -156,6 +156,16 @@ header{
  display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center;
  padding-bottom:64px;
 }
+/* На экране 360 первый экран вместе с кнопками срезало на 30px: слово
+   «КРУГЛОСУТОЧНЫЙ» в Unbounded 900 даёт min-content 370px, колонка
+   грида тянулась под него, а у html стоит overflow-x:clip — прокрутки
+   нет, лишнее просто обрезается. Лечит кегль поменьше на узких
+   экранах: слово встаёт целиком, без разрыва посередине.
+   min-width:0 живёт только в мобильном брейкпоинте (ниже, 960px): на
+   десктопе именно min-content-расширение колонки и держит слово целым,
+   и снятие его рвало заголовок уже на 1280–1440.
+   Найдено live-page-critic 02.09.2026, оба захода. */
+@media (max-width:400px){.hero h1{font-size:23px}}
 .hero .label{margin-bottom:18px}
 .hero h1{max-width:15ch;text-shadow:0 4px 40px rgba(0,0,0,.55)}
 .hero-sub{
@@ -390,6 +400,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 /* ---------- адаптив ---------- */
 @media (max-width:960px){
  .hero-grid{grid-template-columns:1fr;gap:36px}
+ .hero-grid > *{min-width:0}
  .dial-holder{order:-1}
  .dial{width:min(300px,72vw)}
  .hero{padding-top:110px}
@@ -525,12 +536,12 @@ if (document.readyState === 'loading') {
  <div class="hero-grid">
  <div>
  <span class="label">Круглосуточный фитнес-клуб · метро Нижегородская, выход на Рязанский проспект</span>
- <h1>24/7 — ваш зал <span class="gold">не спит</span>, даже когда спит весь город</h1>
- <p class="hero-sub">«Сандов Фитнес» работает круглосуточно, 365 дней в году — без выходных, праздников и перерывов. Тренируйтесь тогда, когда удобно вам, а не расписанию. Новым клиентам — бесплатная вводная тренировка: покажем зал в любое время суток.</p>
+ <h1>Круглосуточный фитнес-клуб, где <span class="gold">свободно</span> в любой час</h1>
+ <p class="hero-sub">2500 м² клуба: снаряды свободны даже в вечерний пик, ждать очереди не придётся. «Сандов Фитнес» работает круглосуточно, 365 дней в году — тренируйтесь тогда, когда удобно вам, а не расписанию. Новым клиентам — подарочная персональная тренировка: покажем зал в любое время суток.</p>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=noch" rel="noopener">Написать в Телеграм</a>
 </div>
- <div class="hero-note">Москва, Нижегородская ул., 29/33, стр. 3 — у метро Нижегородская и начала Новохохловской улицы, выход на Рязанский проспект</div>
+ <div class="hero-note">Москва, Нижегородская ул., 29/33, стр. 3</div>
 </div>
  <div class="dial-holder">
  <!-- 24-часовой циферблат -->
@@ -649,7 +660,7 @@ if (document.readyState === 'loading') {
  <div class="ccard">
  <svg class="ico" width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><rect x="3" y="12" width="28" height="14" rx="3" stroke="#E9C77E" stroke-width="1.4"/><path d="M8 12l3-6h12l3 6" stroke="#E9C77E" stroke-width="1.4"/><circle cx="10" cy="26" r="3" stroke="#E9C77E" stroke-width="1.4"/><circle cx="24" cy="26" r="3" stroke="#E9C77E" stroke-width="1.4"/></svg>
  <h3>Охраняемая парковка</h3>
- <p>Оставляйте машину рядом с клубом и идите тренироваться спокойно — такой парковки нет у клубов по соседству.</p>
+ <p>Оставляйте машину рядом с клубом и идите тренироваться спокойно — парковка охраняемая.</p>
  <span class="pill">Рядом с клубом</span>
 </div>
  <div class="ccard">
@@ -719,8 +730,8 @@ if (document.readyState === 'loading') {
  </svg>
  <div class="wrap">
  <span class="label">Первый шаг</span>
- <h2>Бесплатная вводная <span class="gold">тренировка</span></h2>
- <p>Запишитесь на бесплатную вводную тренировку — покажем клуб, сауну и парковку, расскажем, как устроен круглосуточный доступ, и подберём формат под ваши задачи.</p>
+ <h2>Подарочная персональная <span class="gold">тренировка</span></h2>
+ <p>Запишитесь на подарочную персональную тренировку — покажем клуб, сауну и парковку, расскажем, как устроен круглосуточный доступ, и подберём формат под ваши задачи.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Позвоните — или напишите, мы ответим</div>
  <div class="cta-btns">
@@ -756,6 +767,38 @@ if (document.readyState === 'loading') {
 
 
 <!-- ОТЗЫВЫ + КАРТА -->
+
+<!-- ЖИЗНЬ КЛУБА -->
+
+<style>
+.life-sec{padding:64px 0;border-top:1px solid var(--line,rgba(240,234,222,.13))}
+.life-sec .life-h{font-family:var(--head,'Unbounded',system-ui,sans-serif);
+ font-size:clamp(24px,3.4vw,40px);line-height:1.15;margin:12px 0 10px}
+.life-sec .life-lead{color:var(--muted,#B0AA9C);max-width:640px;margin:0 0 26px}
+.life-film{display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+.life-film figure{margin:0;border-radius:14px;overflow:hidden;
+ background:var(--card,#241A0B);border:1px solid var(--line,rgba(240,234,222,.13))}
+.life-film img{display:block;width:100%;height:210px;object-fit:cover}
+.life-film figcaption{padding:12px 14px 14px}
+.life-film b{display:block;font-size:15px;line-height:1.25;
+ color:var(--ink,#F0EADE)}
+.life-film span{display:block;margin-top:4px;font-size:13px;
+ color:var(--muted,#B0AA9C)}
+.life-note{margin:22px 0 0;color:var(--muted,#B0AA9C);max-width:760px}
+@media(max-width:900px){.life-film{grid-template-columns:repeat(2,1fr)}
+ .life-film img{height:190px}}
+@media(max-width:520px){.life-film{grid-template-columns:1fr}
+ .life-film img{height:220px}.life-sec{padding:48px 0}}
+</style>
+<section class="life-sec">
+ <div class="wrap">
+  <span class="tag">Жизнь клуба</span>
+  <h2 class="life-h">Здесь снимают кино и куют <span class="gold">чемпионов</span></h2>
+  <p class="life-lead">Федеральные телесъёмки, звёзды мировых единоборств и собственные турниры — это не декорации, а обычная жизнь клуба.</p>
+  <div class="life-film"><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg" alt="Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Джефф Монсон</b><span>открытый мастер-класс у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg" alt="Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Сериал ТНТ</b><span>съёмки в тренажёрном зале</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg" alt="Отар Кушанашвили в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Отар Кушанашвили</b><span>готовился к бою у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg" alt="Открытый турнир по бодибилдингу и бикини на площадке клуба" loading="lazy" width="1000" height="700"><figcaption><b>Открытый турнир</b><span>бодибилдинг и бикини</span></figcaption></figure></div>
+  <p class="life-note">Здесь же снимали программу «Адская кухня» телеканала ТНТ, а на нашем октагоне — бой проекта BODY MANIA, у которого 3,4 млн подписчиков.</p>
+ </div>
+</section>
 <section class="proof-sec">
  <div class="wrap">
  <span class="tag">Реальные отзывы</span>
