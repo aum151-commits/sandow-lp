@@ -30,25 +30,25 @@ jobs:
       fail-fast: false        # один сломанный сервис не должен ронять остальные
       matrix:
         include:
-          - имя: sandow-lead-bot
-            репо: sandow-lead-bot
-            запуск: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
-          - имя: sandow-wiki
-            репо: sandow-wiki
-            запуск: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
-          - имя: sandow-trener-hub
-            репо: sandow-trener-hub
-            запуск: uvicorn app:app --host 0.0.0.0 --port $PORT
-          - имя: sandow-voice-trainer
-            репо: sandow-voice-trainer
-            запуск: ''          # у тренажёра свой Dockerfile, свой не пишем
+          - name: sandow-lead-bot
+            repo: sandow-lead-bot
+            start: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          - name: sandow-wiki
+            repo: sandow-wiki
+            start: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          - name: sandow-trener-hub
+            repo: sandow-trener-hub
+            start: uvicorn app:app --host 0.0.0.0 --port $PORT
+          - name: sandow-voice-trainer
+            repo: sandow-voice-trainer
+            start: ''          # у тренажёра свой Dockerfile, свой не пишем
     steps:
       - name: Взять код сервиса
         env:
           TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: |
           git clone --depth 1 \
-            "https://x-access-token:${TOKEN}@github.com/aum151-commits/${{ matrix.репо }}.git" src
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/${{ matrix.repo }}.git" src
 
       - name: Написать Dockerfile, если своего нет
         run: |
@@ -64,7 +64,7 @@ jobs:
           COPY . .
           ENV PORT=10000
           DOCKER
-          echo 'CMD ${{ matrix.запуск }}' >> src/Dockerfile
+          echo 'CMD ${{ matrix.start }}' >> src/Dockerfile
           echo "--- получилось ---"
           cat src/Dockerfile
 
@@ -80,4 +80,4 @@ jobs:
         with:
           context: ./src
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.имя }}:latest
+          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.name }}:latest
