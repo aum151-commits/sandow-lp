@@ -159,6 +159,10 @@ def задачи() -> None:
             прогоны = requests.get(
                 f"https://api.github.com/repos/{репо}/actions/workflows/{wf['id']}/runs?per_page=6",
                 headers=ЗАГОЛОВКИ, timeout=40).json().get("workflow_runs", [])
+            # Идущие прямо сейчас прогоны ни о чём не говорят: у них ещё нет
+            # итога. Без этого проверка первым делом ругалась сама на себя —
+            # свой собственный запуск она видела как «ни одного успешного».
+            прогоны = [r for r in прогоны if r["conclusion"]]
             если_нет = сроки.get(wf["name"], по_умолчанию)
             успешные = [r for r in прогоны if r["conclusion"] == "success"]
             if not успешные:
