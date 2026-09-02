@@ -288,9 +288,14 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  body{padding-bottom:82px}
  .sticky-call{
   display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  /* Пока виден первый экран, кнопка убрана вниз: иначе она ложится
+     поверх кнопок первого экрана. Возвращает её скрипт в конце body. */
+  transform:translateY(115%);transition:transform .25s ease;
+  pointer-events:none;
   padding:14px 16px calc(14px + env(safe-area-inset-bottom));
   background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%);
  }
+ .sticky-call.is-on{transform:none;pointer-events:auto}
  .sticky-call a{width:100%}
 }
 .faq-sec{margin-top:54px;border-top:1px solid var(--line);padding-top:34px}.faq-item{border-bottom:1px solid var(--line);padding:18px 0}.faq-item:last-child{border-bottom:none}.faq-item h3{font-family:var(--body);font-weight:600;font-size:17px;color:var(--gold);margin-bottom:9px;line-height:1.45}.faq-item p{margin:0;color:var(--muted);font-size:16px;line-height:1.65}</style>
@@ -530,5 +535,18 @@ else { initQuickForms(); }
 </script>
 
 <div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
+<script>
+/* Прилипающую кнопку звонка показываем только после первого экрана —
+   на первом экране призыв и так есть, и кнопка накрывала бы его. */
+(function(){
+ var bar=document.querySelector('.sticky-call'),
+     hero=document.querySelector('.hero');
+ if(!bar) return;
+ if(!hero || !('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
+ new IntersectionObserver(function(e){
+  bar.classList.toggle('is-on', !e[0].isIntersecting);
+ },{threshold:0}).observe(hero);
+})();
+</script>
 </body>
 </html>
