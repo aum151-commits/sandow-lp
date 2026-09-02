@@ -135,7 +135,7 @@ header{
 }
 .hero-photo{
  position:absolute;inset:0;z-index:-2;
- background:url('oktagon-wide.jpg') center 42%/cover no-repeat;
+ background:url('oktagon-full.jpg') center 50%/cover no-repeat;
 }
 .hero-shade{
  position:absolute;inset:0;z-index:-1;
@@ -409,6 +409,30 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  .sticky-call.is-on{transform:none;pointer-events:auto}
  .sticky-call a{width:100%}
 }
+
+/* Первый экран на телефоне: фон приглушён, снимок показан отдельным
+   кадром между текстом и кнопками. Фоновая картинка на узком экране
+   обрезается в вертикальную полосу и тонет под затемнением, которое
+   нужно для читаемости текста, — от помещения остаётся фактура.
+   Отступы и кегли ужаты, кнопки в две колонки, чтобы в первый экран
+   попали и кадр, и оба призыва. Правка по замечанию Ольги 02.09.2026. */
+.hero-shot{display:none}
+@media(max-width:600px){
+ .hero{padding-top:84px}
+ .hero-photo{opacity:.3}
+ .hero h1{font-size:26px}
+ .hero .label{margin-bottom:10px;font-size:11px}
+ .hero-sub{margin:12px 0 14px;font-size:15.5px;line-height:1.5}
+ .hero-cta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .hero-cta .btn{padding:15px 10px;font-size:12px;white-space:normal}
+ .hero-shot{display:block;margin:14px 0 16px;
+  border:1px solid rgba(233,199,126,.35);border-radius:14px;overflow:hidden}
+ .hero-shot img{width:100%;aspect-ratio:16/9;max-height:26vh;
+  object-fit:cover;object-position:center 46%;display:block}
+ .hero-shot figcaption{font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;color:#B3AD9F;
+  padding:7px 12px;background:rgba(11,9,6,.75)}
+}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -500,6 +524,7 @@ if (document.readyState === 'loading') {
  <span class="label">Бойцовский клуб · Москва, Нижегородская / Авиамоторная</span>
  <h1>Бойцовский клуб, где тренируются <span class="gold" style="white-space:nowrap">по-настоящему</span></h1>
  <p class="hero-sub">Отдельное пространство 500 м² под единоборства: 7 мешков, сектор татами и настоящий октагон — снаряд свободен всегда, ждать не придётся. Первое занятие боксом — в подарок.</p>
+ <figure class="hero-shot"><img src="oktagon-full.jpg" alt="Октагон в бойцовском клубе «Сандов Фитнес»" loading="eager"><figcaption>Октагон · бойцовский клуб 500 м²</figcaption></figure>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=boec" rel="noopener">Написать в Телеграм</a>
 </div>
