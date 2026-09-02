@@ -32,3 +32,18 @@ jobs:
           url=https://sandow-lead-bot.onrender.com/health
           code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 "$url" || echo timeout)
           echo "$url -> $code"
+
+      # Запасной завод для будильника задач. Обычно он крутит себя сам:
+      # раз в несколько минут ходит запросом на собственный адрес, поэтому
+      # Render его не усыпляет. Но если цикл оборвётся (перезапуск платформы,
+      # сбой сети), разбудить его будет некому — вот этот шаг и разбудит.
+      # Сюда же приходит и точность: как только сервис ожил, расписание
+      # снова идёт по московскому времени, а не «когда GitHub соберётся».
+      - name: Разбудить будильник задач
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then echo "секрет не задан — пропускаю"; exit 0; fi
+          url="https://sandow-cron.onrender.com/cron/$CRON_SECRET"
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 "$url" || echo timeout)
+          echo "будильник задач -> $code"
