@@ -392,7 +392,7 @@ if (document.readyState === 'loading') {
 </ul>
 <div class="lead-form">
  <span class="tag">Хотите начать с нуля?</span>
- <h3>Напишите нам — расскажем расписание групп и запишем на бесплатное первое занятие.</h3>
+ <h3>Напишите нам — расскажем, как прийти. Кикбоксинг — по четвергам.</h3>
  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
@@ -409,7 +409,7 @@ if (document.readyState === 'loading') {
 <h2>С чего начать, если гибкости пока нет</h2>
 <p>Гибкость — не то, с чем приходят в единоборства, а то, что нарабатывается вместе с техникой. Не нужно уметь садиться на шпагат, чтобы записаться на первое занятие боксом или кикбоксингом — растяжка добавляется постепенно, по мере тренировок, и тренер подскажет упражнения под ваш текущий уровень подвижности.</p>
 <h2>Единоборства в «Сандов Фитнес»</h2>
-<p>Бойцовский клуб на 500 м² в составе клуба на 2500 м² — сектор татами, мешки, октагон для отработки техники бокса и кикбоксинга. Первое занятие бесплатно вне зависимости от текущего уровня подготовки и гибкости. Клуб работает круглосуточно, поэтому и растяжку, и основную тренировку можно поставить в удобное вам время.</p>
+<p>Бойцовский клуб на 500 м² в составе клуба на 2500 м² — сектор татами, мешки, октагон для отработки техники бокса и кикбоксинга. Кикбоксинг — по четвергам, вне зависимости от текущего уровня подготовки и гибкости. Клуб работает круглосуточно, поэтому и растяжку, и основную тренировку можно поставить в удобное вам время.</p>
 <h2>Итог</h2>
 <p>Гибкость в единоборствах работает не только на амплитуду удара ногой, но и на скорость, технику и снижение риска травм в целом — в боксе не меньше, чем в кикбоксинге. Начинать с растяжки «на уровне новичка» — нормально: она нарабатывается вместе с остальной техникой, а не является входным требованием.</p>
  <section class="faq-sec">
@@ -442,7 +442,7 @@ if (document.readyState === 'loading') {
  <div class="wrap">
  <span class="tag">Ваш выход</span>
  <h2>Хотите попробовать единоборства?</h2>
- <p>Позвоните — расскажем расписание групп и запишем на бесплатное первое занятие.</p>
+ <p>Позвоните — расскажем, как прийти. Кикбоксинг — по четвергам.</p>
  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
@@ -459,6 +459,38 @@ if (document.readyState === 'loading') {
 </main>
 
 <!-- ОТЗЫВЫ + КАРТА -->
+
+<!-- ЖИЗНЬ КЛУБА -->
+
+<style>
+.life-sec{padding:64px 0;border-top:1px solid var(--line,rgba(240,234,222,.13))}
+.life-sec .life-h{font-family:var(--head,'Unbounded',system-ui,sans-serif);
+ font-size:clamp(24px,3.4vw,40px);line-height:1.15;margin:12px 0 10px}
+.life-sec .life-lead{color:var(--muted,#B0AA9C);max-width:640px;margin:0 0 26px}
+.life-film{display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+.life-film figure{margin:0;border-radius:14px;overflow:hidden;
+ background:var(--card,#241A0B);border:1px solid var(--line,rgba(240,234,222,.13))}
+.life-film img{display:block;width:100%;height:210px;object-fit:cover}
+.life-film figcaption{padding:12px 14px 14px}
+.life-film b{display:block;font-size:15px;line-height:1.25;
+ color:var(--ink,#F0EADE)}
+.life-film span{display:block;margin-top:4px;font-size:13px;
+ color:var(--muted,#B0AA9C)}
+.life-note{margin:22px 0 0;color:var(--muted,#B0AA9C);max-width:760px}
+@media(max-width:900px){.life-film{grid-template-columns:repeat(2,1fr)}
+ .life-film img{height:190px}}
+@media(max-width:520px){.life-film{grid-template-columns:1fr}
+ .life-film img{height:220px}.life-sec{padding:48px 0}}
+</style>
+<section class="life-sec">
+ <div class="wrap">
+  <span class="tag">Жизнь клуба</span>
+  <h2 class="life-h">Здесь снимают кино и куют <span class="gold">чемпионов</span></h2>
+  <p class="life-lead">Федеральные телесъёмки, звёзды мировых единоборств и собственные турниры — это не декорации, а обычная жизнь клуба.</p>
+  <div class="life-film"><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg" alt="Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Джефф Монсон</b><span>открытый мастер-класс у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg" alt="Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Сериал ТНТ</b><span>съёмки в тренажёрном зале</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg" alt="Отар Кушанашвили в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Отар Кушанашвили</b><span>готовился к бою у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg" alt="Открытый турнир по бодибилдингу и бикини на площадке клуба" loading="lazy" width="1000" height="700"><figcaption><b>Открытый турнир</b><span>бодибилдинг и бикини</span></figcaption></figure></div>
+  <p class="life-note">Здесь же снимали программу «Адская кухня» телеканала ТНТ, а на нашем октагоне — бой проекта BODY MANIA, у которого 3,4 млн подписчиков.</p>
+ </div>
+</section>
 <section class="proof-sec">
  <div class="wrap">
  <span class="tag">Реальные отзывы</span>
