@@ -1,0 +1,41 @@
+# Общая проверка автоматики клуба — та, что смотрит на результат.
+#
+# Сторож облачных задач проверяет, завершилась ли задача успешно. Этого мало:
+# 02.09.2026 проверка пропущенных звонков полсуток завершалась успешно и при
+# этом ничего не отправляла. Здесь проверяется другое — живы ли сервисы,
+# доходят ли сообщения ботам, остались ли свежие следы настоящей работы.
+#
+# Отчёт приходит Ольге в личку: утром «всё работает» либо список того, что
+# сломалось, человеческими словами.
+name: Проверка автоматики
+
+on:
+  schedule:
+    - cron: '40 6 * * *'      # запасное время; обычно запускает будильник задач
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install requests
+
+      - name: Проверить всё
+        env:
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          ALERT_BOT_TOKEN: ${{ secrets.ALERT_BOT_TOKEN }}
+          ALERT_CHAT_ID: ${{ secrets.ALERT_CHAT_ID }}
+          CLIENT_BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: python check_all.py
