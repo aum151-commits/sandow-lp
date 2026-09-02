@@ -145,7 +145,7 @@ header{
 .hero-visual{
  position:absolute;inset:0 0 0 auto;z-index:-2;
  width:60%;
- background:url('combat-wide.jpg') 60% 45%/cover no-repeat;
+ background:url('bags-hero.jpg') center 50%/cover no-repeat;
  clip-path:polygon(30% 0, 100% 0, 100% 100%, 0 100%);
 }
 .hero-visual::after{
@@ -452,6 +452,30 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  .sticky-call.is-on{transform:none;pointer-events:auto}
  .sticky-call a{width:100%}
 }
+
+/* Первый экран на телефоне: фон приглушён, снимок показан отдельным
+   кадром между текстом и кнопками. Фоновая картинка на узком экране
+   обрезается в вертикальную полосу и тонет под затемнением, которое
+   нужно для читаемости текста. Отступы и кегли ужаты, кнопки в две
+   колонки, чтобы в первый экран попали и кадр, и оба призыва.
+   Правка по замечанию Ольги 02.09.2026. */
+.hero-shot{display:none}
+@media(max-width:600px){
+ .hero{padding-top:84px}
+ .hero-photo{opacity:.3}
+ .hero h1{font-size:26px}
+ .hero .label{margin-bottom:10px;font-size:11px}
+ .hero-sub{margin:12px 0 14px;font-size:15.5px;line-height:1.5}
+ .hero-cta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .hero-cta .btn{padding:15px 10px;font-size:12px;white-space:normal}
+ .hero-shot{display:block;margin:14px 0 16px;
+  border:1px solid rgba(233,199,126,.35);border-radius:14px;overflow:hidden}
+ .hero-shot img{width:100%;aspect-ratio:16/9;max-height:26vh;
+  object-fit:cover;object-position:center 52%;display:block}
+ .hero-shot figcaption{font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;color:#B3AD9F;
+  padding:7px 12px;background:rgba(11,9,6,.75)}
+}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -542,6 +566,7 @@ if (document.readyState === 'loading') {
  <span class="label">Кикбоксинг · Москва, Нижегородская / Волгоградский проспект</span>
  <h1>Кикбоксинг в Москве — <span class="hit">по четвергам</span> и персонально</h1>
  <p class="hero-sub">Кикбоксинг по четвергам и персональные тренировки в отдельном бойцовском клубе 500 м². От первого удара до спаррингов — в своём темпе, семь мешков свободны. <b>Приходить можно одному или с друзьями.</b></p>
+ <figure class="hero-shot"><img src="bags-hero.jpg" alt="Ударная зона бойцовского клуба «Сандов Фитнес»: мешки и груша" loading="eager"><figcaption>Ударная зона · 7 мешков и груша</figcaption></figure>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Телеграм</a>
 </div>
