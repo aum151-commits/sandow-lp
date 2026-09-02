@@ -78,7 +78,10 @@ jobs:
         run: python -m src.rpa.missed_watch
 
       - name: Ночной отчёт по звонкам
-        if: github.event.schedule == '10 7 * * *' || github.event_name == 'workflow_dispatch'
+        # Только по расписанию, ровно один раз в сутки. Ручной запуск сюда
+        # больше не заходит: 02.09.2026 перезапуск задачи отправил ночной
+        # отчёт в чат заявок повторно и засорил его.
+        if: github.event.schedule == '10 7 * * *'
         working-directory: work/rpa
         continue-on-error: true
         env:
