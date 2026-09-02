@@ -1,0 +1,83 @@
+# Сборка образов всех сервисов клуба.
+#
+# Зачем. У Render 02.09.2026 отвалилась связь с GitHub: сборка «из
+# репозитория» падает на всех сервисах разом, включая публичные, которые
+# спокойно клонируются анонимно откуда угодно. Работающие версии живы, но
+# выложить новый код было нечем ни на один сервис.
+#
+# Готовый образ Render забирает из реестра напрямую — эта дорога от связи
+# с GitHub не зависит вообще. Собираем здесь, в открытом репозитории, где
+# минуты не расходуются, а закрытые репозитории берём по токену.
+#
+# Раз в сутки — чтобы правки доезжали сами, даже если некому нажать кнопку.
+name: Образы сервисов
+
+on:
+  schedule:
+    - cron: '30 1 * * *'      # ночью, когда никто не работает
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false        # один сломанный сервис не должен ронять остальные
+      matrix:
+        include:
+          - имя: sandow-lead-bot
+            репо: sandow-lead-bot
+            запуск: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          - имя: sandow-wiki
+            репо: sandow-wiki
+            запуск: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          - имя: sandow-trener-hub
+            репо: sandow-trener-hub
+            запуск: uvicorn app:app --host 0.0.0.0 --port $PORT
+          - имя: sandow-voice-trainer
+            репо: sandow-voice-trainer
+            запуск: ''          # у тренажёра свой Dockerfile, свой не пишем
+    steps:
+      - name: Взять код сервиса
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/${{ matrix.репо }}.git" src
+
+      - name: Написать Dockerfile, если своего нет
+        run: |
+          if [ -f src/Dockerfile ]; then
+            echo "у сервиса свой Dockerfile — берём его"
+            exit 0
+          fi
+          cat > src/Dockerfile <<'DOCKER'
+          FROM python:3.12-slim
+          WORKDIR /app
+          COPY requirements.txt .
+          RUN pip install --no-cache-dir -r requirements.txt
+          COPY . .
+          ENV PORT=10000
+          DOCKER
+          echo 'CMD ${{ matrix.запуск }}' >> src/Dockerfile
+          echo "--- получилось ---"
+          cat src/Dockerfile
+
+      - name: Войти в реестр GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Собрать и отправить
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.имя }}:latest
