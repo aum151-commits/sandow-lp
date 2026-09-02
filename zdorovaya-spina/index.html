@@ -478,7 +478,7 @@ if (document.readyState === 'loading') {
  <div>
  <span class="tag">Москва · групповые программы</span>
  <h1>«Здоровая спина» — в расписании <span class="gold">групповых программ</span></h1>
- <p class="hero-sub">Программа «Здоровая спина» входит в расписание групповых программ клуба «Сандов Фитнес» — это часть абонемента, отдельно оплачивать занятия не нужно. Мягкая нагрузка, работа с осанкой и гибкостью, светлый зал с зеркалами во всю стену. Новым клиентам — бесплатная вводная тренировка: покажем зал и расскажем про расписание.</p>
+ <p class="hero-sub">Программа «Здоровая спина» входит в расписание групповых программ клуба «Сандов Фитнес» — это часть абонемента, отдельно оплачивать занятия не нужно. Мягкая нагрузка, работа с осанкой и гибкостью, светлый зал с зеркалами во всю стену — и достаточно места, чтобы разложиться. Новым клиентам — подарочная персональная тренировка: покажем зал и расскажем про расписание.</p>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=spina" rel="noopener">Написать в Телеграм</a>
 </div>
@@ -567,7 +567,7 @@ if (document.readyState === 'loading') {
  <ul class="facts">
  <li><span class="n">2500 м²</span><span><b>Клуб целиком</b> — тренажёрный зал, 3 зала групповых программ, бойцовский клуб, сауна.</span></li>
  <li><span class="n">24/7</span><span><b>Круглосуточный доступ</b> для членов клуба — групповые занятия идут по расписанию, уточните у нас по телефону.</span></li>
- <li><span class="n">парковка</span><span><b>Охраняемая парковка</b> рядом с клубом — такой нет у соседних клубов.</span></li>
+ <li><span class="n">парковка</span><span><b>Охраняемая парковка</b> рядом с клубом.</span></li>
  </ul>
 </div>
  <div class="photocard">
@@ -601,8 +601,8 @@ if (document.readyState === 'loading') {
  <div class="cta-grid" aria-hidden="true"></div>
  <div class="wrap">
  <span class="tag">Первый шаг</span>
- <h2>Бесплатная вводная <span class="gold">тренировка</span></h2>
- <p>Запишитесь на бесплатную вводную тренировку — покажем зал, расскажем про расписание групповых занятий и подберём формат под ваши задачи на встрече.</p>
+ <h2>Подарочная персональная <span class="gold">тренировка</span></h2>
+ <p>Запишитесь на подарочную персональную тренировку — покажем зал, расскажем про расписание групповых занятий и подберём формат под ваши задачи на встрече.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Москва, Нижегородская ул., 29/33, стр. 3 — рядом станции Нижегородская и Текстильщики</div>
  <div class="cta-btns">
@@ -638,6 +638,38 @@ if (document.readyState === 'loading') {
 
 
 <!-- ОТЗЫВЫ + КАРТА -->
+
+<!-- ЖИЗНЬ КЛУБА -->
+
+<style>
+.life-sec{padding:64px 0;border-top:1px solid var(--line,rgba(240,234,222,.13))}
+.life-sec .life-h{font-family:var(--head,'Unbounded',system-ui,sans-serif);
+ font-size:clamp(24px,3.4vw,40px);line-height:1.15;margin:12px 0 10px}
+.life-sec .life-lead{color:var(--muted,#B0AA9C);max-width:640px;margin:0 0 26px}
+.life-film{display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+.life-film figure{margin:0;border-radius:14px;overflow:hidden;
+ background:var(--card,#241A0B);border:1px solid var(--line,rgba(240,234,222,.13))}
+.life-film img{display:block;width:100%;height:210px;object-fit:cover}
+.life-film figcaption{padding:12px 14px 14px}
+.life-film b{display:block;font-size:15px;line-height:1.25;
+ color:var(--ink,#F0EADE)}
+.life-film span{display:block;margin-top:4px;font-size:13px;
+ color:var(--muted,#B0AA9C)}
+.life-note{margin:22px 0 0;color:var(--muted,#B0AA9C);max-width:760px}
+@media(max-width:900px){.life-film{grid-template-columns:repeat(2,1fr)}
+ .life-film img{height:190px}}
+@media(max-width:520px){.life-film{grid-template-columns:1fr}
+ .life-film img{height:220px}.life-sec{padding:48px 0}}
+</style>
+<section class="life-sec">
+ <div class="wrap">
+  <span class="tag">Жизнь клуба</span>
+  <h2 class="life-h">Здесь снимают кино и куют <span class="gold">чемпионов</span></h2>
+  <p class="life-lead">Федеральные телесъёмки, звёзды мировых единоборств и собственные турниры — это не декорации, а обычная жизнь клуба.</p>
+  <div class="life-film"><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg" alt="Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Джефф Монсон</b><span>открытый мастер-класс у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg" alt="Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Сериал ТНТ</b><span>съёмки в тренажёрном зале</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg" alt="Отар Кушанашвили в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Отар Кушанашвили</b><span>готовился к бою у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg" alt="Открытый турнир по бодибилдингу и бикини на площадке клуба" loading="lazy" width="1000" height="700"><figcaption><b>Открытый турнир</b><span>бодибилдинг и бикини</span></figcaption></figure></div>
+  <p class="life-note">Здесь же снимали программу «Адская кухня» телеканала ТНТ, а на нашем октагоне — бой проекта BODY MANIA, у которого 3,4 млн подписчиков.</p>
+ </div>
+</section>
 <section class="proof-sec">
  <div class="wrap">
  <span class="tag">Реальные отзывы</span>
