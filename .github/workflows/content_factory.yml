@@ -1,0 +1,69 @@
+# Контент-завод: пакет тем и готовых текстов на неделю.
+#
+# Раз в неделю собирает десять тем из живых отзывов клуба и фактов профиля:
+# пять без съёмки (выпускать сразу) и пять «одним заходом» — они снимаются
+# подряд за двадцать минут, одним человеком, с телефона. Такое деление не
+# от лени: отдельного человека на съёмку у клуба нет, тренеров и координатора
+# зала просят как услугу (Ольга, 03.09.2026).
+#
+# Ничего не публикует. Пакет уходит Ольге в личку на «да» — публикация без
+# её слова запрещена правилом клуба.
+#
+# Четверг выбран намеренно: к выходным есть что снять, а к понедельнику —
+# что публиковать.
+name: Контент-завод
+
+on:
+  schedule:
+    - cron: '0 9 * * 4'      # четверг, 12:00 по Москве
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  content:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        run: pip install requests
+
+      - name: Собрать пакет
+        working-directory: work/rpa
+        env:
+          PAID_LLM_API_KEY: ${{ secrets.PAID_LLM_API_KEY }}
+          PAID_LLM_BASE_URL: ${{ secrets.PAID_LLM_BASE_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
+          TELEGRAM_CHAT_ID_OLGA: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+        run: python -m src.content.content_factory
+
+      - name: Сохранить пакет в историю
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A rpa/data/content_packs 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Контент-завод: пакет на неделю" &&
+            # Задачи идут одновременно и пишут в один репозиторий; кто пришёл
+            # вторым, получал отказ «fetch first» и терял свою запись.
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
+              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            )
+          )
