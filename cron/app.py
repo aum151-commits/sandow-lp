@@ -96,11 +96,10 @@ def _работа(имена):
         try:
             # Имя может нести свой репозиторий через «@»: утренняя сводка и
             # маркетинг-дайджест живут в sandow-automation, а не в sandow-lp.
-            где, _, файл = имя.rpartition("@")
-            репозиторий = где.rstrip("@") or РЕПО
-            если_файл = файл or имя
+            файл, _, где = имя.partition("@")
+            репозиторий = где or РЕПО
             о = requests.post(
-                f"https://api.github.com/repos/{репозиторий}/actions/workflows/{если_файл}/dispatches",
+                f"https://api.github.com/repos/{репозиторий}/actions/workflows/{файл}/dispatches",
                 headers={"Authorization": f"Bearer {ТОКЕН}",
                          "Accept": "application/vnd.github+json"},
                 json={"ref": "main"}, timeout=40)
