@@ -1,0 +1,33 @@
+# Разовая задача: отправить письмо в поддержку Тильды (X-Frame-Options).
+# Причина запуска из облака: SMTP-порты Яндекса с ноутбука закрыты (ВПН),
+# а раннеры GitHub шлют без ограничений. Задача Ольги 13.09: «письмо сам отправь».
+name: Письмо Тильде про вебвизор
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Отправить письмо
+        env:
+          LOGIN: ${{ secrets.MAIL_SANDOW_LOGIN }}
+          PASSWORD: ${{ secrets.MAIL_SANDOW_APP_PASSWORD }}
+        shell: python
+        run: |
+          import os, smtplib
+          from email.mime.text import MIMEText
+          from email.header import Header
+          import base64
+          тело = base64.b64decode("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1IQoK0J/RgNC+0LXQutGCOiBzYW5kb3dmaXRuZXNzLnJ1ICjQsNC60LrQsNGD0L3RgiDQotC40LvRjNC00Ysg4oCUINGN0YLQvtGCINCw0LTRgNC10YEg0L/QvtGH0YLRiykuCgrQn9GA0L7RgdC40Lwg0L7RgtC60LvRjtGH0LjRgtGMINC00LvRjyDQvdCw0YjQtdCz0L4g0YHQsNC50YLQsCDQt9Cw0LPQvtC70L7QstC+0LogWC1GcmFtZS1PcHRpb25zOiBTQU1FT1JJR0lOCtC70LjQsdC+INCy0L3QtdGB0YLQuCDQsiDQuNGB0LrQu9GO0YfQtdC90LjRjyDQtNC+0LzQtdC90Ysg0K/QvdC00LXQutGBLtCc0LXRgtGA0LjQutC4ICh3ZWJ2aXNvci5jb20sCm1ldHJpa2EueWFuZGV4LnJ1LCBtZXRyaWNhLnlhbmRleC5jb20pLgoK0J/RgNC40YfQuNC90LA6INCy0LjQt9GD0LDQu9GM0L3Ri9C1INC+0YLRh9GR0YLRiyDQr9C90LTQtdC60YEu0JzQtdGC0YDQuNC60Lgg4oCUINCS0LXQsdCy0LjQt9C+0YAsINC60LDRgNGC0LAg0LrQu9C40LrQvtCyLCDQutCw0YDRgtCwCtGB0LrRgNC+0LvQu9C40L3Qs9CwLCDQsNC90LDQu9C40YLQuNC60LAg0YTQvtGA0Lwg4oCUINC+0YLQutGA0YvQstCw0Y7RgiDRgdGC0YDQsNC90LjRhtGLINGB0LDQudGC0LAg0LLQvdGD0YLRgNC4INGE0YDQtdC50LzQsCDQvdCwINGB0LLQvtGR0LwK0LTQvtC80LXQvdC1LiDQodC10LnRh9Cw0YEg0YHQtdGA0LLQtdGAINC+0YLQstC10YfQsNC10YIg0LfQsNCz0L7Qu9C+0LLQutC+0LwgWC1GcmFtZS1PcHRpb25zOiBTQU1FT1JJR0lOLCDQuCDQstGB0LUK0Y3RgtC4INC+0YLRh9GR0YLRiyDQstGL0LTQsNGO0YIg0L7RiNC40LHQutGDIMKr0J3QtdCy0L7Qt9C80L7QttC90L4g0LLQvtGB0L/RgNC+0LjQt9Cy0LXRgdGC0Lgg0L/QvtGB0LXRidC10L3QuNC14oCmINC30LDQv9GA0LXRgiDQvdCwCtC+0YLQvtCx0YDQsNC20LXQvdC40LUg0YHRgtGA0LDQvdC40YbRiyDQstC+INGE0YDQtdC50LzQtcK7LiDQkiDQvdCw0YHRgtGA0L7QudC60LDRhSDQu9C40YfQvdC+0LPQviDQutCw0LHQuNC90LXRgtCwINCi0LjQu9GM0LTRiwrRg9C/0YDQsNCy0LvQtdC90LjRjyDRjdGC0LjQvCDQt9Cw0LPQvtC70L7QstC60L7QvCDQvNGLINC90LUg0L3QsNGI0LvQuC4KCtCh0YfRkdGC0YfQuNC6INCc0LXRgtGA0LjQutC4IOKEliAxMTE0Mzg2MzMg0YPRgdGC0LDQvdC+0LLQu9C10L0g0L3QsCDRgdCw0LnRgtC1INGI0YLQsNGC0L3Qviwg0LLQvtC/0YDQvtGBINGC0L7Qu9GM0LrQvgrQsiDQt9Cw0LPQvtC70L7QstC60LUg0L7RgtCy0LXRgtCwINGB0LXRgNCy0LXRgNCwLgoK0JXRgdC70Lgg0L/QvtC70L3QvtC1INC+0YLQutC70Y7Rh9C10L3QuNC1INC90LXQstC+0LfQvNC+0LbQvdC+LCDQv9C+0LTRgdC60LDQttC40YLQtSwg0L/QvtC20LDQu9GD0LnRgdGC0LAsINC/0L7QtNC00LXRgNC20LjQstCw0LXQvNGL0LkK0YHQv9C+0YHQvtCxINGA0LDQt9GA0LXRiNC40YLRjCDQstGB0YLRgNCw0LjQstCw0L3QuNC1INC00LvRjyDQtNC+0LzQtdC90L7QsiDQnNC10YLRgNC40LrQuC4KCtCh0L/QsNGB0LjQsdC+IQotLQrQpNC40YLQvdC10YEt0LrQu9GD0LEgwqvQodCw0L3QtNC+0LIg0KTQuNGC0L3QtdGBwrssIHNhbmRvd2ZpdG5lc3MucnU=").decode("utf-8")
+          msg = MIMEText(тело, "plain", "utf-8")
+          msg["Subject"] = Header('X-Frame-Options мешает Вебвизору Метрики — просим отключить для sandowfitness.ru', "utf-8")
+          msg["From"] = os.environ["LOGIN"]
+          msg["To"] = "help@tilda.cc"
+          s = smtplib.SMTP_SSL("smtp.yandex.ru", 465, timeout=60)
+          s.login(os.environ["LOGIN"], os.environ["PASSWORD"])
+          s.sendmail(os.environ["LOGIN"], ["help@tilda.cc"], msg.as_string())
+          s.quit()
+          print("отправлено")
