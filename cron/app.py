@@ -94,8 +94,13 @@ def _слот(шаг, сейчас):
 def _работа(имена):
     for имя in имена:
         try:
+            # Имя может нести свой репозиторий через «@»: утренняя сводка и
+            # маркетинг-дайджест живут в sandow-automation, а не в sandow-lp.
+            где, _, файл = имя.rpartition("@")
+            репозиторий = где.rstrip("@") or РЕПО
+            если_файл = файл or имя
             о = requests.post(
-                f"https://api.github.com/repos/{РЕПО}/actions/workflows/{имя}/dispatches",
+                f"https://api.github.com/repos/{репозиторий}/actions/workflows/{если_файл}/dispatches",
                 headers={"Authorization": f"Bearer {ТОКЕН}",
                          "Accept": "application/vnd.github+json"},
                 json={"ref": "main"}, timeout=40)
