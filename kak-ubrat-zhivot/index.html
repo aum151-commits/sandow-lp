@@ -735,7 +735,7 @@ if (document.readyState === 'loading') {
     (замечание Ольги 14.09: «четыре кнопки — перебор»). */
  var bar=document.querySelector('.sticky-call'),
      hero=document.querySelector('.hero'),
-     cta=document.querySelector('.cta-form');
+     cta=document.querySelector('.cta-form, section.cta');
  if(!bar) return;
  if(!('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
  var heroVisible=false, ctaVisible=false;
