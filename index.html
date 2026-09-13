@@ -61,6 +61,24 @@ main{flex:1;padding:36px 0 24px}
 footer{border-top:1px solid var(--line);padding:28px 0 40px;text-align:center}
 .phone{font-family:var(--head);font-weight:700;font-size:clamp(1.15rem,4vw,1.6rem);text-decoration:none}
 .addr{color:var(--muted);margin-top:10px;font-size:.95rem}
+.cta-home{border-top:1px solid var(--line);padding:44px 0 10px;text-align:center}
+.cta-home h2{font-family:var(--head);font-weight:700;font-size:clamp(1.15rem,3.4vw,1.6rem);margin-bottom:10px}
+.cta-home p{color:var(--muted);max-width:56ch;margin:0 auto}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;font-weight:600;text-decoration:none;font-size:.98rem}
+.btn-gold{background:var(--gold);color:#0B0906}
+.btn-ghost{border:1px solid rgba(233,199,126,.55);color:var(--gold)}
+.qform{display:flex;gap:10px;margin:20px auto 0;max-width:520px;flex-wrap:wrap;align-items:center;justify-content:center}
+.qform input[type=tel]{flex:1 1 220px;min-width:0;background:rgba(11,9,6,.6);border:1px solid rgba(233,199,126,.4);border-radius:999px;padding:14px 20px;color:var(--ink);font-family:var(--body);font-size:16px;outline:none}
+.qform input[type=tel]::placeholder{color:var(--muted)}
+.qform input[type=tel]:focus{border-color:var(--gold)}
+.qform button{flex:0 0 auto;border:0;cursor:pointer;font-family:var(--body)}
+.qform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.qform-note{margin:10px auto 0;font-size:12.5px;line-height:1.5;color:var(--muted);max-width:520px}
+.qform-ok{margin-top:12px;font-size:15px;color:var(--gold);display:none}
+.qform-err{margin-top:10px;font-size:14px;color:#E38B7B;display:none}
+@media(max-width:600px){.qform input[type=tel]{flex:1 1 100%}.qform button{width:100%}}
+
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -107,6 +125,26 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
     </a>
   </div>
 </main>
+
+<!-- CTA-БЛОК ГЛАВНОЙ (добавлен 13.09.2026 по задаче «максимальная лидогенерация»:
+     единственная страница lp без формы; тексты — дословно из одобренного
+     пакета статей 13.09, оффер синхронизирован с карточкой и сайтом) -->
+<section class="cta-home">
+ <div class="wrap">
+  <h2>С чего начать?</h2>
+  <p>Дарим 5 персональных тренировок: разберём вашу цель и составим план под ваш уровень. Позвоните или напишите в Телеграм — подберём удобное время.</p>
+  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=lp_home" rel="noopener">Написать в Телеграм</a></div>
+  <form class="qform" novalidate>
+   <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
+   <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+   <button class="btn btn-gold" type="submit">Жду звонка</button>
+  </form>
+  <div class="qform-err" role="alert"></div>
+  <div class="qform-ok" role="status"></div>
+  <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
+ </div>
+</section>
+
 <!-- TRADE-IN АБОНЕМЕНТА (вставка штаба 31.08, согласовано Ольгой) -->
 <section style="border-top:1px solid var(--line);padding:26px 0">
  <div class="wrap" style="font-size:15px;line-height:1.65;color:var(--muted)">
@@ -118,5 +156,42 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
   <a class="phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
   <p class="addr">Москва, Нижегородская ул., 29/33, стр. 3 · <a href="https://sandowfitness.ru">sandowfitness.ru</a></p>
 </footer>
+
+<script>
+/* Отправка короткой формы — тот же канал, что на всех лендингах */
+(function(){
+ var form=document.querySelector('.qform');
+ if(!form) return;
+ form.addEventListener('submit', function(e){
+  e.preventDefault();
+  var input=form.querySelector('input[type=tel]');
+  var btn=form.querySelector('button');
+  var box=form.parentNode;
+  var ok=box.querySelector('.qform-ok');
+  var err=box.querySelector('.qform-err');
+  var digits=(input.value||'').replace(/\D/g,'');
+  if(digits.length<10){
+   if(err){err.textContent='Проверьте номер — нужно 10 цифр.';err.style.display='block';}
+   input.focus();return;
+  }
+  if(err) err.style.display='none';
+  btn.disabled=true;
+  var was=btn.textContent;
+  btn.textContent='Отправляем…';
+  fetch('https://sandow-lead-bot.onrender.com/site-lead',{
+   method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({phone:input.value,company:(form.querySelector('.hp')||{}).value||'',page:location.pathname})
+  }).then(function(r){return r.json();}).then(function(res){
+   if(res&&res.ok){
+    form.style.display='none';
+    if(ok){ok.textContent='Записали номер — перезвоним. Если удобнее сейчас: +7 (495) 795-69-57';ok.style.display='block';}
+   }else{throw new Error('bad');}
+  }).catch(function(){
+   btn.disabled=false;btn.textContent=was;
+   if(err){err.innerHTML='Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>';err.style.display='block';}
+  });
+ });
+})();
+</script>
 </body>
 </html>
