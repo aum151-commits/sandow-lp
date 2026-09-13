@@ -60,10 +60,10 @@
  "@type": "FAQPage",
  "mainEntity": [
  {"@type":"Question","name":"Где находится клуб?","acceptedAnswer":{"@type":"Answer","text":"«Сандов Фитнес» — Москва, Нижегородская улица, 29/33, стр. 3. От Текстильщиков это одна станция Большой кольцевой линии до Нижегородской, у клуба охраняемая парковка."}},
- {"@type":"Question","name":"У клуба есть парковка?","acceptedAnswer":{"@type":"Answer","text":"Да, у клуба охраняемая парковка при бизнес-центре. Как ей пользоваться, расскажем по телефону."}},
+ {"@type":"Question","name":"У клуба есть парковка?","acceptedAnswer":{"@type":"Answer","text":"Да, у клуба охраняемая парковка при бизнес-центре."}},
  {"@type":"Question","name":"Есть ли бассейн?","acceptedAnswer":{"@type":"Answer","text":"Бассейна в клубе нет, клуб «сухой». Взамен — 2500 м² без очередей, круглосуточный доступ у членов клуба, бойцовский клуб с татами, октагоном и мешками для самостоятельных тренировок, финская сауна в абонементе, полотенца и питьевая вода без доплат."}},
  {"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},
- {"@type":"Question","name":"Можно сначала просто посмотреть клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Дарим 5 персональных тренировок: позанимайтесь в зале и сходите в сауну."}}
+ {"@type":"Question","name":"Можно сначала просто посмотреть клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. И дарим 5 персональных тренировок."}}
  ]
 }
 </script>
@@ -135,20 +135,6 @@ header.site-header{border-bottom:1px solid var(--line);padding:20px 0;position:r
 .hero-shot-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 14px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--ink);background:linear-gradient(to top, rgba(11,9,6,.92), rgba(11,9,6,0))}
 
 /* схема перегона */
-.routecard{border:1px solid rgba(233,199,126,.3);border-radius:20px;background:linear-gradient(170deg, rgba(23,19,16,.95), rgba(13,15,23,.88));padding:26px 24px 22px;box-shadow:0 26px 70px rgba(0,0,0,.5)}
-.routecard .rc-cap{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--bronze);margin-bottom:18px}
-.rc-line{display:flex;align-items:flex-start;gap:0;margin-bottom:20px}
-.rc-stop{flex:1 1 0;min-width:0;text-align:center;position:relative}
-.rc-stop::before{content:"";position:absolute;top:7px;left:50%;width:100%;height:2px;background:linear-gradient(90deg,var(--gold),rgba(233,199,126,.25))}
-.rc-stop:last-child::before{display:none}
-.rc-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--gold);background:var(--bg);margin:0 auto 12px;position:relative;z-index:2}
-.rc-stop.is-club .rc-dot{background:var(--gold);box-shadow:0 0 18px rgba(233,199,126,.7)}
-.rc-name{font-family:var(--head);font-weight:700;font-size:13px;text-transform:uppercase;line-height:1.3;color:var(--ink);overflow-wrap:break-word}
-.rc-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
-.rc-rows{border-top:1px solid var(--line)}
-.rc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px;color:var(--muted)}
-.rc-row b{font-family:var(--mono);color:var(--gold);font-size:15px;white-space:nowrap}
-.rc-foot{margin-top:14px;font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--muted);letter-spacing:.02em}
 
 section{padding:82px 0}
 .sec-head{max-width:780px}
@@ -263,9 +249,6 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  .nums{grid-template-columns:1fr 1fr;gap:12px}
  .gal-grid{grid-template-columns:1fr;gap:14px}
  .gal-card img{height:225px}
- .routecard{padding:22px 18px 20px}
- .rc-name{font-size:11.5px}
- .rc-sub{font-size:10px}
  .honest{padding:22px 20px}
  .cta{padding:66px 0 74px}
  .cta-phone{font-size:clamp(19px,6.4vw,30px)}
@@ -317,7 +300,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 <noscript><div><img src="https://mc.yandex.ru/watch/111841988" style="position:absolute; left:-9999px;" alt=""></div></noscript>
 <!-- /Yandex.Metrika counter -->
 <style>
-/* «Месяц перехода» — акция до 30.09.2026 */
+/* Trade-in абонемента — оффер без срока */
 .transfer-sec{padding:64px 0;border-top:1px solid var(--line)}
 .transfer-card{position:relative;overflow:hidden;border:1px solid rgba(233,199,126,.4);border-radius:18px;padding:44px 40px;background:linear-gradient(170deg, rgba(36,26,11,.9), rgba(11,9,6,.75));box-shadow:0 0 40px rgba(233,199,126,.1)}
 .transfer-card::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(60% 90% at 85% 0%, rgba(233,199,126,.14), transparent 65%);pointer-events:none}
@@ -347,7 +330,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <p class="hero-sub">2500 м² клуба на Нижегородской: тренажёрный зал 1100 м², бойцовский клуб, три зала групповых программ и финская сауна. Снаряды свободны даже в вечерний пик. Охраняемая парковка, работаем круглосуточно.</p>
  <div class="offer">
  <div class="offer-big">5 персональных тренировок — в подарок</div>
- <div class="offer-sub">Дарим 5 персональных тренировок: позанимайтесь с тренером и решайте спокойно. Позвоните — договоримся о визите.</div>
+ <div class="offer-sub">Дарим 5 персональных тренировок — получайте и забирайте. Позвоните: договоримся о визите.</div>
 </div>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=tekstilshchiki" rel="noopener">Написать в Телеграм</a>
@@ -419,7 +402,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <div class="icard">
  <svg class="ico" width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M11.5 6.5h8.5a6 6 0 0 1 6 6v6.5a5 5 0 0 1-5 5h-8a5 5 0 0 1-5-5v-2.5" stroke="#E9C77E" stroke-width="1.4" stroke-linejoin="round"/><path d="M11.5 6.5A3.5 3.5 0 0 0 8 10v2.5A2.5 2.5 0 0 0 10.5 15h1.5" stroke="#E9C77E" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 15h12" stroke="#E9C77E" stroke-width="1.4" stroke-linecap="round"/><path d="M11.5 24v3.5h11V24" stroke="#E9C77E" stroke-width="1.4" stroke-linejoin="round"/></svg>
  <h3>Бойцовский клуб 500 м²</h3>
- <p>Отдельная зона под единоборства: татами, октагон и мешки. Бокс и кикбоксинг с тренером, а ещё самостоятельные тренировки: приходить можно одному или с друзьями, кикбоксинг — по четвергам.</p>
+ <p>Отдельная зона под единоборства: татами, октагон и мешки. Бокс и кикбоксинг с тренером — кикбоксинг группой по четвергам. А ещё самостоятельные тренировки: приходить можно одному или с друзьями.</p>
  <span class="pill">Отдельная зона</span>
 </div>
  <div class="icard">
@@ -458,7 +441,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <div class="wrap">
  <span class="label">Первый шаг</span>
  <h2>Позвоните — <span class="gold">подарим 5 персональных тренировок</span></h2>
- <p>Дарим 5 персональных тренировок: позанимайтесь с тренером, сходите в сауну — подберём формат под ваши задачи. Стоимость считаем при встрече, под ваш запрос — есть рассрочка и разбивка платежей.</p>
+ <p>Дарим 5 персональных тренировок. Стоимость считаем при встрече, под ваш запрос — есть рассрочка и разбивка платежей.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Позвоните — или оставьте номер, перезвоним</div>
  <div class="cta-btns">
@@ -479,7 +462,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </div>
 </section>
 
-<!-- МЕСЯЦ ПЕРЕХОДА (акция до 30.09.2026) -->
+<!-- TRADE-IN АБОНЕМЕНТА -->
 <section class="transfer-sec gridbg">
  <div class="wrap">
  <div class="transfer-card">
@@ -507,7 +490,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </div>
  <div class="faq-item">
  <h3>У клуба есть парковка?</h3>
- <p>Да, у клуба охраняемая парковка при бизнес-центре. Как ей пользоваться, расскажем по телефону.</p>
+ <p>Да, у клуба охраняемая парковка при бизнес-центре.</p>
 </div>
  <div class="faq-item">
  <h3>Есть ли бассейн?</h3>
@@ -519,7 +502,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </div>
  <div class="faq-item">
  <h3>Можно сначала просто посмотреть клуб?</h3>
- <p>Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Дарим 5 персональных тренировок: позанимайтесь в зале и сходите в сауну.</p>
+ <p>Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. И дарим 5 персональных тренировок.</p>
 </div>
 </div>
 </section>
@@ -574,7 +557,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 <!-- ГЕО: РЯДОМ С НАМИ -->
 <section style="border-top:1px solid var(--line);padding:22px 0">
  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
- <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
+ <strong>Рядом с нами:</strong> метро Нижегородская, Текстильщики, Печатники, Авиамоторная, Таганская, Волгоградский проспект, Рязанский проспект; местность Карачарово; Новохохловская улица; исторический район Хохловка.
 </div>
 </section>
 
@@ -664,8 +647,7 @@ else { boot(); }
    на первом экране призыв и так есть, и кнопка накрывала бы его. */
 (function(){
  /* Прячем панель и на первом экране, и когда виден блок с формой —
-    иначе на экране формы оказывались две одинаковые кнопки звонка
-    (замечание Ольги 14.09: «четыре кнопки — перебор»). */
+    иначе на экране формы оказывались две одинаковые кнопки звонка. */
  var bar=document.querySelector('.sticky-call'),
      hero=document.querySelector('.hero'),
      cta=document.querySelector('.cta-form, section.cta');
