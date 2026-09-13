@@ -25,9 +25,9 @@ jobs:
           msg = MIMEText(тело, "plain", "utf-8")
           msg["Subject"] = Header('X-Frame-Options мешает Вебвизору Метрики — просим отключить для sandowfitness.ru', "utf-8")
           msg["From"] = os.environ["LOGIN"]
-          msg["To"] = "help@tilda.cc"
+          msg["To"] = "team@tilda.cc"
           s = smtplib.SMTP_SSL("smtp.yandex.ru", 465, timeout=60)
           s.login(os.environ["LOGIN"], os.environ["PASSWORD"])
-          s.sendmail(os.environ["LOGIN"], ["help@tilda.cc"], msg.as_string())
+          s.sendmail(os.environ["LOGIN"], ["team@tilda.cc"], msg.as_string())
           s.quit()
           print("отправлено")
