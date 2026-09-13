@@ -591,11 +591,12 @@ if (document.readyState === 'loading') {
   <span class="tag">Хотите понять, что менять в тренировках?</span>
   <h3>Позвоните или напишите нам в Телеграм — подберём удобное время. Дарим 5 персональных тренировок.</h3>
   <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
-  <form class="qform" novalidate>
+  <div class="qform-note" style="font-size:14.5px;color:var(--ink);margin-bottom:4px">Перезвоним, подберём удобное время и дадим рекомендации по тренировкам под вашу цель.</div>
+   <form class="qform" novalidate>
     <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel"
            inputmode="tel" aria-label="Ваш телефон">
     <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button class="btn btn-gold" type="submit">Жду звонка</button>
+    <button class="btn btn-gold" type="submit">Получить рекомендации</button>
   </form>
   <div class="qform-err" role="alert"></div>
   <div class="qform-ok" role="status"></div>
@@ -677,7 +678,7 @@ if (document.readyState === 'loading') {
  <form class="qform" novalidate>
  <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
  <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
- <button class="btn btn-gold" type="submit">Жду звонка</button>
+ <button class="btn btn-gold" type="submit">Получить рекомендации</button>
  </form>
  <div class="qform-err" role="alert"></div>
  <div class="qform-ok" role="status"></div>
@@ -714,12 +715,6 @@ if (document.readyState === 'loading') {
  <div class="wrap" style="font-size:15px;line-height:1.65;color:var(--muted)">
  <strong style="color:var(--ink)">Trade-in абонемента:</strong> покажите карту своего клуба — добавим к абонементу Сандов Фитнес минимум месяц. Подробности по телефону: <a href="tel:+74957956957" style="white-space:nowrap">+7 (495) 795-69-57</a>.
 </div>
-</section>
-<!-- ВЫЧЕТ 13% (вставка 13.09, согласовано Ольгой: «публикуй») -->
-<section style="border-top:1px solid var(--line);padding:26px 0">
- <div class="wrap" style="font-size:15px;line-height:1.65;color:var(--muted)">
- <strong style="color:var(--ink)">13% за абонемент вернёт налоговая — справку подготовим мы.</strong> Клуб включён в государственный перечень для налогового вычета: часть стоимости абонемента возвращается через налоговую — как за лечение или обучение. Клиенты клуба оформляют вычет с 2024 года. Если абонемент оформлен на ребёнка — вычет получают родители.
- </div>
 </section>
 <footer>
  <div class="wrap foot">
