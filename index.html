@@ -211,13 +211,18 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 /* Панель звонка на мобильном — появляется после первого экрана,
    как на всех лендингах (иначе накрывала бы шапку). */
 (function(){
+ /* Панель прячется и на шапке, и на блоке с формой — чтобы кнопка
+    звонка не дублировалась (замечание Ольги 14.09). */
  var bar=document.querySelector('.sticky-call'),
-     hero=document.querySelector('header');
+     hero=document.querySelector('header'),
+     cta=document.querySelector('.cta-home');
  if(!bar) return;
- if(!hero || !('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
- new IntersectionObserver(function(e){
-  bar.classList.toggle('is-on', !e[0].isIntersecting);
- },{threshold:0}).observe(hero);
+ if(!('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
+ var h=false,c=false;
+ function ap(){bar.classList.toggle('is-on', !(h||c));}
+ if(hero){new IntersectionObserver(function(e){h=e[0].isIntersecting;ap();},{threshold:0}).observe(hero);}
+ if(cta){new IntersectionObserver(function(e){c=e[0].isIntersecting;ap();},{threshold:0.15}).observe(cta);}
+ ap();
 })();
 </script>
 </body>
