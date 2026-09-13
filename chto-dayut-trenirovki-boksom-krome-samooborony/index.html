@@ -380,6 +380,7 @@ if (document.readyState === 'loading') {
 <div class="qform-err" role="alert"></div>
 <div class="qform-ok" role="status"></div>
 <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
+   <div class="qform-note" style="margin-top:14px">Смотрите также: <a href="/boytsovsky-klub-moskva/">Бойцовский клуб →</a></div>
 </div>
 </div>
 </div>
@@ -396,7 +397,7 @@ if (document.readyState === 'loading') {
 <div class="lead-form">
  <span class="tag">Первое занятие боксом — в подарок</span>
  <h3>Напишите нам — расскажем расписание групп и запишем на первое занятие боксом, оно в подарок.</h3>
- <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a><a class="btn btn-ghost cta-context" href="/boytsovsky-klub-moskva/">Бойцовский клуб →</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
+ <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -574,13 +575,20 @@ else { initQuickForms(); }
 /* Прилипающую кнопку звонка показываем только после первого экрана —
    на первом экране призыв и так есть, и кнопка накрывала бы его. */
 (function(){
+ /* Прячем панель и на первом экране, и когда виден блок с формой —
+    иначе на экране формы оказывались две одинаковые кнопки звонка
+    (замечание Ольги 14.09: «четыре кнопки — перебор»). */
  var bar=document.querySelector('.sticky-call'),
-     hero=document.querySelector('.hero');
+     hero=document.querySelector('.hero'),
+     cta=document.querySelector('.cta-form');
  if(!bar) return;
- if(!hero || !('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
- new IntersectionObserver(function(e){
-  bar.classList.toggle('is-on', !e[0].isIntersecting);
- },{threshold:0}).observe(hero);
+ if(!('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
+ var heroVisible=false, ctaVisible=false;
+ function apply(){bar.classList.toggle('is-on', !(heroVisible||ctaVisible));}
+ if(hero){new IntersectionObserver(function(e){heroVisible=e[0].isIntersecting;apply();},{threshold:0}).observe(hero);}
+ if(cta){new IntersectionObserver(function(e){ctaVisible=e[0].isIntersecting;apply();},{threshold:0.15}).observe(cta);}
+ if(!hero&&!cta){bar.classList.add('is-on');}
+ apply();
 })();
 </script>
 </body>
