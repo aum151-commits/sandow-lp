@@ -545,13 +545,20 @@ else { initQuickForms(); }
 /* Прилипающую кнопку звонка показываем только после первого экрана —
    на первом экране призыв и так есть, и кнопка накрывала бы его. */
 (function(){
+ /* Прячем панель и на первом экране, и когда виден блок с формой —
+    иначе на экране формы оказывались две одинаковые кнопки звонка
+    (замечание Ольги 14.09: «четыре кнопки — перебор»). */
  var bar=document.querySelector('.sticky-call'),
-     hero=document.querySelector('.hero');
+     hero=document.querySelector('.hero'),
+     cta=document.querySelector('.cta-form');
  if(!bar) return;
- if(!hero || !('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
- new IntersectionObserver(function(e){
-  bar.classList.toggle('is-on', !e[0].isIntersecting);
- },{threshold:0}).observe(hero);
+ if(!('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
+ var heroVisible=false, ctaVisible=false;
+ function apply(){bar.classList.toggle('is-on', !(heroVisible||ctaVisible));}
+ if(hero){new IntersectionObserver(function(e){heroVisible=e[0].isIntersecting;apply();},{threshold:0}).observe(hero);}
+ if(cta){new IntersectionObserver(function(e){ctaVisible=e[0].isIntersecting;apply();},{threshold:0.15}).observe(cta);}
+ if(!hero&&!cta){bar.classList.add('is-on');}
+ apply();
 })();
 </script>
 </body>
