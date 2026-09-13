@@ -1,0 +1,56 @@
+# Замер оффера в карточке Яндекс.Карт каждые 3 дня.
+# Задача Ольги 13.09.2026: «замеры каждые три дня делай, не ждём две недели».
+# Запускается ежедневно в широком окне (расписание GitHub опаздывает),
+# сам скрипт решает, прошло ли 3 дня с прошлой отправки.
+name: Замер оффера карточки
+
+on:
+  schedule:
+    - cron: '30 6-12 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Прислать замер прямо сейчас"
+        type: boolean
+        default: false
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Взять код из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1             "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+      - name: Поставить зависимости
+        run: pip install requests
+      - name: Замер
+        working-directory: work
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_OLGA: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          YANDEX_METRIKA_TOKEN: ${{ secrets.YANDEX_METRIKA_TOKEN }}
+          FORCE_SEND: ${{ github.event.inputs.force == 'true' && '1' || '' }}
+        run: python report_offer_check.py
+      - name: Вернуть отметку в приватный репозиторий
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_offer_check.json || true
+          git diff --staged --quiet || (
+            git commit -m "Отметка замера оффера" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main ||
+            (git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+             git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main)
+          )
