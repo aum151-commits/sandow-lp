@@ -63,7 +63,7 @@
  {"@type":"Question","name":"У клуба есть парковка?","acceptedAnswer":{"@type":"Answer","text":"Да, у клуба охраняемая парковка при бизнес-центре. Как ей пользоваться, расскажем по телефону."}},
  {"@type":"Question","name":"Есть ли бассейн?","acceptedAnswer":{"@type":"Answer","text":"Бассейна в клубе нет, клуб «сухой». Взамен — 2500 м² без очередей, круглосуточный доступ у членов клуба, бойцовский клуб с татами, октагоном и мешками для самостоятельных тренировок, финская сауна в абонементе, полотенца и питьевая вода без доплат."}},
  {"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},
- {"@type":"Question","name":"Можно сначала просто посмотреть клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Новым гостям клуба дарим 72 часа в клубе: позанимайтесь в зале и сходите в сауну."}}
+ {"@type":"Question","name":"Можно сначала просто посмотреть клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Дарим 5 персональных тренировок: позанимайтесь в зале и сходите в сауну."}}
  ]
 }
 </script>
@@ -290,6 +290,20 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  .sticky-call.is-on{transform:none;pointer-events:auto}
  .sticky-call a{width:100%}
 }
+
+/* Кнопки первого экрана уходили за край на 88 px — из-за столбика на
+   всю ширину. На телефоне ставим их в две колонки. */
+@media (max-width:600px){
+ .hero{padding-top:96px}
+ .hero h1{font-size:25px}
+ .hero-sub{font-size:15.5px;line-height:1.5;margin:12px 0 16px}
+ .offer{padding:12px 14px;margin:12px 0}
+ .offer-big{font-size:17px}
+ .offer-sub{font-size:13.5px;line-height:1.4}
+ .hero-cta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .hero-cta .btn{width:100%;padding:15px 8px;font-size:12px;
+  white-space:normal;line-height:1.25}
+}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -331,8 +345,8 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <h1>Фитнес рядом с <span class="gold">Текстильщиками</span> — одна станция БКЛ</h1>
  <p class="hero-sub">2500 м² клуба на Нижегородской: тренажёрный зал 1100 м², бойцовский клуб, три зала групповых программ и финская сауна. Снаряды свободны даже в вечерний пик. Охраняемая парковка, работаем круглосуточно.</p>
  <div class="offer">
- <div class="offer-big">72 часа в клубе — в подарок</div>
- <div class="offer-sub">Новым гостям — 72 часа в клубе в подарок: позанимайтесь и решайте спокойно. Позвоните — договоримся о визите.</div>
+ <div class="offer-big">5 персональных тренировок — в подарок</div>
+ <div class="offer-sub">Дарим 5 персональных тренировок: позанимайтесь с тренером и решайте спокойно. Позвоните — договоримся о визите.</div>
 </div>
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=tekstilshchiki" rel="noopener">Написать в Телеграм</a>
@@ -442,24 +456,25 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 <section class="cta">
  <div class="wrap">
  <span class="label">Первый шаг</span>
- <h2>Позвоните — <span class="gold">подарим 72 часа в клубе</span></h2>
- <p>Новым гостям дарим 72 часа в клубе: позанимайтесь в зале, сходите в сауну и подберём формат под ваши задачи. Стоимость считаем при встрече, под ваш запрос — есть рассрочка и разбивка платежей.</p>
+ <h2>Позвоните — <span class="gold">подарим 5 персональных тренировок</span></h2>
+ <p>Дарим 5 персональных тренировок: позанимайтесь с тренером, сходите в сауну — подберём формат под ваши задачи. Стоимость считаем при встрече, под ваш запрос — есть рассрочка и разбивка платежей.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Позвоните — или оставьте номер, перезвоним</div>
  <div class="cta-btns">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=tekstilshchiki" rel="noopener">Написать в Телеграм</a>
 </div>
  <div style="max-width:520px;margin:22px auto 0">
- <form class="qform" id="zayavka" novalidate>
+ <div class="qform-note" style="font-size:14.5px;color:var(--ink);margin-bottom:4px">Перезвоним, подберём удобное время и дадим рекомендации по тренировкам под вашу цель.</div>
+   <form class="qform" id="zayavka" novalidate>
  <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
  <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
- <button class="btn btn-gold" type="submit">Жду звонка</button>
+ <button class="btn btn-gold" type="submit">Получить рекомендации</button>
  </form>
  <div class="qform-err" role="alert"></div>
  <div class="qform-ok" role="status"></div>
  <div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</div>
 </div>
- <div class="cta-gift">Новым гостям клуба дарим 72 часа в клубе</div>
+ <div class="cta-gift">Дарим 5 персональных тренировок</div>
 </div>
 </section>
 
@@ -503,7 +518,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </div>
  <div class="faq-item">
  <h3>Можно сначала просто посмотреть клуб?</h3>
- <p>Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Новым гостям клуба дарим 72 часа в клубе: позанимайтесь в зале и сходите в сауну.</p>
+ <p>Да. Позвоните или оставьте номер — договоримся о визите и подберём удобное время. Дарим 5 персональных тренировок: позанимайтесь в зале и сходите в сауну.</p>
 </div>
 </div>
 </section>
@@ -567,12 +582,6 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <div class="wrap" style="color:var(--muted);font-size:14px;line-height:1.6">
  <strong style="color:var(--ink)">Как нас найти:</strong> от метро Нижегородская — около 12 минут пешком. Вход под чёрный козырёк «Сандов Фитнес», дальше налево и на 2-й этаж.
 </div>
-</section>
-<!-- ВЫЧЕТ 13% (вставка 13.09, согласовано Ольгой: «публикуй») -->
-<section style="border-top:1px solid var(--line);padding:26px 0">
- <div class="wrap" style="font-size:15px;line-height:1.65;color:var(--muted)">
- <strong style="color:var(--ink)">13% за абонемент вернёт налоговая — справку подготовим мы.</strong> Клуб включён в государственный перечень для налогового вычета: часть стоимости абонемента возвращается через налоговую — как за лечение или обучение. Клиенты клуба оформляют вычет с 2024 года. Если абонемент оформлен на ребёнка — вычет получают родители.
- </div>
 </section>
 <footer>
  <div class="wrap foot">
