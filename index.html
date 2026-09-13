@@ -78,6 +78,17 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;text-align:center}
 .qform-ok{margin-top:12px;font-size:15px;color:var(--gold);display:none}
 .qform-err{margin-top:10px;font-size:14px;color:#E38B7B;display:none}
 @media(max-width:600px){.qform input[type=tel]{flex:1 1 100%}.qform button{width:100%}}
+.sticky-call{display:none}
+@media(max-width:600px){
+ body{padding-bottom:82px}
+ .sticky-call{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;
+  transform:translateY(115%);transition:transform .25s ease;pointer-events:none;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(11,9,6,0) 0%, var(--bg) 30%)}
+ .sticky-call.is-on{transform:none;pointer-events:auto}
+ .sticky-call a{width:100%;text-align:center}
+}
+
 
 </style>
 <!-- Yandex.Metrika counter -->
@@ -134,10 +145,11 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
   <h2>С чего начать?</h2>
   <p>Дарим 5 персональных тренировок: разберём вашу цель и составим план под ваш уровень. Позвоните или напишите в Телеграм — подберём удобное время.</p>
   <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=lp_home" rel="noopener">Написать в Телеграм</a></div>
+  <div class="qform-note" style="font-size:14.5px;color:var(--ink);margin-bottom:4px">Перезвоним, подберём удобное время и дадим рекомендации по тренировкам под вашу цель.</div>
   <form class="qform" novalidate>
    <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
    <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-   <button class="btn btn-gold" type="submit">Жду звонка</button>
+   <button class="btn btn-gold" type="submit">Получить рекомендации</button>
   </form>
   <div class="qform-err" role="alert"></div>
   <div class="qform-ok" role="status"></div>
@@ -191,6 +203,21 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
    if(err){err.innerHTML='Не получилось отправить. Позвоните, пожалуйста: <a href="tel:+74957956957">+7 (495) 795-69-57</a>';err.style.display='block';}
   });
  });
+})();
+</script>
+
+<div class="sticky-call"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a></div>
+<script>
+/* Панель звонка на мобильном — появляется после первого экрана,
+   как на всех лендингах (иначе накрывала бы шапку). */
+(function(){
+ var bar=document.querySelector('.sticky-call'),
+     hero=document.querySelector('header');
+ if(!bar) return;
+ if(!hero || !('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
+ new IntersectionObserver(function(e){
+  bar.classList.toggle('is-on', !e[0].isIntersecting);
+ },{threshold:0}).observe(hero);
 })();
 </script>
 </body>
