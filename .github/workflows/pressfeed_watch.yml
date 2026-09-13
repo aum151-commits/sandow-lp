@@ -1,0 +1,93 @@
+# Мониторинг запросов журналистов Pressfeed (задача Ольги 13.09: вариант А,
+# пресса — зона сессии кампаний). Дайджесты queries@pressfeed.ru приходят
+# на sandow.reports@ дважды в день; этот фильтр раз в день вылавливает
+# запросы по темам клуба (фитнес/спорт/ЗОЖ) и шлёт Ольге кандидатов.
+# Лимит бесплатного тарифа — 1 ответ в месяц, поэтому только информирование:
+# сам ответ готовится сессией и идёт через гейт (тексты для прессы).
+name: Pressfeed - фильтр запросов журналистов
+
+on:
+  schedule:
+    - cron: '20 15 * * *'   # ~18:20 МСК, после обоих дневных дайджестов
+  workflow_dispatch: {}
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Фильтр дайджестов и отправка кандидатов
+        env:
+          LOGIN: ${{ secrets.MAIL_SANDOW_LOGIN }}
+          PASSWORD: ${{ secrets.MAIL_SANDOW_APP_PASSWORD }}
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+        shell: python
+        run: |
+          import email, imaplib, json, os, re, urllib.request
+          from datetime import datetime, timedelta, timezone
+          from email.header import decode_header
+
+          def dec(raw):
+              if not raw: return ""
+              return "".join(t.decode(e or "utf-8", "replace") if isinstance(t, bytes) else t
+                             for t, e in decode_header(raw))
+
+          M = imaplib.IMAP4_SSL("imap.yandex.ru", 993)
+          M.login(os.environ["LOGIN"], os.environ["PASSWORD"])
+          M.select("INBOX", readonly=True)
+          since = (datetime.now(timezone.utc) - timedelta(hours=30)).strftime("%d-%b-%Y")
+          typ, data = M.search(None, 'FROM', '"queries@pressfeed.ru"', 'SINCE', since)
+          ids = data[0].split()
+          print("дайджестов за 30 часов:", len(ids))
+
+          KEYS = re.compile(
+              r"фитнес|спорт|трениров|тренаж|похуд|зож|здоров|питани|нутрициол|"
+              r"бег(?:а|ом|е|у|ов)?\b|мышц|единобор|бокс|йог[аиу]|растяж|осанк|сутул|"
+              r"сауна|восстановлен|сил(?:овая|овой|овых)|выносливост|разминк|"
+              r"абонемент|качалк|спортзал", re.I)
+          # ложные срабатывания: транспорт/госспорт и т.п. отсекаем стоп-словами
+          STOP = re.compile(r"киберспорт|спортивн(?:ое|ый) пита(?:ние)? для животн|тотализатор|букмекер", re.I)
+
+          Q_RE = re.compile(
+              r"\d+\.\s*(.{5,160}?)\s*\(\s*https?://service\.pressfeed\S*?\s*\)\s*"
+              r"([^()]{3,80}?)\s*\(до\s+([^)]{4,40})\)")
+
+          seen, hits = set(), []
+          for i in ids:
+              typ, msg_data = M.fetch(i, "(RFC822)")
+              msg = email.message_from_bytes(msg_data[0][1])
+              body = ""
+              for part in msg.walk():
+                  if part.get_content_type() == "text/plain":
+                      body = part.get_payload(decode=True).decode("utf-8", "replace"); break
+              if not body:
+                  for part in msg.walk():
+                      if part.get_content_type() == "text/html":
+                          h = part.get_payload(decode=True).decode("utf-8", "replace")
+                          body = re.sub(r"<[^>]+>", " ", h); break
+              flat = re.sub(r"\s+", " ", body)
+              for title, outlet, deadline in Q_RE.findall(flat):
+                  title = title.strip(" .")
+                  if title.lower() in seen: continue
+                  seen.add(title.lower())
+                  if KEYS.search(title) and not STOP.search(title):
+                      hits.append((title, outlet.strip(), deadline.strip()))
+          M.logout()
+          print("совпадений:", len(hits))
+
+          if hits:
+              lines = ["Запросы журналистов по нашим темам (Pressfeed, авто-фильтр):", ""]
+              for n, (t, o, d) in enumerate(hits[:10], 1):
+                  lines.append(f"{n}. {t} — {o} (до {d})")
+              lines.append("")
+              lines.append("Лимит бесплатного тарифа — 1 ответ в месяц. Если какой-то запрос стоит взять — ответьте его номером, текст комментария подготовлю и покажу перед отправкой.")
+              text = "\n".join(lines)[:4000]
+              req = urllib.request.Request(
+                  f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
+                  data=json.dumps({"chat_id": os.environ["TG_CHAT"], "text": text}).encode(),
+                  headers={"Content-Type": "application/json"})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  print("telegram:", r.status)
+          else:
+              print("подходящих запросов нет — молчим")
