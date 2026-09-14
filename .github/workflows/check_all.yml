@@ -38,4 +38,7 @@ jobs:
           CLIENT_BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          # ключ сторожа к дашборду: чтобы проверить не только доступность,
+          # но и свежесть цифр внутри (заведён 14.09.2026)
+          DASH_GUARD_KEY: ${{ secrets.DASH_GUARD_KEY }}
         run: python check_all.py
