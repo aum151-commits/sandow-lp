@@ -1,0 +1,60 @@
+# Новые отзывы, рейтинг и снятые по жалобе — в личный телеграм Ольге и
+# управляющему. Раньше это жило на ноутбуке и молчало с 31 августа:
+# код в облако перенесли, а задачу для него не завели.
+#
+# Источники независимы: если сессия 2ГИС протухла, отзывы Яндекса всё
+# равно доходят. Раньше падение 2ГИС роняло весь скрипт целиком.
+name: Отзывы — новые, рейтинг, снятые
+
+on:
+  schedule:
+    - cron: '5 6-19 * * *'   # каждый час с 9:05 до 22:05 МСК
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  reviews:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1             "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        working-directory: work/rpa
+        run: |
+          pip install requests playwright python-dotenv
+          playwright install --with-deps chromium
+
+      - name: Проверить отзывы
+        working-directory: work/rpa
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.rpa.watch_new_reviews
+
+      - name: Вернуть состояние
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add -A rpa/data 2>/dev/null || true
+          git diff --staged --quiet || (
+            git commit -m "Отзывы: обновлено состояние" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
+              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            )
+          )
