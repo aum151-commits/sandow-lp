@@ -38,7 +38,10 @@ jobs:
       - name: Проверить отзывы
         working-directory: work/rpa
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          # Бот маркетинга: именно с ним управляющий начинал диалог.
+          # С прежним ботом Telegram отдавал 400 — он не может писать
+          # человеку, который ему ни разу не написал.
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python -m src.rpa.watch_new_reviews
 
