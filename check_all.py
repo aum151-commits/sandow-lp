@@ -60,10 +60,15 @@ def часов_назад(момент: str) -> float:
 
 def сервисы() -> None:
     адреса = [
-        ("бот заявок", "https://sandow-lead-bot.onrender.com/health", (200,)),
+        # 16.09.2026: Render лёг по биллингу на всех сервисах аккаунта.
+        # Приём заявок перенесён на Cloudflare (не ждёт сброса лимита);
+        # wiki и голосовой тренажёр — на новый бесплатный аккаунт Render
+        # (sandow.reports@yandex.ru), адреса сменились.
+        ("приём заявок", "https://sandow-emergency-leads.pages.dev/health", (200,)),
         ("сайт клуба", "https://sandowfitness.ru/", (200,)),
-        ("обучение «Лига Сандов»", "https://sandow-wiki.onrender.com/", (200, 302)),
-        ("голосовой тренажёр", "https://sandow-voice-trainer.onrender.com/", (200, 401)),
+        ("обучение «Лига Сандов»", "https://sandow-wiki-x1c4.onrender.com/", (200, 302)),
+        ("голосовой тренажёр", "https://sandow-voice-trainer-k6b2.onrender.com/", (200, 401)),
+        ("Тренер Хаб", "https://sandow-trener-hub-pcq6.onrender.com/health", (200,)),
     ]
     for имя, адрес, годные in адреса:
         try:
@@ -79,7 +84,7 @@ def сервисы() -> None:
 def будильник() -> None:
     """Тот, кто задаёт время задачам. Если встал — всё поедет с опозданием."""
     try:
-        о = requests.get("https://sandow-cron.onrender.com/health", timeout=90).json()
+        о = requests.get("https://sandow-cron-worker.sandow-aum151.workers.dev/health", timeout=90).json()
     except Exception as сбой:
         плохо(f"будильник задач не отвечает ({type(сбой).__name__}) — "
               f"задачи пойдут с задержкой в несколько часов")
