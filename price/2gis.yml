@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-09-16T12:00:00">
+<shop>
+<name>Сандов Фитнес</name>
+<company>Сандов Фитнес</company>
+<url>https://sandowfitness.ru</url>
+<currencies><currency id="RUB" rate="1"/></currencies>
+<categories>
+<category id="1">Бойцовский клуб</category>
+<category id="2">Тренажёрный зал</category>
+<category id="3">Групповые программы</category>
+<category id="4">Сауна</category>
+<category id="5">Акции</category>
+</categories>
+<offers>
+<offer id="e9ab3c94-7a1e-4e22-9117-f76ca66e56ab" available="true">
+<name>Персональная тренировка по боксу</name>
+<categoryId>1</categoryId>
+<price>3200</price>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/boks-metro-nizhegorodskaya/bags-row.jpg</picture>
+<description>Тренировки проходят в Бойцовском клубе 500 м² с октагоном — тем самым, где снимали бои для YouTube-канала BODY MANIA (3,4 млн подписчиков). Первое занятие боксом — бесплатное.</description>
+<url>https://lp.sandowfitness.ru/boks-metro-nizhegorodskaya/</url>
+</offer>
+<offer id="c57747b9-75ae-4848-afc4-01827b25f2e3" available="true">
+<name>Персональная тренировка по кикбоксингу</name>
+<categoryId>1</categoryId>
+<price>3200</price>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/boks-metro-nizhegorodskaya/tatami.jpg</picture>
+<description>Тот же Бойцовский клуб 500 м² с октагоном. Есть групповые занятия кикбоксингом по расписанию, помимо персональных тренировок.</description>
+<url>https://lp.sandowfitness.ru/kikboksing-moskva/</url>
+</offer>
+<offer id="bc80c38d-ddf7-4f11-87d7-5ba5ebd3086f" available="true">
+<name>Персональная тренировка</name>
+<categoryId>1</categoryId>
+<price>2500</price>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/boks-metro-nizhegorodskaya/zal-day.jpg</picture>
+<description>Тренажёрный зал 1100 м², разбит на секторы по группам мышц — тренер подберёт программу под вашу задачу. Оборудование Eleiko, Nautilus, Hammer, TechnoGym, Panatta, Icarian, TuffStuff, Precor, Atlantis, Bodystyle.
+
+Бойцовский клуб: ММА — персонально с тренером и самостоятельно — октагон, татами, 7 мешков.</description>
+<url>https://lp.sandowfitness.ru/trenazherny-zal-nizhegorodskaya/</url>
+</offer>
+<offer id="06e743ed-da60-435a-9652-8f977ee53b64" available="true">
+<name>Тренажёрный зал — разовое посещение</name>
+<categoryId>2</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-tekstilshchiki/zal-panorama.jpg</picture>
+<description>Один визит в тренажёрный зал 1100 м². Зал разбит на секторы по группам мышц: новичок легко ориентируется сам, опытный не теряет время в поисках нужного места. Оборудование — Nautilus, Bodystyle, Hammer, два грифа Eleiko (тот же бренд — на Олимпийских соревнованиях по тяжёлой атлетике), TechnoGym, Panatta, Icarian, TuffStuff, Precor, Atlantis.</description>
+<url>https://lp.sandowfitness.ru/trenazherny-zal-nizhegorodskaya/</url>
+</offer>
+<offer id="0e0b21c9-57ee-4a8e-a72c-ea18b9bbdf83" available="true">
+<name>Йога</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-tekstilshchiki/group-hall-wide.jpg</picture>
+<description>Групповое занятие в одном из трёх залов групповых программ клуба: растяжка, дыхание и работа с телом в спокойном темпе. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="1d4018c4-278a-4962-9f0e-a81332cc1764" available="true">
+<name>Пилатес</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-pechatniki/group-hall-wide.jpg</picture>
+<description>Мягкая силовая работа и контроль дыхания на коврике — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="c9693741-72fb-4252-bee2-984171e8a532" available="true">
+<name>Стретчинг</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-tekstilshchiki/group-hall-wide.jpg</picture>
+<description>Растяжка и работа над гибкостью в группе — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="bc16d71a-31b5-46a8-8773-df9706dae635" available="true">
+<name>Функциональный тренинг</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-pechatniki/group-hall-wide.jpg</picture>
+<description>Тренировка на выносливость и координацию всего тела в группе — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="8ad208da-97bb-42cc-90fc-2405d0892244" available="true">
+<name>Здоровая спина</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-tekstilshchiki/group-hall-wide.jpg</picture>
+<description>Групповое занятие для профилактики и укрепления мышц спины — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="385c8eb8-15e0-4ada-9598-1053eee31f05" available="true">
+<name>Силовая аэробика</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-pechatniki/group-hall-wide.jpg</picture>
+<description>Аэробная тренировка с элементами силовой работы в группе — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="dba27207-c95e-4d60-a6b1-8683a818aa04" available="true">
+<name>Zumba</name>
+<categoryId>3</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-tekstilshchiki/group-hall-wide.jpg</picture>
+<description>Танцевальная кардиотренировка под музыку в группе — в одном из трёх залов групповых программ клуба. Входит в абонемент клуба.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+<offer id="9d192040-e68e-4e1a-bf37-61900734e079" available="true">
+<name>Сауна</name>
+<categoryId>4</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/boytsovsky-klub-moskva/sauna.jpg</picture>
+<description>Финская сауна — доступна в рамках абонемента клуба. Полотенца и питьевая вода без доплат. Есть ведро-водопад для закаливания.</description>
+<url>https://lp.sandowfitness.ru/krugosutochny-fitness-klub-metro/</url>
+</offer>
+<offer id="90a45c78-d76c-4ae6-a18e-8350f7647ed9" available="true">
+<name>5 персональных тренировок в подарок</name>
+<categoryId>5</categoryId>
+<currencyId>RUB</currencyId>
+<picture>https://lp.sandowfitness.ru/fitnes-pechatniki/zal-panorama.jpg</picture>
+<description>Забирайте 5 персональных тренировок в подарок. В клубе: тренажёрный зал 1100 м², Бойцовский клуб, финская сауна, охраняемая парковка, круглосуточно. Звоните — обо всём расскажем. Акция до 30 сентября 2026.</description>
+<url>https://sandowfitness.ru</url>
+</offer>
+</offers>
+</shop>
+</yml_catalog>
