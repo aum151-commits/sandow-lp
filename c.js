@@ -84,8 +84,8 @@
     стиль.id = 'sndw-bar-css';
     стиль.textContent =
       '#sndw-bar{position:fixed;left:0;right:0;bottom:0;z-index:9999;display:flex;gap:8px;' +
-      'padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(11,9,6,.94);' +
-      'backdrop-filter:blur(6px);border-top:1px solid rgba(233,199,126,.25);' +
+      'padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:' + ТЁМНЫЙ + ';' +
+      'box-shadow:0 -8px 24px rgba(0,0,0,.55);border-top:1px solid rgba(233,199,126,.25);' +
       'transform:translateY(120%);transition:transform .25s ease}' +
       '#sndw-bar.sndw-on{transform:translateY(0)}' +
       '#sndw-bar a{flex:1;display:flex;align-items:center;justify-content:center;' +
@@ -94,14 +94,14 @@
       '#sndw-bar .sndw-call{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
       '#sndw-bar .sndw-lead{background:transparent;color:' + ЗОЛОТО + ';' +
       'border:1px solid rgba(233,199,126,.55)}' +
-      'body{padding-bottom:64px}';
+      'body{padding-bottom:78px}';
     document.head.appendChild(стиль);
 
     var панель = document.createElement('div');
     панель.id = 'sndw-bar';
     панель.innerHTML =
       '<a class="sndw-call" href="tel:' + ТЕЛЕФОН + '">Позвонить</a>' +
-      '<a class="sndw-lead" href="#sndw-form">5 тренировок в подарок</a>';
+      '<a class="sndw-lead" href="#sndw-form">5 тренировок</a>';
     document.body.appendChild(панель);
 
     панель.querySelector('.sndw-lead').addEventListener('click', function (e) {
@@ -146,27 +146,31 @@
 
     var стиль = document.createElement('style');
     стиль.textContent =
-      '.sndw-anchor{padding:26px 16px;text-align:center;background:' + ТЁМНЫЙ + '}' +
+      '.sndw-anchor{padding:10px 16px 30px;text-align:center;background:' + ТЁМНЫЙ + '}' +
       '.sndw-anchor a{display:inline-block;padding:15px 30px;border-radius:26px;' +
       'background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + ';font:700 16px/1.2 Arial,sans-serif;' +
       'text-decoration:none;max-width:92%}' +
       '.sndw-anchor p{margin:0 0 12px;color:#9A8F7C;font:400 14px/1.4 Arial,sans-serif}';
     document.head.appendChild(стиль);
 
-    // после каждой третьей записи, но не в первых двух экранах и не в подвале
+    // Ставим по высоте: примерно каждые 2,5 экрана, начиная со второго.
+    // По номеру блока не выходит — блоки Тильды очень разные по высоте.
+    var шаг = window.innerHeight * 2.5;
+    var следующая = window.innerHeight * 2.0;
+    var предел = document.documentElement.scrollHeight - window.innerHeight * 1.6;
     var поставлено = 0;
-    записи.forEach(function (зап, i) {
-      if (i < 3 || i % 3 !== 0 || поставлено >= 3) return;
+    записи.forEach(function (зап) {
+      if (поставлено >= 3) return;
       var r = зап.getBoundingClientRect();
-      var верх = r.top + window.scrollY;
-      if (верх < window.innerHeight * 1.5) return;
-      if (верх > document.documentElement.scrollHeight - window.innerHeight * 1.5) return;
+      var низ = r.top + window.scrollY + r.height;
+      if (низ < следующая || низ > предел) return;
+      следующая = низ + шаг;
 
       var блок = document.createElement('div');
       блок.className = 'sndw-anchor';
       блок.innerHTML =
         '<p>Перезвоним и договоримся о времени визита</p>' +
-        '<a href="#sndw-form">Забрать 5 тренировок в подарок</a>';
+        '<a href="#sndw-form">Забрать 5 тренировок</a>';
       блок.querySelector('a').addEventListener('click', function (e) {
         e.preventDefault();
         к_форме();
