@@ -36,7 +36,7 @@ name: Сторож лид-бота
 
 on:
   schedule:
-    - cron: '7 * * * *'
+    - cron: '7 */3 * * *'
   workflow_dispatch:
 
 # Время внутри задач — московское. Раннеры GitHub живут по UTC, а все
