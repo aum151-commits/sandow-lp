@@ -1,0 +1,58 @@
+# Заявки Богородицка → 1С. Живёт в публичном репозитории (минуты Actions
+# бесплатны без лимита — приватный репозиторий однажды уже исчерпал их и
+# 5,5 суток молча не работал, 25-31.08.2026, см. cloud_guard/keepalive).
+#
+# Очередь заявок (data/intake/bogoroditsk_1c_queue.jsonl) пишут функции
+# Cloudflare tg-bog.js/lead.js в приватный репозиторий sandow-automation;
+# этот workflow читает и пишет её обратно по токену PRIVATE_REPO_TOKEN —
+# код (этот файл) в публичном репозитории, данные (телефоны) в приватном.
+#
+# Запуск — sandow-cron-worker (Cloudflare Cron Trigger, раз в 30 минут),
+# не встроенный cron GitHub Actions (он ненадёжен под нагрузкой у клуба —
+# см. другие workflow). workflow_dispatch оставлен и для ручного запуска.
+name: Заявки Богородицка в 1С
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: bogoroditsk-1c-leads
+  cancel-in-progress: false
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: bogoroditsk-1c-consumer
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Поставить зависимости
+        run: |
+          npm install
+          npx --yes playwright install --with-deps chromium
+
+      - name: Разгрузить очередь в 1С
+        env:
+          FITNESS_1C_LOGIN: ${{ secrets.FITNESS_1C_LOGIN }}
+          FITNESS_1C_PASSWORD: ${{ secrets.FITNESS_1C_PASSWORD }}
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: node bog_lead_consumer.js
+
+      - name: Снимки экрана при ошибках
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-screenshots
+          path: bogoroditsk-1c-consumer/error-*.png
+          if-no-files-found: ignore
+          retention-days: 14
