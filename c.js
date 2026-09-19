@@ -321,14 +321,98 @@
     setTimeout(function () { с.classList.add('sndw-in'); }, 50);
   }
 
+
+  /* 7. Первый экран: три правки по замечаниям Ольги 19.09 -------------
+   *  — заголовок рвал слово пополам («ПЕРСОНАЛЬНЫ / Х»): Тильда ставит
+   *    перенос по буквам, а кегль не влезает в узкий экран;
+   *  — строка доверия прилипала к кнопке без отступа;
+   *  — подпись «Перезвонит менеджер…» лишняя: человек и так оставляет
+   *    телефон, объяснять незачем. */
+  function первый_экран() {
+    if (document.getElementById('sndw-hero-fix')) return;
+
+    var стиль = document.createElement('style');
+    стиль.id = 'sndw-hero-fix';
+    стиль.textContent =
+      // Заголовок первого экрана строит наш же старый скрипт из head —
+      // это блоки sndw2-hero-*. У них overflow-wrap:break-word (рвёт слова
+      // пополам) и контейнер всего 252 px при экране 390. Чиним и то, и другое.
+      '[class*="sndw2-hero-title"],[class*="sndw2-hero-l"],' +
+      '.t-cover h1,.t-cover .tn-atom,.t-section__title,.tn-elem .tn-atom{' +
+      'word-break:normal !important;overflow-wrap:normal !important;hyphens:none !important}' +
+      '[class*="sndw2-hero-title"]{max-width:none !important;width:auto !important;' +
+      'padding-left:8px !important;padding-right:8px !important}' +
+      '[class*="sndw2-hero-lwrap"],[class*="sndw2-hero-l"]{max-width:none !important;' +
+      'width:auto !important;display:block !important}' +
+      // отступ строке доверия, чтобы не липла к кнопке
+      '#sndw-trust{margin-top:22px !important}';
+    document.head.appendChild(стиль);
+
+    // Подбираем кегль заголовка так, чтобы самое длинное слово влезало
+    // целиком. Считаем по реальной ширине, а не «на глаз».
+    var заголовки = [].slice.call(document.querySelectorAll('h1,.tn-atom,div,span'))
+      .filter(function (e) {
+        var t = (e.textContent || '').trim();
+        return e.children.length === 0 && /ПЕРСОНАЛЬНЫХ|ТРЕНИРОВОК/i.test(t) &&
+               t.length < 60 && e.getBoundingClientRect().top < window.innerHeight;
+      });
+    заголовки.forEach(function (эл) {
+      var ширина = эл.getBoundingClientRect().width;
+      if (!ширина) return;
+      var мерка = document.createElement('span');
+      var s = getComputedStyle(эл);
+      мерка.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;' +
+        'font-family:' + s.fontFamily + ';font-weight:' + s.fontWeight +
+        ';letter-spacing:' + s.letterSpacing;
+      document.body.appendChild(мерка);
+      var слова = (эл.textContent || '').trim().split(/\s+/);
+      var кегль = parseFloat(s.fontSize) || 40;
+      for (var шаг = 0; шаг < 14; шаг++) {
+        мерка.style.fontSize = кегль + 'px';
+        var влезает = слова.every(function (сл) {
+          мерка.textContent = сл;
+          return мерка.getBoundingClientRect().width <= ширина - 2;
+        });
+        if (влезает) break;
+        кегль = Math.max(18, кегль * 0.92);
+      }
+      document.body.removeChild(мерка);
+      if (кегль < parseFloat(s.fontSize)) {
+        эл.style.fontSize = Math.floor(кегль) + 'px';
+        эл.style.lineHeight = '1.08';
+      }
+    });
+
+    // Убираем подпись под кнопкой — по прямому указанию Ольги
+    [].slice.call(document.querySelectorAll('div,p,span')).forEach(function (e) {
+      if (e.children.length > 1) return;
+      var t = (e.textContent || '').trim();
+      if (/^Перезвонит менеджер/i.test(t) && t.length < 120) {
+        e.style.display = 'none';
+      }
+    });
+  }
+
   готово(function () {
     try { фавикон(); } catch (e) {}
     try { липкая_панель(); } catch (e) {}
     try { панель_пк(); } catch (e) {}
+    try { первый_экран(); } catch (e) {}
     try { строка_доверия(); } catch (e) {}
     // Тильда достраивает блоки после загрузки — ждём, иначе .t-rec ещё нет
     setTimeout(function () { try { якоря(); } catch (e) {} }, 1200);
+    setTimeout(function () { try { первый_экран(); } catch (e) {} }, 1400);
     setTimeout(function () { try { строка_доверия(); } catch (e) {} }, 1500);
+    var перестройка = null;
+    window.addEventListener('resize', function () {
+      // без задержки обработчик срабатывал пачками и ронял страницу
+      clearTimeout(перестройка);
+      перестройка = setTimeout(function () {
+        var с = document.getElementById('sndw-hero-fix');
+        if (с) с.remove();
+        try { первый_экран(); } catch (e) {}
+      }, 400);
+    });
     window.addEventListener('load', function () {
       setTimeout(function () { try { якоря(); } catch (e) {} }, 800);
     });
