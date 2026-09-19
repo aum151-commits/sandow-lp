@@ -28,6 +28,8 @@
   // Точечные выключатели: поставить false и перезалить файл — элемент
   // исчезнет с сайта за минуту, остальные правки останутся на месте.
   var ПОКАЗЫВАТЬ_РЕЙТИНГ = true;
+  var ПОКАЗЫВАТЬ_ТЕЛЕГРАМ = true;   // кнопка «Написать» в нижней полосе
+  var ТЕЛЕГРАМ = 'https://t.me/sandowclub_bot';
 
   function готово(что) {
     if (document.readyState === 'loading') {
@@ -105,7 +107,15 @@
       '#sndw-bar.sndw-on{transform:translateY(0)}' +
       '#sndw-bar a{flex:1;display:flex;align-items:center;justify-content:center;' +
       'height:48px;border-radius:24px;font:700 15px/1 Arial,sans-serif;text-decoration:none;' +
-      'text-align:center;padding:0 10px}' +
+      'text-align:center;padding:0 8px;white-space:nowrap}' +
+      // на 360 px «5 тренировок» ломалось на две строки — уменьшаем кегль
+      '@media (max-width:380px){#sndw-bar a{font-size:13px;padding:0 6px}' +
+      '#sndw-bar{gap:6px;padding-left:8px;padding-right:8px}}' +
+      // Телеграм — квадратной иконкой, а не третьей надписью: на 360 px
+      // три подписи не помещаются и ломаются
+      '#sndw-bar .sndw-tg{flex:0 0 48px;width:48px;padding:0;' +
+      'background:transparent;border:1px solid rgba(233,199,126,.55)}' +
+      '#sndw-bar .sndw-tg svg{width:22px;height:22px;display:block}' +
       '#sndw-bar .sndw-call{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
       '#sndw-bar .sndw-lead{background:transparent;color:' + ЗОЛОТО + ';' +
       'border:1px solid rgba(233,199,126,.55)}' +
@@ -114,7 +124,17 @@
 
     var панель = document.createElement('div');
     панель.id = 'sndw-bar';
+    // Замер 06–17.09: переходов в мессенджер 21 против 11 заявок через
+    // форму — людям проще написать. Кнопка даёт этот путь явно.
+    var тг = ПОКАЗЫВАТЬ_ТЕЛЕГРАМ
+      ? '<a class="sndw-tg" href="' + ТЕЛЕГРАМ + '" target="_blank" rel="noopener" ' +
+        'aria-label="Написать в Телеграм">' +
+        '<svg viewBox="0 0 24 24" fill="' + ЗОЛОТО + '">' +
+        '<path d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.2 13 2.7 11.6c-1-.3-1-1 .2-1.4l17.7-6.8c.8-.3 1.5.2 1.3 1z"/>' +
+        '</svg></a>'
+      : '';
     панель.innerHTML =
+      тг +
       '<a class="sndw-call" href="tel:' + ТЕЛЕФОН + '">Позвонить</a>' +
       '<a class="sndw-lead" href="#sndw-form">5 тренировок</a>';
     document.body.appendChild(панель);
