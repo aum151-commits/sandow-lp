@@ -5,8 +5,8 @@
  *
  * Что делает:
  *   1. favicon 120x120 — рекомендация Яндекс.Вебмастера от 11.02.2026;
- *   2. номер телефона рядом с иконкой трубки в шапке (звонки = половина
- *      всех лидов сайта, а номера на первом экране не было);
+ *   2. (снято 19.09) подпись с номером в шапке — на десктопе номер там
+ *      уже есть своей кнопкой, вышел дубль; на мобильном работает панель;
  *   3. липкая панель внизу на мобильном: «Позвонить» и «5 тренировок»;
  *   4. кнопки-якоря по ходу страницы — между первым экраном и подвалом
  *      было девять экранов без единой точки действия.
@@ -66,6 +66,17 @@
     // на узких экранах номер рядом с иконкой не помещается — там работает
     // липкая панель, она заметнее
     if (window.innerWidth < 900) return;
+    // На широких экранах номер в шапке уже есть отдельной кнопкой —
+    // вторая подпись рядом читалась как дубль. Проверяем по тексту
+    // верхней части страницы, а не по наличию ссылки tel:.
+    var шапка = '';
+    document.querySelectorAll('a,button,span,div').forEach(function (e) {
+      var r = e.getBoundingClientRect();
+      if (r.top < 140 && r.width > 0 && e.children.length === 0) {
+        шапка += (e.textContent || '');
+      }
+    });
+    if (/795[-\s]?69[-\s]?57/.test(шапка.replace(/ /g, ' '))) return;
     var подпись = document.createElement('a');
     подпись.id = 'sndw-hdr-tel';
     подпись.href = 'tel:' + ТЕЛЕФОН;
@@ -180,10 +191,87 @@
     });
   }
 
+
+  /* 5. Панель обратного звонка на компьютере ---------------------------
+   * Замер 05–18.09: смартфоны дают 17,7% лидов, компьютеры — 4,7%, при
+   * том что с компьютера читают вдвое дольше (241 с против 110 с).
+   * Причина не в интересе: с компьютера просто не звонят. Поэтому здесь
+   * не кнопка звонка, а предложение оставить номер. */
+  function панель_пк() {
+    if (window.innerWidth < 900) return;
+    if (document.getElementById('sndw-desk')) return;
+
+    var стиль = document.createElement('style');
+    стиль.textContent =
+      '#sndw-desk{position:fixed;right:24px;bottom:24px;z-index:9998;width:300px;' +
+      'background:' + ТЁМНЫЙ + ';border:1px solid rgba(233,199,126,.35);border-radius:16px;' +
+      'padding:18px 18px 16px;box-shadow:0 18px 50px rgba(0,0,0,.55);' +
+      'font-family:Arial,sans-serif;transform:translateY(140%);transition:transform .3s ease}' +
+      '#sndw-desk.sndw-on{transform:translateY(0)}' +
+      '#sndw-desk .sndw-h{color:#F0EADE;font:700 17px/1.25 Arial,sans-serif;margin:0 0 6px}' +
+      '#sndw-desk .sndw-p{color:#9A8F7C;font:400 13px/1.45 Arial,sans-serif;margin:0 0 12px}' +
+      '#sndw-desk input{width:100%;box-sizing:border-box;height:42px;border-radius:10px;' +
+      'border:1px solid rgba(240,234,222,.25);background:rgba(240,234,222,.06);color:#F0EADE;' +
+      'padding:0 12px;font:400 15px Arial,sans-serif;margin-bottom:8px}' +
+      '#sndw-desk input::placeholder{color:#9A8F7C}' +
+      '#sndw-desk button{width:100%;height:46px;border:0;border-radius:23px;cursor:pointer;' +
+      'background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + ';font:700 15px Arial,sans-serif}' +
+      '#sndw-desk .sndw-x{position:absolute;top:10px;right:12px;color:#9A8F7C;cursor:pointer;' +
+      'font:400 20px/1 Arial,sans-serif;background:none;border:0;width:auto;height:auto}' +
+      '#sndw-desk .sndw-tel{display:block;margin-top:10px;text-align:center;color:' + ЗОЛОТО + ';' +
+      'font:600 14px Arial,sans-serif;text-decoration:none}';
+    document.head.appendChild(стиль);
+
+    var п = document.createElement('div');
+    п.id = 'sndw-desk';
+    п.innerHTML =
+      '<button class="sndw-x" aria-label="Закрыть">×</button>' +
+      '<p class="sndw-h">Перезвоним и всё расскажем</p>' +
+      '<p class="sndw-p">Оставьте номер — менеджер ответит на вопросы ' +
+      'и договорится о времени визита.</p>' +
+      '<input type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" id="sndw-desk-tel">' +
+      '<button type="button" id="sndw-desk-go">Жду звонка</button>' +
+      '<a class="sndw-tel" href="tel:' + ТЕЛЕФОН + '">' + ТЕЛЕФОН_ВИД + '</a>';
+    document.body.appendChild(п);
+
+    п.querySelector('.sndw-x').addEventListener('click', function () {
+      п.classList.remove('sndw-on');
+      try { sessionStorage.setItem('sndw-desk-off', '1'); } catch (e) {}
+    });
+
+    // Свою отправку не делаем: заявки должны идти тем же путём, что и
+    // с основной формы, иначе они не попадут в группу заявок. Переносим
+    // введённый номер в форму первого экрана и доводим человека до неё.
+    п.querySelector('#sndw-desk-go').addEventListener('click', function () {
+      var номер = (п.querySelector('#sndw-desk-tel').value || '').trim();
+      var ф = найти_форму();
+      if (ф && номер) {
+        var поле = ф.querySelector('input[type="tel"],input[name*="hone"],input[name*="el"]');
+        if (поле) {
+          поле.value = номер;
+          поле.dispatchEvent(new Event('input', { bubbles: true }));
+          поле.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+      к_форме();
+      п.classList.remove('sndw-on');
+    });
+
+    function пересчёт() {
+      var выключен = false;
+      try { выключен = sessionStorage.getItem('sndw-desk-off') === '1'; } catch (e) {}
+      if (выключен) return;
+      if (window.scrollY > window.innerHeight * 1.2) п.classList.add('sndw-on');
+      else п.classList.remove('sndw-on');
+    }
+    window.addEventListener('scroll', пересчёт, { passive: true });
+    пересчёт();
+  }
+
   готово(function () {
     try { фавикон(); } catch (e) {}
-    try { номер_в_шапке(); } catch (e) {}
     try { липкая_панель(); } catch (e) {}
+    try { панель_пк(); } catch (e) {}
     // Тильда достраивает блоки после загрузки — ждём, иначе .t-rec ещё нет
     setTimeout(function () { try { якоря(); } catch (e) {} }, 1200);
     window.addEventListener('load', function () {
