@@ -74,7 +74,10 @@
       'background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + ';font:700 16px Arial,sans-serif;' +
       'text-decoration:none}' +
       '#sndw-lp-cta .sndw-sub{display:block;margin-top:12px;color:#9A8F7C;' +
-      'font:400 13px Arial,sans-serif}';
+      'font:400 13px Arial,sans-serif}' +
+      '#sndw-lp-cta .sndw-site{display:inline-block;margin-top:14px;padding:0;' +
+      'background:none;color:' + ЗОЛОТО + ';font:600 14px Arial,sans-serif;' +
+      'text-decoration:underline;text-underline-offset:3px}';
     document.head.appendChild(стиль);
 
     // заголовок подбираем под тему статьи — так призыв не выглядит чужим
@@ -102,7 +105,11 @@
       '<p class="sndw-h">' + заголовок + '</p>' +
       '<p class="sndw-p">' + описание + '</p>' +
       '<a href="tel:' + ТЕЛЕФОН + '">Позвонить и записаться</a>' +
-      '<span class="sndw-sub">+7 (495) 795-69-57</span>';
+      '<span class="sndw-sub">+7 (495) 795-69-57</span>' +
+      // Ссылка на основной сайт: для человека — куда посмотреть подробнее,
+      // для Google — связь поддомена с основным доменом. Сейчас с лендинга
+      // на sandowfitness.ru ведёт одна ссылка на всю страницу.
+      '<a class="sndw-site" href="https://sandowfitness.ru/">Смотреть клуб на сайте</a>';
 
     var куда = document.querySelector('main') || document.querySelector('article') ||
                document.body;
