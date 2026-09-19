@@ -25,6 +25,10 @@
   var ТЁМНЫЙ = '#0B0906';
   var БАЗА = 'https://lp.sandowfitness.ru/';
 
+  // Точечные выключатели: поставить false и перезалить файл — элемент
+  // исчезнет с сайта за минуту, остальные правки останутся на месте.
+  var ПОКАЗЫВАТЬ_РЕЙТИНГ = true;
+
   function готово(что) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', что);
@@ -268,12 +272,63 @@
     пересчёт();
   }
 
+
+  /* 6. Строка доверия под формой первого экрана -------------------------
+   * На первом экране было только обещание подарка и ни одного
+   * доказательства. Строка намеренно одна и мелкая: hero держится на
+   * заголовке и форме, доказательство лишь снимает страх ошибиться.
+   * Цифры округлены («более 1000»), чтобы не устаревать. */
+  function строка_доверия() {
+    if (!ПОКАЗЫВАТЬ_РЕЙТИНГ) return;
+    if (document.getElementById('sndw-trust')) return;
+    var ф = найти_форму();
+    if (!ф) return;
+    // только у формы первого экрана: ниже по странице она ни к чему
+    if (ф.getBoundingClientRect().top + window.scrollY > window.innerHeight * 1.6) return;
+
+    var стиль = document.createElement('style');
+    стиль.textContent =
+      // nowrap обязателен: без него длинный хвост переносился на вторую
+      // строку и вся группа разъезжалась влево — на телефоне выглядело криво
+      '#sndw-trust{display:flex;align-items:center;justify-content:center;gap:7px;' +
+      'margin:14px auto 0;padding:0 10px;max-width:520px;text-align:center;' +
+      'white-space:nowrap;flex-wrap:nowrap;' +
+      'font-family:Arial,sans-serif;opacity:0;transition:opacity .6s ease .3s}' +
+      '#sndw-trust.sndw-in{opacity:1}' +
+      '#sndw-trust .sndw-star{color:' + ЗОЛОТО + ';font-size:15px;line-height:1}' +
+      '#sndw-trust .sndw-val{color:' + ЗОЛОТО + ';font:700 15px/1 Arial,sans-serif;' +
+      'letter-spacing:.02em}' +
+      '#sndw-trust .sndw-dot{width:3px;height:3px;border-radius:50%;' +
+      'background:rgba(154,143,124,.7);flex:0 0 auto}' +
+      '#sndw-trust .sndw-txt{color:#9A8F7C;font:400 13px/1.3 Arial,sans-serif}' +
+      '@media (max-width:430px){#sndw-trust{gap:6px}#sndw-trust .sndw-txt{font-size:11px}#sndw-trust .sndw-val{font-size:14px}#sndw-trust .sndw-star{font-size:13px}}';
+    document.head.appendChild(стиль);
+
+    var с = document.createElement('div');
+    с.id = 'sndw-trust';
+    с.innerHTML =
+      '<span class="sndw-star">★</span>' +
+      '<span class="sndw-val">4,6</span>' +
+      '<span class="sndw-dot"></span>' +
+      '<span class="sndw-txt">более 1000 оценок на Яндекс&nbsp;Картах</span>';
+
+    // ставим под форму, а если рядом есть подпись «Перезвонит менеджер…» —
+    // после неё, чтобы не разрывать смысловую пару «кнопка → что дальше»
+    var куда = ф;
+    var сосед = ф.nextElementSibling;
+    if (сосед && /перезвонит|менеджер/i.test(сосед.innerText || '')) куда = сосед;
+    куда.insertAdjacentElement('afterend', с);
+    setTimeout(function () { с.classList.add('sndw-in'); }, 50);
+  }
+
   готово(function () {
     try { фавикон(); } catch (e) {}
     try { липкая_панель(); } catch (e) {}
     try { панель_пк(); } catch (e) {}
+    try { строка_доверия(); } catch (e) {}
     // Тильда достраивает блоки после загрузки — ждём, иначе .t-rec ещё нет
     setTimeout(function () { try { якоря(); } catch (e) {} }, 1200);
+    setTimeout(function () { try { строка_доверия(); } catch (e) {} }, 1500);
     window.addEventListener('load', function () {
       setTimeout(function () { try { якоря(); } catch (e) {} }, 800);
     });
