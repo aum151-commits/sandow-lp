@@ -230,13 +230,49 @@ async function createLead(page, entry) {
 
   await selectBogoroditsk(page);
 
+  /* Фамилия/Имя/Отчество — фиксированные координаты, а не fieldNear по
+     подписи "Имя:". Причина: fieldNear стабильно находил "Телефон" и
+     "Комментарий:", но раз за разом не находил именно "Имя:" (проверено
+     на нескольких прогонах 19-20.09.2026, включая ручные заявки
+     Георгия/Алины — телефон и структурная единица сохранялись верно, имя
+     оставалось пустым). Причина не выяснена (возможно, у строки "Имя:"
+     на странице оказывается более одного совпадения текста), но три
+     поля в шапке формы (Фамилия/Имя/Отчество) всегда на одном и том же
+     месте — так надёжнее.
+     Имя обязательно: без него в 1С падает заявка без опознавательных
+     данных, а имя — то, что реально сообщает клиент боту/форме. */
   const name = sanitizeText(entry.name);
-  const nameBox = await fieldNear(page, 'Имя:');
-  if (nameBox && name) {
-    await page.mouse.click(nameBox.x, nameBox.y);
-    await page.waitForTimeout(400);
-    await page.keyboard.type(name.slice(0, 60), { delay: 25 });
-    await page.waitForTimeout(400);
+  if (name) {
+    const nameValue = name.slice(0, 60);
+    let typed = '';
+    for (let attempt = 0; attempt < 3 && typed !== nameValue; attempt++) {
+      await page.mouse.click(642, 206); // средняя строка — "Имя"
+      await page.waitForTimeout(500);
+      // на случай, если предыдущая попытка что-то уже вписала не туда —
+      // выделить и стереть перед вводом заново
+      await page.keyboard.press('Control+A');
+      await page.keyboard.press('Delete');
+      await page.waitForTimeout(200);
+      await page.keyboard.type(nameValue, { delay: 30 });
+      await page.waitForTimeout(500);
+      // проверяем, что значение реально попало именно в поле "Имя" —
+      // раньше клик по координате иногда не долетал до нужного input, и
+      // заявка сохранялась без имени, никак об этом не сообщая (проверено
+      // 19-20.09.2026 на реальных заявках Георгия и Алины: канал и
+      // структурная единица сохранялись, имя — нет, ошибок не было).
+      typed = await page.evaluate((y) => {
+        let best = null, bestDy = 1e9;
+        document.querySelectorAll('input').forEach((inp) => {
+          const r = inp.getBoundingClientRect();
+          if (r.width === 0) return;
+          const dy = Math.abs((r.y + r.height / 2) - y);
+          if (dy < bestDy) { bestDy = dy; best = inp; }
+        });
+        return best ? best.value : '';
+      }, 206);
+      if (typed !== nameValue) console.log(`  имя не закрепилось с попытки ${attempt + 1} (в поле: "${typed}") — повтор`);
+    }
+    if (typed !== nameValue) throw new Error(`не удалось ввести имя «${nameValue}» после трёх попыток (в поле осталось: «${typed}»)`);
   }
 
   const phoneBox = await fieldNear(page, 'Телефон');
@@ -245,6 +281,55 @@ async function createLead(page, entry) {
   await page.waitForTimeout(400);
   await page.keyboard.type(entry.phone.replace(/\D/g, '').slice(-10), { delay: 25 });
   await page.waitForTimeout(400);
+
+  /* Канал привлечения = "Заявка" — тот же канонический канал, которым
+     размечены и заявки, которые вручную регистрируют по звонку/чату
+     менеджеры (см. "заявка" в marks.js). Поле фильтруется набором
+     текста и коммитится одним кликом по варианту — без отдельной кнопки
+     "Выбрать". */
+  await page.mouse.click(620, 374);
+  await page.waitForTimeout(2000);
+  await page.keyboard.type('Заявка', { delay: 40 });
+  await page.waitForTimeout(2000);
+  let kanalOption = await findByText(page, 'Заявка', true);
+  if (!kanalOption) {
+    const showAllKanal = await findByText(page, 'Показать все', true);
+    if (showAllKanal) {
+      await page.mouse.click(showAllKanal.x, showAllKanal.y);
+      await page.waitForTimeout(3000);
+      kanalOption = await findByText(page, 'Заявка', true);
+      if (kanalOption) {
+        await page.mouse.click(kanalOption.x, kanalOption.y);
+        await page.waitForTimeout(1500);
+        const selectBtn1 = await findByText(page, 'Выбрать', true);
+        if (selectBtn1) { await page.mouse.click(selectBtn1.x, selectBtn1.y); await page.waitForTimeout(1500); }
+      }
+      kanalOption = true; // цикл обработан через "Показать все", не дублировать клик ниже
+    }
+  } else {
+    await page.mouse.click(kanalOption.x, kanalOption.y);
+    await page.waitForTimeout(1500);
+  }
+
+  /* Рекламный источник — "tilda" для заявок с формы сайта (сайт
+     Богородицка собран на Тильде, то же значение, что у реальных заявок
+     Москвы), "Он-Лайн" для Telegram-бота (отдельной строки под бота в
+     справочнике 1С нет, это ближайшее по смыслу существующее значение). */
+  const sourceLabel = entry.adSource === 'tilda' ? 'tilda' : 'Он-Лайн';
+  await page.mouse.click(620, 408);
+  await page.waitForTimeout(2000);
+  const showAllSource = await findByText(page, 'Показать все', true);
+  if (showAllSource) {
+    await page.mouse.click(showAllSource.x, showAllSource.y);
+    await page.waitForTimeout(3000);
+    const sourceOption = await findByText(page, sourceLabel, true);
+    if (sourceOption) {
+      await page.mouse.click(sourceOption.x, sourceOption.y);
+      await page.waitForTimeout(1500);
+      const selectBtn2 = await findByText(page, 'Выбрать', true);
+      if (selectBtn2) { await page.mouse.click(selectBtn2.x, selectBtn2.y); await page.waitForTimeout(2000); }
+    }
+  }
 
   const comment = sanitizeText(entry.comment);
   const commentBox = await fieldNear(page, 'Комментарий:');
