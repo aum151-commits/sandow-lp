@@ -19,8 +19,10 @@
   'use strict';
 
   var ПОКАЗЫВАТЬ_БЛОК = true;
+  var ПОКАЗЫВАТЬ_ФОРМУ_В_HERO = true;
   var БАЗА = 'https://lp.sandowfitness.ru/';
   var ТЕЛЕФОН = '+74957956957';
+  var ПРИЁМ = 'https://sandow-emergency-leads.pages.dev/site-lead';
   var ЗОЛОТО = '#E9C77E';
   var ТЁМНЫЙ = '#0B0906';
 
@@ -116,6 +118,193 @@
     куда.appendChild(б);
   }
 
+  /* Форма в первом экране коммерческих посадочных.
+   *
+   * Замер 20.09.2026: 12 страниц под запросы («фитнес Текстильщики» 59
+   * визитов, «бойцовский клуб Москва» 26, «налоговый вычет» 26 и ещё
+   * девять) дали за 28 дней 191 визит и НОЛЬ лидов. Статьи на том же
+   * поддомене при таком же трафике дают 10–40%. Разница видна на
+   * рендере: на коммерческих первая форма стоит после 54–64% прокрутки
+   * (у «Текстильщиков» — 6629 px при высоте 12 264), а в первом экране
+   * только «Позвонить» и «Написать в Телеграм» — поля, куда оставить
+   * номер, нет вообще. На главной сайта форма стоит сразу, и главная
+   * даёт 12,3%.
+   *
+   * Что здесь НЕ делается: ничего не убирается. Заголовок, описание,
+   * блок подарка и обе кнопки остаются на местах — требование Ольги
+   * 20.09: «чтобы было чем заинтересовать на hero, а не только форма».
+   * Добавляются строка доверия и два поля.
+   *
+   * Цифры строки доверия: 4,6 и 1089 оценок — замер Яндекс.Карт
+   * 17.09.2026, МАРКЕТИНГ-СИСТЕМА\Сбор-оценок\КАК-СОБИРАТЬ-ОЦЕНКИ.md.
+   * НЕ путать с кабинетом Яндекс Бизнеса: там 603 — это отзывы с
+   * текстом, другая величина (оценку ставят и без текста, поэтому их
+   * больше). Писать «более 1000 оценок» верно, «более 1000 отзывов» —
+   * ложь. Не «поправлять» это число на 603.
+   *
+   * Текст кнопки подбирается под оффер конкретной страницы. Так надо,
+   * потому что подарки на страницах разные: на боксовых в первом экране
+   * «первое занятие боксом в подарок», на фитнес-страницах «5
+   * персональных тренировок», а на части страниц подарка нет вообще.
+   * Одна кнопка на всех давала бы два разных обещания на одном экране —
+   * ровно то, что раздел 5 CLAUDE.md называет обещанием, которого
+   * воронка не выполнит.
+   *
+   * Отправка идёт на тот же приёмник, что и нижняя форма страницы, —
+   * Cloudflare, оттуда в группу менеджеров и в 1С. Свой обработчик, а
+   * не чужой initQuickForms: тот привязывается к формам один раз при
+   * загрузке, и наша появляется позже.
+   *
+   * Откат: ПОКАЗЫВАТЬ_ФОРМУ_В_HERO = false и перезалить файл.
+   */
+  /* Что обещает кнопка — берём из первого экрана самой страницы.
+   *
+   * Проверено критиком 20.09 на 19 живых страницах: на боксовых в hero
+   * стоит «Первое занятие боксом — в подарок» (и повторяется по 4–5 раз
+   * ниже), на фитнес-страницах «5 персональных тренировок — в подарок»,
+   * а на «Разовое посещение» подарка нет вовсе — там платный визит.
+   * Кнопка «Забрать 5 тренировок» на боксовой странице означала бы два
+   * разных подарка рядом, а на странице разового визита — подарок из
+   * ниоткуда. Где оффера нет, кнопка нейтральная и ничего не обещает.
+   */
+  function что_обещает(экран) {
+    var т = (экран.innerText || '').toLowerCase();
+    var есть_подарок = т.indexOf('подар') >= 0 || т.indexOf('дарим') >= 0;
+    if (!есть_подарок) return 'Жду звонка';
+    if (/5\s*персональн/.test(т) || /пять\s*персональн/.test(т)) {
+      return 'Забрать 5 тренировок';
+    }
+    if (/перв(ое|ая)\s+(занятие|тренировка)/.test(т)) {
+      return 'Забрать первое занятие';
+    }
+    if (/персональн\w*\s+тренировк/.test(т)) return 'Забрать тренировку';
+    return 'Жду звонка';
+  }
+
+  function форма_в_hero() {
+    if (!ПОКАЗЫВАТЬ_ФОРМУ_В_HERO) return;
+    if (document.getElementById('sndw-hero-form')) return;
+
+    // Две вёрстки первого экрана: у коммерческих посадочных .hero-cta,
+    // у страниц-разборов (налоговый вычет, выбор абонемента) .cta-btns
+    // внутри .article-hero. Вторые тоже коммерческие и тоже без формы.
+    var кнопки = document.querySelector('.hero .hero-cta') ||
+                 document.querySelector('.article-hero .cta-btns');
+    if (!кнопки) return;
+    var экран = кнопки.closest('.hero') || кнопки.closest('.article-hero');
+    if (!экран) return;
+    // если форма уже есть в первом экране — не трогаем страницу
+    if (экран.querySelector('form, input[type="tel"]')) return;
+
+    var подпись = что_обещает(экран);
+
+    var стиль = document.createElement('style');
+    стиль.textContent =
+      '#sndw-hero-form{margin:18px 0 0;max-width:460px}' +
+      '#sndw-hero-form .sndw-trust{display:flex;align-items:center;gap:8px;' +
+      'margin:0 0 14px;color:#C9BEA8;font:400 14px/1.2 inherit}' +
+      '#sndw-hero-form .sndw-trust b{color:' + ЗОЛОТО + ';font-size:17px}' +
+      '#sndw-hero-form .sndw-row{display:flex;gap:8px;flex-wrap:wrap}' +
+      '#sndw-hero-form input[type="text"],#sndw-hero-form input[type="tel"]{' +
+      'flex:1 1 150px;min-width:0;padding:14px 16px;border-radius:12px;' +
+      'border:1px solid rgba(233,199,126,.34);background:rgba(11,9,6,.72);' +
+      'color:#F0EADE;font:400 16px inherit;outline:none}' +
+      '#sndw-hero-form input::placeholder{color:#8B8272}' +
+      '#sndw-hero-form input:focus{border-color:' + ЗОЛОТО + '}' +
+      '#sndw-hero-form button{width:100%;margin-top:8px;padding:15px 20px;' +
+      'border:0;border-radius:26px;background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + ';' +
+      'font:700 16px inherit;cursor:pointer}' +
+      '#sndw-hero-form button[disabled]{opacity:.6;cursor:default}' +
+      // 13px — нижняя граница: согласие не то место, где экономят
+      // высоту. Место для кнопки «Позвонить» находим за счёт отступов.
+      '#sndw-hero-form .sndw-note{margin:8px 0 0;color:#8B8272;' +
+      'font:400 13px/1.35 inherit}' +
+      '#sndw-hero-form .sndw-note a{color:#A79A86;text-underline-offset:2px}' +
+      '#sndw-hero-form .sndw-say{margin:10px 0 0;font:400 14px inherit;display:none}' +
+      '#sndw-hero-form .sndw-hp{position:absolute;left:-9999px;width:1px;height:1px}' +
+      // На широком экране hero и без того высокий: заголовок в четыре
+      // строки, блок подарка, две кнопки в столбик. Поля и кнопка в один
+      // ряд экономят ~80 px и оставляют форму выше сгиба.
+      '@media (min-width:1024px){' +
+      '#sndw-hero-form{max-width:620px}' +
+      '#sndw-hero-form form{display:flex;gap:8px;align-items:stretch}' +
+      '#sndw-hero-form .sndw-row{flex:1 1 auto;gap:8px}' +
+      '#sndw-hero-form button{width:auto;margin-top:0;flex:0 0 auto;' +
+      'padding:14px 22px;white-space:nowrap}}';
+    document.head.appendChild(стиль);
+
+    var б = document.createElement('div');
+    б.id = 'sndw-hero-form';
+    б.innerHTML =
+      '<p class="sndw-trust"><b>★ 4,6</b> · более 1000 оценок на Яндекс Картах</p>' +
+      '<form novalidate>' +
+      '<div class="sndw-row">' +
+      '<input type="text" name="name" placeholder="Ваше имя" autocomplete="name">' +
+      '<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" inputmode="tel">' +
+      '</div>' +
+      '<input class="sndw-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<button type="submit">' + подпись + '</button>' +
+      '</form>' +
+      '<p class="sndw-say" role="status"></p>' +
+      // Текст согласия — дословно тот же, что у нижней формы этих же
+      // страниц: с названной целью обработки и оговоркой про рекламу.
+      // Без цели согласие слабее юридически, а два разных текста под
+      // двумя формами одной страницы выглядят небрежно.
+      '<p class="sndw-note">Нажимая кнопку, вы соглашаетесь на ' +
+      '<a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">' +
+      'обработку персональных данных</a> для ответа на обращение. ' +
+      'Мы не рассылаем рекламу.</p>';
+
+    // Ставим форму ПЕРЕД кнопками, а не после: замер показал, что после
+    // них она падает на 912 px и уходит за сгиб на экране 900. Кнопка
+    // «Позвонить» остаётся на месте — звонок по-прежнему главное действие.
+    кнопки.parentNode.insertBefore(б, кнопки);
+
+    var форма = б.querySelector('form');
+    var кнопка = б.querySelector('button');
+    var говорит = б.querySelector('.sndw-say');
+    форма.addEventListener('submit', function (е) {
+      е.preventDefault();
+      var имя = форма.querySelector('input[name="name"]');
+      var тел = форма.querySelector('input[name="phone"]');
+      var цифры = (тел.value || '').replace(/[^0-9]/g, '');
+      говорит.style.display = 'block';
+      if (цифры.length < 10) {
+        говорит.style.color = '#E09A8A';
+        говорит.textContent = 'Проверьте номер — нужно 10 цифр.';
+        тел.focus();
+        return;
+      }
+      кнопка.disabled = true;
+      var было = кнопка.textContent;
+      кнопка.textContent = 'Отправляем…';
+      говорит.style.color = '#9A8F7C';
+      говорит.textContent = 'Отправляем…';
+      fetch(ПРИЁМ, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: имя.value, phone: тел.value,
+          company: форма.querySelector('input[name="company"]').value || '',
+          page: location.pathname
+        })
+      }).then(function (о) { return о.json(); }).then(function (р) {
+        if (р && р.ok) {
+          говорит.style.color = ЗОЛОТО;
+          говорит.textContent = 'Приняли. Скоро свяжемся.';
+          форма.style.display = 'none';
+        } else {
+          throw new Error('отказ');
+        }
+      }).catch(function () {
+        кнопка.disabled = false;
+        кнопка.textContent = было;
+        говорит.style.color = '#E09A8A';
+        говорит.textContent = 'Не отправилось. Позвоните: +7 (495) 795-69-57';
+      });
+    });
+  }
+
   function готово(что) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', что);
@@ -126,6 +315,7 @@
 
   готово(function () {
     try { фавикон(); } catch (e) {}
+    try { форма_в_hero(); } catch (e) {}
     try { блок_в_конце(); } catch (e) {}
   });
 })();
