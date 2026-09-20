@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Разбудить лид-бота
         run: |
-          url=https://sandow-lead-bot.onrender.com/health
+          url=https://sandow-lead-bot-v2.onrender.com/health
           code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 "$url" || echo timeout)
           echo "$url -> $code"
 
