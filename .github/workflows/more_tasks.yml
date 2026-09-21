@@ -75,6 +75,11 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # без него lp_pages() не видит список лендингов — проверялись
+          # только 13 страниц основного сайта, а 125 страниц lp.* — нет
+          # (найдено 21.09.2026 при проверке фикса .env, см. коммит
+          # с относительным BASE_DIR в src/rpa/compliance_scan.py)
+          GITHUB_TOKEN_WORKFLOW: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: python -m src.rpa.compliance_scan
 
       - name: Очередь публикаций в карточку
