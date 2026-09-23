@@ -448,7 +448,8 @@ if (document.readyState === 'loading') {
 .transfer-note{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--muted);max-width:52ch}
 @media(max-width:600px){.transfer-sec{padding:48px 0}.transfer-card{padding:30px 22px}.transfer-btns .btn{flex:0 0 100%;width:100%;min-width:0;padding:16px 12px;font-size:12.5px;white-space:normal;line-height:1.4;flex-wrap:wrap;gap:4px 10px}}
 </style>
-<script src=/lp.js defer></script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Что входит в клуб?","acceptedAnswer":{"@type":"Answer","text":"2500 м²: тренажёрный зал 1100 м², бойцовский клуб 500 м², три зала групповых программ, финская сауна, охраняемая парковка."}},{"@type":"Question","name":"Где находится клуб?","acceptedAnswer":{"@type":"Answer","text":"Москва, Нижегородская улица, 29/33, стр. 3 — рядом с метро Нижегородская."}},{"@type":"Question","name":"Что входит в абонемент?","acceptedAnswer":{"@type":"Answer","text":"Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка."}},{"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},{"@type":"Question","name":"Можно прийти и попробовать клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите."}}]}</script>
 </head>
 <body>
 
@@ -563,8 +564,8 @@ if (document.readyState === 'loading') {
  <div class="cta-grid" aria-hidden="true"></div>
  <div class="wrap">
  <span class="tag">Первый шаг</span>
- <h2>5 персональных <span class="gold">тренировок в подарок</span></h2>
- <p>Покажем клуб целиком — зал, бойцовскую зону и залы групповых программ, подберём формат под ваши задачи на встрече. Позвоните — или напишите, мы ответим и договоримся о визите.</p>
+ <h2>Год <span class="gold">в подарок</span></h2>
+ <p>Год в подарок. Оставьте номер — перезвоним и договоримся о визите. Заодно покажем клуб целиком — зал, бойцовскую зону и залы групповых программ.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Москва, Нижегородская ул., 29/33, стр. 3 — рядом станции Нижегородская, Текстильщики и Таганская</div>
  <div class="cta-btns">
@@ -574,7 +575,7 @@ if (document.readyState === 'loading') {
    <form class="qform" id="zayavka" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button class="btn btn-gold" type="submit">Попросить перезвонить</button>
+<button class="btn btn-gold" type="submit">Забрать год в подарок</button>
 </form>
 <div class="qform-err" role="alert"></div>
 <div class="qform-ok" role="status"></div>
@@ -600,6 +601,36 @@ if (document.readyState === 'loading') {
 </section>
 
 
+
+<!-- ЧАСТЫЕ ВОПРОСЫ -->
+<section>
+ <div class="wrap" style="max-width:820px">
+ <div class="sec-head">
+ <span class="tag">03 · Частые вопросы</span>
+ <h2>Что спрашивают <span class="gold">перед первым визитом</span></h2>
+</div>
+ <div class="faq-item">
+ <h3>Что входит в клуб?</h3>
+ <p>2500 м²: тренажёрный зал 1100 м², бойцовский клуб 500 м², три зала групповых программ, финская сауна, охраняемая парковка.</p>
+</div>
+ <div class="faq-item">
+ <h3>Где находится клуб?</h3>
+ <p>Москва, Нижегородская улица, 29/33, стр. 3 — рядом с метро Нижегородская.</p>
+</div>
+ <div class="faq-item">
+ <h3>Что входит в абонемент?</h3>
+ <p>Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка.</p>
+</div>
+ <div class="faq-item">
+ <h3>Сколько стоит абонемент?</h3>
+ <p>Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57.</p>
+</div>
+ <div class="faq-item">
+ <h3>Можно прийти и попробовать клуб?</h3>
+ <p>Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите.</p>
+</div>
+</div>
+</section>
 <!-- ОТЗЫВЫ + КАРТА -->
 
 <!-- ЖИЗНЬ КЛУБА -->
@@ -623,6 +654,12 @@ if (document.readyState === 'loading') {
  .life-film img{height:190px}}
 @media(max-width:520px){.life-film{grid-template-columns:1fr}
  .life-film img{height:220px}.life-sec{padding:48px 0}}
+
+/* ---------- частые вопросы ---------- */
+.faq-item{border-bottom:1px solid var(--line);padding:20px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-family:var(--body);font-weight:600;font-size:17px;color:var(--gold);margin-bottom:9px;line-height:1.45;text-transform:none}
+.faq-item p{margin:0;color:var(--muted);font-size:16px;line-height:1.65}
 </style>
 <section class="life-sec">
  <div class="wrap">
@@ -688,7 +725,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
+ fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
