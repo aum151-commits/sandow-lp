@@ -895,11 +895,21 @@
       hero.style.removeProperty('min-height');
       hero.style.removeProperty('height');
       var hr = hero.getBoundingClientRect();
-      var cands = hero.querySelectorAll(
-        '.sndw2-hero-note, .sndw2-hero-formslot, form, .t-form, .sndw2-hero-cta');
+      // Раньше низ контента искался по списку классов. Форму в первый
+      // экран переносит c.js (moveForm) уже после первого замера — если
+      // не успел, в списке не находилось ничего, высота ставилась по
+      // неполному содержимому, и кнопка с формой уезжали под обрезку
+      // (у hero overflow:hidden). Мерим по ВСЕМ видимым потомкам: что бы
+      // и когда ни появилось внутри, оно будет учтено.
+      var cands = hero.querySelectorAll('*');
       var contentBottom = 0;
       for (var ci = 0; ci < cands.length; ci++) {
-        var cb = cands[ci].getBoundingClientRect();
+        var el = cands[ci];
+        if (el === mq || mq.contains(el)) continue; // сама бегущая строка
+        var st = getComputedStyle(el);
+        if (st.display === 'none' || st.visibility === 'hidden') continue;
+        if (st.position === 'fixed') continue;
+        var cb = el.getBoundingClientRect();
         if (cb.height > 0 && cb.bottom - hr.top > contentBottom) {
           contentBottom = cb.bottom - hr.top;
         }
