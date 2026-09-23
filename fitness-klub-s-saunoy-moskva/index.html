@@ -424,7 +424,8 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 .transfer-note{margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--muted);max-width:52ch}
 @media(max-width:600px){.transfer-sec{padding:48px 0}.transfer-card{padding:30px 22px}.transfer-btns .btn{flex:0 0 100%;width:100%;min-width:0;padding:16px 12px;font-size:12.5px;white-space:normal;line-height:1.4;flex-wrap:wrap;gap:4px 10px}}
 </style>
-<script src=/lp.js defer></script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Сауна входит в абонемент?","acceptedAnswer":{"@type":"Answer","text":"Да, финская сауна входит в абонемент, отдельной платы нет. Полотенца и питьевая вода — тоже без доплат."}},{"@type":"Question","name":"Нужно ли записываться в сауну?","acceptedAnswer":{"@type":"Answer","text":"Нет, записи не нужно — сауна работает для членов клуба в часы работы клуба."}},{"@type":"Question","name":"Что входит в абонемент?","acceptedAnswer":{"@type":"Answer","text":"Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка."}},{"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},{"@type":"Question","name":"Можно прийти и попробовать клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите."}}]}</script>
 </head>
 <body>
 
@@ -559,6 +560,36 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </div>
 </section>
 
+
+<!-- ЧАСТЫЕ ВОПРОСЫ -->
+<section>
+ <div class="wrap" style="max-width:820px">
+ <div class="sec-head">
+ <span class="tag">04 · Частые вопросы</span>
+ <h2>Что спрашивают <span class="gold">перед первым визитом</span></h2>
+</div>
+ <div class="faq-item">
+ <h3>Сауна входит в абонемент?</h3>
+ <p>Да, финская сауна входит в абонемент, отдельной платы нет. Полотенца и питьевая вода — тоже без доплат.</p>
+</div>
+ <div class="faq-item">
+ <h3>Нужно ли записываться в сауну?</h3>
+ <p>Нет, записи не нужно — сауна работает для членов клуба в часы работы клуба.</p>
+</div>
+ <div class="faq-item">
+ <h3>Что входит в абонемент?</h3>
+ <p>Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка.</p>
+</div>
+ <div class="faq-item">
+ <h3>Сколько стоит абонемент?</h3>
+ <p>Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57.</p>
+</div>
+ <div class="faq-item">
+ <h3>Можно прийти и попробовать клуб?</h3>
+ <p>Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите.</p>
+</div>
+</div>
+</section>
 <!-- ПРИЗЫВ -->
 
 <!-- ЖИЗНЬ КЛУБА -->
@@ -582,6 +613,12 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  .life-film img{height:190px}}
 @media(max-width:520px){.life-film{grid-template-columns:1fr}
  .life-film img{height:220px}.life-sec{padding:48px 0}}
+
+/* ---------- частые вопросы ---------- */
+.faq-item{border-bottom:1px solid var(--line);padding:20px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-family:var(--body);font-weight:600;font-size:17px;color:var(--gold);margin-bottom:9px;line-height:1.45;text-transform:none}
+.faq-item p{margin:0;color:var(--muted);font-size:16px;line-height:1.65}
 </style>
 <section class="life-sec">
  <div class="wrap">
@@ -670,7 +707,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
+ fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
