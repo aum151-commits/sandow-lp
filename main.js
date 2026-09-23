@@ -895,21 +895,15 @@
       hero.style.removeProperty('min-height');
       hero.style.removeProperty('height');
       var hr = hero.getBoundingClientRect();
-      // Раньше низ контента искался по списку классов. Форму в первый
-      // экран переносит c.js (moveForm) уже после первого замера — если
-      // не успел, в списке не находилось ничего, высота ставилась по
-      // неполному содержимому, и кнопка с формой уезжали под обрезку
-      // (у hero overflow:hidden). Мерим по ВСЕМ видимым потомкам: что бы
-      // и когда ни появилось внутри, оно будет учтено.
-      var cands = hero.querySelectorAll('*');
+      // ПОЛОЖЕНИЕ строки считаем по СОДЕРЖИМОМУ — по этому списку, а не
+      // по всем потомкам: фоновые и декоративные слои растянуты на весь
+      // экран, и от них строка уезжала вниз, за пределы видимой части
+      // (проверено на живом 23.09 — строка пропала).
+      var cands = hero.querySelectorAll(
+        '.sndw2-hero-note, .sndw2-hero-formslot, form, .t-form, .sndw2-hero-cta');
       var contentBottom = 0;
       for (var ci = 0; ci < cands.length; ci++) {
-        var el = cands[ci];
-        if (el === mq || mq.contains(el)) continue; // сама бегущая строка
-        var st = getComputedStyle(el);
-        if (st.display === 'none' || st.visibility === 'hidden') continue;
-        if (st.position === 'fixed') continue;
-        var cb = el.getBoundingClientRect();
+        var cb = cands[ci].getBoundingClientRect();
         if (cb.height > 0 && cb.bottom - hr.top > contentBottom) {
           contentBottom = cb.bottom - hr.top;
         }
@@ -917,12 +911,32 @@
       if (!contentBottom) {
         contentBottom = title.getBoundingClientRect().bottom - hr.top;
       }
+      // А вот ВЫСОТУ экрана ограничиваем по низу всего видимого: форму
+      // переносит сюда c.js (moveForm) уже после первого замера, и если
+      // считать только по списку выше, кнопка с формой попадают под
+      // обрезку (у hero overflow:hidden) — человек не может оставить
+      // заявку. Замер до починки: 4 обрезки из 5 запусков.
+      var всёВидимое = hero.querySelectorAll('*');
+      var реальныйНиз = 0;
+      for (var vi = 0; vi < всёВидимое.length; vi++) {
+        var эл = всёВидимое[vi];
+        if (эл === mq || mq.contains(эл)) continue;
+        var стиль = getComputedStyle(эл);
+        if (стиль.display === 'none' || стиль.visibility === 'hidden') continue;
+        if (стиль.position === 'fixed') continue;
+        var рект = эл.getBoundingClientRect();
+        if (рект.height > 0 && рект.bottom - hr.top > реальныйНиз) {
+          реальныйНиз = рект.bottom - hr.top;
+        }
+      }
       var lineH = mq.getBoundingClientRect().height || 60;
       var top = contentBottom + 22;
       mq.style.top = Math.round(top) + 'px';
       mq.style.bottom = 'auto';
       if (window.innerWidth <= 760) {
-        var wantH = Math.round(top + lineH + 26);
+        // Берём большее из двух: место под строку и низ всего содержимого.
+        // Так строка остаётся на виду, а форма с кнопкой не обрезаются.
+        var wantH = Math.round(Math.max(top + lineH + 26, реальныйНиз + 26));
         if (wantH < hr.height) {
           hero.style.setProperty('min-height', wantH + 'px', 'important');
           hero.style.setProperty('height', wantH + 'px', 'important');
