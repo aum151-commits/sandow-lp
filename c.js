@@ -7,7 +7,7 @@
  *   1. favicon 120x120 — рекомендация Яндекс.Вебмастера от 11.02.2026;
  *   2. (снято 19.09) подпись с номером в шапке — на десктопе номер там
  *      уже есть своей кнопкой, вышел дубль; на мобильном работает панель;
- *   3. липкая панель внизу на мобильном: «Позвонить» и «5 тренировок»;
+ *   3. липкая панель внизу на мобильном: «Позвонить» и «Год в подарок»;
  *   4. кнопки-якоря по ходу страницы — между первым экраном и подвалом
  *      было девять экранов без единой точки действия.
  *
@@ -108,7 +108,7 @@
       '#sndw-bar a{flex:1;display:flex;align-items:center;justify-content:center;' +
       'height:48px;border-radius:24px;font:700 15px/1 Arial,sans-serif;text-decoration:none;' +
       'text-align:center;padding:0 8px;white-space:nowrap}' +
-      // на 360 px «5 тренировок» ломалось на две строки — уменьшаем кегль
+      // на 360 px подпись ломалась на две строки — уменьшаем кегль
       '@media (max-width:380px){#sndw-bar a{font-size:13px;padding:0 6px}' +
       '#sndw-bar{gap:6px;padding-left:8px;padding-right:8px}}' +
       // Телеграм — квадратной иконкой, а не третьей надписью: на 360 px
@@ -136,7 +136,7 @@
     панель.innerHTML =
       тг +
       '<a class="sndw-call" href="tel:' + ТЕЛЕФОН + '">Позвонить</a>' +
-      '<a class="sndw-lead" href="#sndw-form">5 тренировок</a>';
+      '<a class="sndw-lead" href="#sndw-form">Год в подарок</a>';
     document.body.appendChild(панель);
 
     панель.querySelector('.sndw-lead').addEventListener('click', function (e) {
@@ -205,7 +205,7 @@
       блок.className = 'sndw-anchor';
       блок.innerHTML =
         '<p>Перезвоним и договоримся о времени визита</p>' +
-        '<a href="#sndw-form">Забрать 5 тренировок</a>';
+        '<a href="#sndw-form">Забрать год в подарок</a>';
       блок.querySelector('a').addEventListener('click', function (e) {
         e.preventDefault();
         к_форме();
@@ -373,7 +373,7 @@
     var заголовки = [].slice.call(document.querySelectorAll('h1,.tn-atom,div,span'))
       .filter(function (e) {
         var t = (e.textContent || '').trim();
-        return e.children.length === 0 && /ПЕРСОНАЛЬНЫХ|ТРЕНИРОВОК/i.test(t) &&
+        return e.children.length === 0 && /ПОЛУЧИ|ПОДАРОК|ПЕРСОНАЛЬНЫХ|ТРЕНИРОВОК/i.test(t) &&
                t.length < 60 && e.getBoundingClientRect().top < window.innerHeight;
       });
     заголовки.forEach(function (эл) {
