@@ -45,11 +45,13 @@ jobs:
           DOCKER
           cat src/Dockerfile
 
+      # Ключ передаём через переменную окружения, а не подстановкой в команду:
+      # многострочный секрет ломает шелл, и реестр отвечает «must be JSON key».
       - name: Войти в реестр Яндекс Облака
+        env:
+          YC_SA_KEY: ${{ secrets.YC_SA_KEY }}
         run: |
-          echo '${{ secrets.YC_SA_KEY }}' > key.json
-          cat key.json | docker login --username json_key --password-stdin cr.yandex
-          rm key.json
+          printf '%s' "$YC_SA_KEY" | docker login --username json_key --password-stdin cr.yandex
 
       - name: Собрать и отправить
         uses: docker/build-push-action@v6
