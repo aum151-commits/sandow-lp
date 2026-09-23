@@ -1,0 +1,59 @@
+# Сборка образа программы учёта каникул в реестр Яндекс Облака.
+#
+# Зачем отдельно от build_images.yml: тот workflow кормит сервисы на Render
+# и трогать его рабочую матрицу рискованно. Здесь одна задача — положить
+# свежий образ в Yandex Container Registry, откуда его берёт Serverless
+# Container. Так программа клуба живёт в России, без иностранных площадок
+# (требование Ольги 23.09.2026).
+#
+# Локального Docker на рабочей машине нет — поэтому сборка здесь.
+name: Образ Тренер Хаба в Яндекс Облако
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'      # ночью, чтобы правки доезжали сами
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Взять код программы
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-trener-hub.git" src
+
+      - name: Написать Dockerfile
+        run: |
+          cat > src/Dockerfile <<'DOCKER'
+          FROM python:3.12-slim
+          WORKDIR /app
+          COPY requirements.txt .
+          RUN pip install --no-cache-dir -r requirements.txt
+          COPY . .
+          # Serverless Container ждёт приложение на 8080; база пишется в /tmp —
+          # единственное место, доступное на запись, а постоянное хранение
+          # всё равно на Яндекс.Диске через yandex_sync.py
+          ENV PORT=8080
+          EXPOSE 8080
+          CMD uvicorn app:app --host 0.0.0.0 --port $PORT
+          DOCKER
+          cat src/Dockerfile
+
+      - name: Войти в реестр Яндекс Облака
+        run: |
+          echo '${{ secrets.YC_SA_KEY }}' > key.json
+          cat key.json | docker login --username json_key --password-stdin cr.yandex
+          rm key.json
+
+      - name: Собрать и отправить
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          tags: cr.yandex/${{ secrets.YC_REGISTRY_ID }}/trener-hub:latest
