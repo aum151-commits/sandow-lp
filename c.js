@@ -471,7 +471,11 @@
   // всё к живому боту. Канал @sandowfit не трогаем — это канал, а не
   // способ связи.
   function единый_телеграм() {
-    var чужие = ['sandowfitness_ru_bot', 'SandowFitness_bot'];
+    // Список пополнен 23.09 после проверки всех страниц сайта: на
+    // /info1 нашлись ещё два бота. Богородицкий @sandow_bogoroditsk_bot
+    // НЕ трогаем — это отдельный клуб со своим приёмником заявок.
+    var чужие = ['sandowfitness_ru_bot', 'SandowFitness_bot',
+                 'Sandofit_bot', 'sandowfitness_bot'];
     var заменено = 0;
     [].slice.call(document.querySelectorAll('a[href*="t.me/"]')).forEach(function (a) {
       var h = a.getAttribute('href') || '';
