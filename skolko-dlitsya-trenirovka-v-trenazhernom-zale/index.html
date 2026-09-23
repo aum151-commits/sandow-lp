@@ -357,7 +357,6 @@ if (document.readyState === 'loading') {
 }
 })();
 </script>
-<script src=/lp.js defer></script>
 </head>
 <body>
 
@@ -447,7 +446,7 @@ if (document.readyState === 'loading') {
  <div class="wrap">
  <span class="tag">Ваш выход</span>
  <h2>Готовы попробовать?</h2>
- <p>Заберите 5 персональных тренировок в подарок — тренер подберёт формат под вашу цель.</p>
+ <p>Заберите год в подарок — тренер подберёт формат под вашу цель.</p>
  <div class="cta-btns"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
 <form class="qform" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
@@ -519,7 +518,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
+ fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
