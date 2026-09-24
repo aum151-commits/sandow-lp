@@ -401,35 +401,6 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
    НЕ трогаем position (14.09:  перебивал
    absolute у .hero-photo, и фото схлопывалось в высоту 0). */
 .hero h1,.hero-sub{text-shadow:0 2px 14px rgba(0,0,0,.95), 0 0 30px rgba(0,0,0,.7)}
-
-/* Первый экран: оффер + форма (24.09.2026). Раньше тут стояли две
-   конкурирующие кнопки, обе уводили со страницы, а оффер лежал ниже
-   середины — до него не доходили. */
-.hero-offer{display:inline-block;margin:22px 0 0;padding:10px 20px;
- border:1px solid rgba(233,199,126,.5);border-radius:999px;
- font-family:var(--head);font-weight:700;
- font-size:clamp(14px,3.4vw,18px);text-transform:uppercase;
- letter-spacing:.03em;color:var(--gold);background:rgba(233,199,126,.08)}
-.qform input[name=name]{flex:1 1 150px;min-width:0;
- background:rgba(11,9,6,.6);border:1px solid rgba(233,199,126,.4);
- border-radius:999px;padding:15px 22px;color:var(--ink);
- font-family:var(--body);font-size:16px;outline:none}
-.qform input[name=name]::placeholder{color:var(--muted)}
-.qform input[name=name]:focus{border-color:var(--gold);
- box-shadow:0 0 0 3px rgba(233,199,126,.16)}
-.hero-trust{margin-top:16px;font-family:var(--mono);font-size:13px;
- color:var(--muted)}
-.hero-trust b{color:var(--gold);font-size:15px}
-/* Телеграм оставлен по просьбе Ольги 24.09: кому-то удобнее написать.
-   Намеренно НЕ кнопка — иконка-ссылка, чтобы не спорить с главным
-   действием (одна кнопка на экран, Unbounce). */
-.hero-tg{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
- font-size:14px;color:var(--muted);text-decoration:none;
- border-bottom:1px solid rgba(233,199,126,.28);padding-bottom:2px}
-.hero-tg:hover{color:var(--gold)}
-/* Иконка фирменная, голубая (Ольга 24.09: «золотыми линиями на чёрном
-   её вообще не видно»). Цвет — родной телеграмовский #2AABEE. */
-.hero-tg svg{width:22px;height:22px;flex:0 0 auto}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -520,18 +491,9 @@ if (document.readyState === 'loading') {
  <span class="tag">Москва · групповые программы</span>
  <h1>Зумба — в расписании <span class="gold">групповых программ</span></h1>
  <p class="hero-sub">Зумба входит в расписание групповых программ клуба «Сандов Фитнес» — это часть абонемента, отдельно оплачивать занятия не нужно. Танцевальная кардио-тренировка под музыку в просторном зале с зеркалами — три зала групповых программ, тесно не бывает. Новым клиентам — подарочные персональные тренировки: покажем зал и расскажем про расписание.</p>
- <div class="hero-offer">Получи год в подарок</div>
-<form class="qform" novalidate>
-<input type="text" name="name" placeholder="Ваше имя" autocomplete="name" aria-label="Ваше имя">
-<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" inputmode="tel" aria-label="Телефон">
-<input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button class="btn btn-gold" type="submit">Забрать год в подарок</button>
-</form>
-<div class="qform-err" role="alert"></div>
-<div class="qform-ok" role="status"></div>
-<div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a>. Мы не рассылаем рекламу.</div>
-<div class="hero-trust"><b>★ 4,6</b> · более 1000 оценок на Яндекс Картах</div>
-<a class="hero-tg" href="https://t.me/sandowclub_bot?start=zumba" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path fill="#fff" d="M18.4 7.2 16.2 17.4c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.7.3l.2-3.3 6.1-5.5c.3-.2-.1-.3-.4-.1l-7.5 4.7-3.2-1c-.7-.2-.7-.7.1-1l12.6-4.8c.6-.2 1.1.1.9.8z"/></svg>Удобнее написать в Телеграм</a>
+ <div class="hero-cta">
+ <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=zumba" rel="noopener">Написать в Телеграм</a>
+</div>
 </div>
  <svg class="dim" viewBox="0 0 400 320" fill="none" aria-label="Зумба входит в абонемент, без отдельной оплаты">
  <rect x="30" y="34" width="340" height="220" rx="10" stroke="#C08B4E" stroke-width="1" opacity=".55"/>
@@ -811,7 +773,7 @@ function initQuickForms(){
  btn.textContent = 'Отправляем…';
  fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
- body: JSON.stringify({phone: input.value, name: (form.querySelector('input[name=name]')||{}).value||'', company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
+ body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
  if (res && res.ok) {
  form.style.display = 'none';
