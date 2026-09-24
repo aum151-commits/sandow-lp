@@ -1,0 +1,112 @@
+# Проекты не смешиваются: страницы других клубов не должны получать
+# московские офферы.
+#
+# Повод — 24.09.2026. Общий скрипт `c.js` подключён в head ВСЕГО домена
+# sandowfitness.ru и не различал проекты: на /bogoroditsk появились три
+# кнопки «Забрать год в подарок» и липкая панель с московской акцией.
+# Заметила это Ольга, а не мы.
+#
+# В самом c.js теперь стоит защита (список разделов + признак по имени
+# клуба в заголовке и тексте). Эта задача — вторая линия: она открывает
+# чужие страницы БРАУЗЕРОМ, как человек, и проверяет, что московского
+# не появилось. Защиту можно случайно сломать правкой; проверка увидит.
+name: Проекты не смешиваются
+
+on:
+  schedule:
+    - cron: '25 5 * * *'   # 08:25 МСК, раз в сутки
+  workflow_dispatch: {}
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Поставить браузер
+        run: |
+          pip install playwright
+          python -m playwright install chromium --with-deps
+
+      - name: Проверить чужие страницы
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          from playwright.sync_api import sync_playwright
+
+          # Страницы других проектов и слова, которых на них быть не должно.
+          ЧУЖИЕ = {
+              "https://sandowfitness.ru/bogoroditsk": "Богородицк",
+          }
+          МОСКОВСКОЕ = ["год в подарок", "получи год", "забрать год"]
+
+          беды = []
+          with sync_playwright() as p:
+              бр = p.chromium.launch()
+              for адрес, имя in ЧУЖИЕ.items():
+                  стр = бр.new_page(viewport={"width": 390, "height": 844})
+                  try:
+                      стр.goto(адрес, wait_until="domcontentloaded", timeout=60000)
+                      # ждём дольше обычного: оффер дописывается скриптами
+                      # не сразу, на коротком ожидании проверка соврёт
+                      стр.wait_for_timeout(14000)
+                      текст = (стр.locator("body").inner_text() or "").lower()
+                      нашли = [с for с in МОСКОВСКОЕ if с in текст]
+                      липкая = стр.locator(".sndw-lead").count() > 0
+                      if нашли or липкая:
+                          беды.append(
+                              f"{имя} ({адрес}): "
+                              + (f"московский оффер — {', '.join(нашли)}. " if нашли else "")
+                              + ("липкая панель московского клуба. " if липкая else "")
+                          )
+                      print(f"{имя}: оффер {нашли or 'нет'}, липкая панель {липкая}")
+                  except Exception as e:
+                      беды.append(f"{имя}: страница не открылась — {str(e)[:90]}")
+                  стр.close()
+              бр.close()
+
+          if not беды:
+              print("проекты не смешаны — чисто")
+              raise SystemExit(0)
+
+          текст = ("ПРОЕКТЫ СМЕШАЛИСЬ — на странице другого клуба появилось "
+                   "московское:\n\n" + "\n".join("• " + б for б in беды)
+                   + "\n\nСкорее всего сломана защита в c.js (список разделов "
+                     "и признак по имени клуба). Это уже случалось 24.09.2026.")
+          urllib.request.urlopen(urllib.request.Request(
+              f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
+              data=json.dumps({"chat_id": os.environ["TG_CHAT"],
+                               "text": текст}).encode(),
+              headers={"Content-Type": "application/json"}), timeout=30)
+          print("тревога отправлена")
+          raise SystemExit(1)
+
+      # Молчание не должно означать «всё хорошо»: если шаг выше упал сам
+      # (браузер, сеть), об этом тоже надо сказать.
+      - name: Сообщить о сбое проверки
+        if: failure()
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          urllib.request.urlopen(urllib.request.Request(
+              f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
+              data=json.dumps({
+                  "chat_id": os.environ["TG_CHAT"],
+                  "text": ("Проверка «проекты не смешиваются» не отработала. "
+                           "Страницы других клубов сегодня не проверены.\n\n"
+                           + os.environ["RUN_URL"]),
+              }).encode(),
+              headers={"Content-Type": "application/json"}), timeout=30)
