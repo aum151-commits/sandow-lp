@@ -400,35 +400,6 @@ table.cmp td{color:var(--muted)}
  .sticky-call a{width:100%}
 }
 
-
-/* Первый экран: оффер + форма (24.09.2026). Раньше тут стояли две
-   конкурирующие кнопки, обе уводили со страницы, а оффер лежал ниже
-   середины — до него не доходили. */
-.hero-offer{display:inline-block;margin:22px 0 0;padding:10px 20px;
- border:1px solid rgba(233,199,126,.5);border-radius:999px;
- font-family:var(--head);font-weight:700;
- font-size:clamp(14px,3.4vw,18px);text-transform:uppercase;
- letter-spacing:.03em;color:var(--gold);background:rgba(233,199,126,.08)}
-.qform input[name=name]{flex:1 1 150px;min-width:0;
- background:rgba(11,9,6,.6);border:1px solid rgba(233,199,126,.4);
- border-radius:999px;padding:15px 22px;color:var(--ink);
- font-family:var(--body);font-size:16px;outline:none}
-.qform input[name=name]::placeholder{color:var(--muted)}
-.qform input[name=name]:focus{border-color:var(--gold);
- box-shadow:0 0 0 3px rgba(233,199,126,.16)}
-.hero-trust{margin-top:16px;font-family:var(--mono);font-size:13px;
- color:var(--muted)}
-.hero-trust b{color:var(--gold);font-size:15px}
-/* Телеграм оставлен по просьбе Ольги 24.09: кому-то удобнее написать.
-   Намеренно НЕ кнопка — иконка-ссылка, чтобы не спорить с главным
-   действием (одна кнопка на экран, Unbounce). */
-.hero-tg{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
- font-size:14px;color:var(--muted);text-decoration:none;
- border-bottom:1px solid rgba(233,199,126,.28);padding-bottom:2px}
-.hero-tg:hover{color:var(--gold)}
-/* Иконка фирменная, голубая (Ольга 24.09: «золотыми линиями на чёрном
-   её вообще не видно»). Цвет — родной телеграмовский #2AABEE. */
-.hero-tg svg{width:22px;height:22px;flex:0 0 auto}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -554,19 +525,8 @@ if (document.readyState === 'loading') {
  <span class="tag">Статья · Сандов Фитнес</span>
  <h1>Упраж­нения при осте­охон­дро­зе: что стоит за диагнозом и что помогает</h1>
  <p class="article-lead">«Остеохондроз» — самый частый диагноз при боли в спине в русскоязычной медицине и один из самых запутанных. Разбираемся, что за ним стоит на самом деле, почему находки на снимке не равны причине боли и какая нагрузка изучалась в исследованиях.</p>
- <div class="hero-offer">Получи год в подарок</div>
-<form class="qform" novalidate>
-<input type="text" name="name" placeholder="Ваше имя" autocomplete="name" aria-label="Ваше имя">
-<input type="tel" name="phone" placeholder="Телефон" autocomplete="tel" inputmode="tel" aria-label="Телефон">
-<input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
-<button class="btn btn-gold" type="submit">Забрать год в подарок</button>
-</form>
-<div class="qform-err" role="alert"></div>
-<div class="qform-ok" role="status"></div>
-<div class="qform-note">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a>. Мы не рассылаем рекламу.</div>
-<div class="hero-trust"><b>★ 4,6</b> · более 1000 оценок на Яндекс Картах</div>
-<a class="hero-tg" href="https://t.me/sandowclub_bot?start=article" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#2AABEE"/><path fill="#fff" d="M18.4 7.2 16.2 17.4c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.7.3l.2-3.3 6.1-5.5c.3-.2-.1-.3-.4-.1l-7.5 4.7-3.2-1c-.7-.2-.7-.7.1-1l12.6-4.8c.6-.2 1.1.1.9.8z"/></svg>Удобнее написать в Телеграм</a>
-<div class="cta-form-note" style="margin-top:14px">Сейчас год в подарок.</div>
+ <div class="cta-btns" style="margin-top:28px"><a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Написать в Телеграм</a></div>
+ <div class="cta-form-note" style="margin-top:14px">Сейчас год в подарок.</div>
 </div>
 </div>
 
