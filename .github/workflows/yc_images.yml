@@ -30,9 +30,12 @@ jobs:
           - name: wiki
             repo: sandow-wiki
             start: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
-          - name: lead-bot
-            repo: sandow-lead-bot
-            start: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          # Лид-бота здесь нет намеренно: из Яндекс Облака недоступен
+          # api.telegram.org, бот не смог бы отвечать клиентам (проверено
+          # 24.09.2026). Он остаётся на Render.
+          - name: voice-trainer
+            repo: sandow-voice-trainer
+            start: ''          # у тренажёра свой Dockerfile
     steps:
       - name: Взять код сервиса
         env:
