@@ -38,7 +38,17 @@ jobs:
           M.select("INBOX", readonly=True)
           since = (datetime.now(timezone.utc) - timedelta(hours=30)).strftime("%d-%b-%Y")
           typ, data = M.search(None, 'FROM', '"queries@pressfeed.ru"', 'SINCE', since)
-          ids = data[0].split()
+          # Результат поиска ОБЯЗАТЕЛЬНО проверяем. 20–23.09.2026 задача
+          # падала четыре дня подряд: почта вернула не список писем, а
+          # текст ошибки, код принял его за список и пошёл читать
+          # «письма» с номерами вида b'Command' — отсюда
+          # «FETCH command error: Command syntax error».
+          if typ != "OK" or not data or data[0] is None:
+              raise RuntimeError(f"поиск писем не удался: {typ} {data!r}")
+          ids = [x for x in data[0].split() if x.isdigit()]
+          мусор = len(data[0].split()) - len(ids)
+          if мусор:
+              print(f"внимание: почта вернула {мусор} нечисловых значений — пропущены")
           print("дайджестов за 30 часов:", len(ids))
 
           KEYS = re.compile(
@@ -91,3 +101,42 @@ jobs:
                   print("telegram:", r.status)
           else:
               print("подходящих запросов нет — молчим")
+
+          # Раз в неделю (понедельник) отчёт подаёт голос, даже если
+          # новостей нет. Причина: молчание упавшей задачи неотличимо от
+          # молчания «всё спокойно» — из-за этого падение 20–23.09 никто
+          # не заметил четыре дня. Пусть тишина будет сигналом.
+          if datetime.now(timezone.utc).weekday() == 0 and not hits:
+              урл = f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage"
+              тело = json.dumps({
+                  "chat_id": os.environ["TG_CHAT"],
+                  "text": ("Pressfeed: фильтр работает, за неделю подходящих "
+                           "запросов журналистов не было."),
+              }).encode()
+              urllib.request.urlopen(
+                  urllib.request.Request(
+                      урл, data=тело,
+                      headers={"Content-Type": "application/json"}),
+                  timeout=30)
+              print("отправлена недельная отметка «жив»")
+
+      # Если шаг выше упал — говорим об этом вслух. Молчащая задача
+      # неотличима от спокойной: падение 20–23.09.2026 никто не заметил
+      # четыре дня подряд именно поэтому.
+      - name: Сообщить о падении
+        if: failure()
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          текст = ("Pressfeed: фильтр запросов журналистов упал и сегодня "
+                   "не отработал. Запросы прессы за этот день не проверены.\n\n"
+                   + os.environ["RUN_URL"])
+          urllib.request.urlopen(urllib.request.Request(
+              f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
+              data=json.dumps({"chat_id": os.environ["TG_CHAT"],
+                               "text": текст}).encode(),
+              headers={"Content-Type": "application/json"}), timeout=30)
