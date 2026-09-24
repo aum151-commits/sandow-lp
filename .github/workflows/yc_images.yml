@@ -1,0 +1,75 @@
+# Сборка образов сервисов клуба в реестр Яндекс Облака.
+#
+# Зачем: на Render бесплатный тариф даёт 750 часов работы на аккаунт в
+# месяц, и четыре наших сервиса выбирают их за две недели — после чего
+# Render гасит ВСЁ разом, включая приём заявок. В Яндекс Облаке лимит
+# считается обработанными запросами (1 млн/мес), а не временем включения,
+# и холодный старт 3 секунды против 23 у Render (замерено 24.09.2026).
+#
+# Локального Docker на рабочей машине нет — поэтому сборка здесь.
+name: Образы сервисов в Яндекс Облако
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'      # ночью, чтобы правки доезжали сами
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false       # один сломанный сервис не должен ронять остальные
+      matrix:
+        include:
+          - name: trener-hub
+            repo: sandow-trener-hub
+            start: uvicorn app:app --host 0.0.0.0 --port $PORT
+          - name: wiki
+            repo: sandow-wiki
+            start: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+          - name: lead-bot
+            repo: sandow-lead-bot
+            start: gunicorn bot:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 30
+    steps:
+      - name: Взять код сервиса
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/${{ matrix.repo }}.git" src
+
+      - name: Написать Dockerfile, если своего нет
+        run: |
+          if [ -f src/Dockerfile ]; then
+            echo "у сервиса свой Dockerfile — берём его"
+            exit 0
+          fi
+          cat > src/Dockerfile <<'DOCKER'
+          FROM python:3.12-slim
+          WORKDIR /app
+          COPY requirements.txt .
+          RUN pip install --no-cache-dir -r requirements.txt
+          COPY . .
+          ENV PORT=8080
+          EXPOSE 8080
+          DOCKER
+          echo 'CMD ${{ matrix.start }}' >> src/Dockerfile
+          cat src/Dockerfile
+
+      # Ключ передаём переменной окружения: многострочный секрет ломает
+      # шелл-команду, и реестр отвечает «must be JSON key».
+      - name: Войти в реестр Яндекс Облака
+        env:
+          YC_SA_KEY: ${{ secrets.YC_SA_KEY }}
+        run: |
+          printf '%s' "$YC_SA_KEY" | docker login --username json_key --password-stdin cr.yandex
+
+      - name: Собрать и отправить
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src
+          push: true
+          tags: cr.yandex/${{ secrets.YC_REGISTRY_ID }}/${{ matrix.name }}:latest
