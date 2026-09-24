@@ -24,7 +24,7 @@ jobs:
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
         shell: python
         run: |
-          import email, imaplib, json, os, re, urllib.request
+          import email, imaplib, json, os, re, time, urllib.request
           from datetime import datetime, timedelta, timezone
           from email.header import decode_header
 
@@ -37,19 +37,39 @@ jobs:
           M.login(os.environ["LOGIN"], os.environ["PASSWORD"])
           M.select("INBOX", readonly=True)
           since = (datetime.now(timezone.utc) - timedelta(hours=30)).strftime("%d-%b-%Y")
-          typ, data = M.search(None, 'FROM', '"queries@pressfeed.ru"', 'SINCE', since)
-          # Результат поиска ОБЯЗАТЕЛЬНО проверяем. 20–23.09.2026 задача
-          # падала четыре дня подряд: почта вернула не список писем, а
-          # текст ошибки, код принял его за список и пошёл читать
-          # «письма» с номерами вида b'Command' — отсюда
-          # «FETCH command error: Command syntax error».
-          if typ != "OK" or not data or data[0] is None:
-              raise RuntimeError(f"поиск писем не удался: {typ} {data!r}")
-          ids = [x for x in data[0].split() if x.isdigit()]
-          мусор = len(data[0].split()) - len(ids)
-          if мусор:
-              print(f"внимание: почта вернула {мусор} нечисловых значений — пропущены")
-          print("дайджестов за 30 часов:", len(ids))
+
+          # Поиск на Яндекс-почте периодически отвечает
+          # «NO [UNAVAILABLE] SEARCH Backend error» — это сбой на их
+          # стороне, не в наших данных. Проверено вживую 25.09.2026:
+          # первая попытка упала, вторая тем же запросом прошла.
+          # Поэтому: повторяем составной поиск, а если он не даётся
+          # вовсе — берём письма только по дате (простой запрос почта
+          # держит надёжнее) и отбираем отправителя сами.
+          def числа(ответ):
+              return [x for x in ответ.split() if x.isdigit()]
+
+          ids, способ = None, ""
+          for попытка in range(4):
+              typ, data = M.search(None, 'FROM', '"queries@pressfeed.ru"',
+                                   'SINCE', since)
+              if typ == "OK" and data and data[0] is not None:
+                  ids, способ = числа(data[0]), "поиск по отправителю"
+                  break
+              print(f"попытка {попытка + 1}: почта ответила {typ} {str(data)[:100]}")
+              time.sleep(5 * (попытка + 1))
+
+          if ids is None:
+              typ, data = M.search(None, 'SINCE', since)
+              if typ != "OK" or not data or data[0] is None:
+                  raise RuntimeError(f"поиск писем не удался даже по дате: {typ} {data!r}")
+              ids, способ = [], "запасной путь — отбор по заголовку"
+              for i in числа(data[0]):
+                  t, d = M.fetch(i, "(BODY.PEEK[HEADER.FIELDS (FROM)])")
+                  шапка = d[0][1].decode("utf-8", "replace") if t == "OK" and d and d[0] else ""
+                  if "queries@pressfeed.ru" in шапка.lower():
+                      ids.append(i)
+
+          print(f"дайджестов за 30 часов: {len(ids)} ({способ})")
 
           KEYS = re.compile(
               r"фитнес|спорт|трениров|тренаж|похуд|зож|здоров|питани|нутрициол|"
@@ -120,20 +140,58 @@ jobs:
                   timeout=30)
               print("отправлена недельная отметка «жив»")
 
-      # Если шаг выше упал — говорим об этом вслух. Молчащая задача
-      # неотличима от спокойной: падение 20–23.09.2026 никто не заметил
-      # четыре дня подряд именно поэтому.
-      - name: Сообщить о падении
+      # Если шаг выше упал — говорим об этом вслух, но НЕ каждый день.
+      # Молчащая задача неотличима от спокойной (падение 20–23.09.2026
+      # никто не заметил четыре дня) — поэтому сообщать надо. Но 24.09
+      # вышла обратная крайность: почта Яндекса сбоит плавающе, и Ольге
+      # уходило сообщение о падении каждый вечер. Её требование прямое —
+      # «только о реальных проблемах». Одиночный сбой почты реальной
+      # проблемой не является: он лечится сам на следующем прогоне.
+      # Поэтому пишем, только когда упало ТРЕТИЙ раз подряд — это уже
+      # не помеха связи, а сломанный фильтр.
+      - name: Сообщить о падении, если оно не разовое
         if: failure()
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: python
         run: |
           import json, os, urllib.request
-          текст = ("Pressfeed: фильтр запросов журналистов упал и сегодня "
-                   "не отработал. Запросы прессы за этот день не проверены.\n\n"
+
+          def гх(путь):
+              зп = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GITHUB_REPOSITORY']}{путь}",
+                  headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                           "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(зп, timeout=30) as о:
+                  return json.loads(о.read().decode())
+
+          # Считаем, сколько прогонов подряд закончились неудачей,
+          # начиная с текущего (он ещё идёт — его считаем сами).
+          подряд = 1
+          try:
+              прошлые = гх(f"/actions/workflows/pressfeed_watch.yml/runs"
+                           f"?per_page=6&status=completed")["workflow_runs"]
+              for п in прошлые:
+                  if п["id"] == int(os.environ.get("GITHUB_RUN_ID", 0)):
+                      continue
+                  if п["conclusion"] == "failure":
+                      подряд += 1
+                  else:
+                      break
+          except Exception as e:          # noqa: BLE001
+              print("историю прогонов получить не удалось:", e)
+              подряд = 3                  # не знаем — лучше сказать
+
+          print("неудач подряд:", подряд)
+          if подряд < 3:
+              print("разовый сбой почты — молчим, поправится сам")
+              raise SystemExit(0)
+
+          текст = (f"Pressfeed: фильтр запросов журналистов падает "
+                   f"{подряд}-й раз подряд и запросы прессы не проверяются.\n\n"
                    + os.environ["RUN_URL"])
           urllib.request.urlopen(urllib.request.Request(
               f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
