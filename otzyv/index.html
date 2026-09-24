@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Расскажите о клубе — «Сандов Фитнес»</title>
+<meta name="description" content="Страница для отзыва о фитнес-клубе «Сандов Фитнес»: выберите удобную площадку — 2ГИС или Яндекс.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://lp.sandowfitness.ru/otzyv/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0906; --ink:#F0EADE; --gold:#E9C77E; --bronze:#C08B4E;
+  --muted:#B0AA9C; --line:rgba(240,234,222,.13);
+  --head:'Unbounded',system-ui,sans-serif;
+  --body:'Archivo',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--body); font-size:17px; line-height:1.6;
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:28px 18px;
+}
+.card{width:100%; max-width:560px; text-align:center}
+.logo{
+  font-family:var(--head); font-weight:900; font-size:15px;
+  letter-spacing:.14em; color:var(--gold); text-transform:uppercase;
+  margin-bottom:34px;
+}
+h1{
+  font-family:var(--head); font-weight:900; line-height:1.15;
+  font-size:clamp(27px,6vw,40px); margin:0 0 18px; text-transform:uppercase;
+}
+h1 span{color:var(--gold)}
+p{color:var(--muted); margin:0 0 14px}
+.hint{
+  font-family:var(--mono); font-size:13px; letter-spacing:.06em;
+  color:var(--bronze); text-transform:uppercase; margin:30px 0 14px;
+}
+.btn{
+  display:block; width:100%; padding:19px 20px; margin-bottom:13px;
+  border-radius:999px; text-decoration:none; font-weight:600; font-size:17px;
+  border:1px solid var(--gold); transition:transform .15s ease, opacity .15s ease;
+}
+.btn:active{transform:scale(.985)}
+.btn-gold{background:var(--gold); color:#171206; border-color:var(--gold)}
+.btn-ghost{background:transparent; color:var(--gold)}
+.note{font-size:14px; color:var(--muted); margin-top:26px; line-height:1.55}
+.phone{
+  display:inline-block; margin-top:22px; color:var(--ink);
+  text-decoration:none; font-family:var(--head); font-weight:700; font-size:19px;
+}
+.phone:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="logo">Сандов Фитнес</div>
+
+  <h1>Расскажите <span>о клубе</span></h1>
+
+  <p>Спасибо, что выбираете «Сандов Фитнес». Если найдётся минута — напишите
+     пару слов о клубе: ваш отзыв помогает тем, кто сейчас выбирает зал.</p>
+
+  <div class="hint">[ где вам удобнее ]</div>
+
+  <a class="btn btn-gold" href="https://2gis.ru/moscow/firm/70000001024833402?writeReview"
+     target="_blank" rel="noopener" onclick="цель('otzyv_2gis')">Написать в 2ГИС</a>
+
+  <a class="btn btn-ghost" href="https://yandex.ru/profile/1820685452"
+     target="_blank" rel="noopener" onclick="цель('otzyv_yandex')">Отзыв в Яндексе</a>
+
+  <p class="note">Выбирайте ту площадку, где у вас уже есть аккаунт, — так быстрее.
+     Пишите как есть: и то, что понравилось, и то, что стоит поправить.</p>
+
+</main>
+
+<script>
+// Счётчик переходов: без него не узнать, работает ли просьба вообще.
+// Номер счётчика тот же, что на остальных страницах клуба.
+function цель(имя){ try{ if(window.ym) ym(111841988,'reachGoal',имя); }catch(e){} }
+</script>
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+ym(111841988,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/111841988" style="position:absolute;left:-9999px" alt=""></div></noscript>
+</body>
+</html>
