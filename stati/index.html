@@ -110,35 +110,6 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 .qform-ok{margin-top:14px;font-size:16px;color:var(--gold);display:none}
 .qform-err{margin-top:10px;font-size:14px;color:#E38B7B;display:none}
 @media(max-width:600px){.qform input[type=tel]{flex:1 1 100%}.qform button{width:100%}}
-
-/* Первый экран: оффер + форма (24.09.2026). Раньше тут стояли две
-   конкурирующие кнопки, обе уводили со страницы, а оффер лежал ниже
-   середины — до него не доходили. */
-.hero-offer{display:inline-block;margin:22px 0 0;padding:10px 20px;
- border:1px solid rgba(233,199,126,.5);border-radius:999px;
- font-family:var(--head);font-weight:700;
- font-size:clamp(14px,3.4vw,18px);text-transform:uppercase;
- letter-spacing:.03em;color:var(--gold);background:rgba(233,199,126,.08)}
-.qform input[name=name]{flex:1 1 150px;min-width:0;
- background:rgba(11,9,6,.6);border:1px solid rgba(233,199,126,.4);
- border-radius:999px;padding:15px 22px;color:var(--ink);
- font-family:var(--body);font-size:16px;outline:none}
-.qform input[name=name]::placeholder{color:var(--muted)}
-.qform input[name=name]:focus{border-color:var(--gold);
- box-shadow:0 0 0 3px rgba(233,199,126,.16)}
-.hero-trust{margin-top:16px;font-family:var(--mono);font-size:13px;
- color:var(--muted)}
-.hero-trust b{color:var(--gold);font-size:15px}
-/* Телеграм оставлен по просьбе Ольги 24.09: кому-то удобнее написать.
-   Намеренно НЕ кнопка — иконка-ссылка, чтобы не спорить с главным
-   действием (одна кнопка на экран, Unbounce). */
-.hero-tg{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
- font-size:14px;color:var(--muted);text-decoration:none;
- border-bottom:1px solid rgba(233,199,126,.28);padding-bottom:2px}
-.hero-tg:hover{color:var(--gold)}
-/* Иконка фирменная, голубая (Ольга 24.09: «золотыми линиями на чёрном
-   её вообще не видно»). Цвет — родной телеграмовский #2AABEE. */
-.hero-tg svg{width:22px;height:22px;flex:0 0 auto}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -297,7 +268,7 @@ function initQuickForms(){
  btn.textContent = 'Отправляем…';
  fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
- body: JSON.stringify({phone: input.value, name: (form.querySelector('input[name=name]')||{}).value||'', company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
+ body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
  if (res && res.ok) {
  form.style.display = 'none';
