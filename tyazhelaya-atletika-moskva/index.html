@@ -27,7 +27,7 @@
  "image": "https://lp.sandowfitness.ru/tyazhelaya-atletika-moskva/zal-vdol.jpg",
  "address": {
  "@type": "PostalAddress",
- "streetAddress": "Нижегородская ул., 29/33, стр. 3",
+ "streetAddress": "Нижегородская ул., 29–33, стр. 3",
  "addressLocality": "Москва",
  "postalCode": "109052",
  "addressCountry": "RU"
@@ -777,7 +777,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
  <h2>Узнайте, как попасть в зал <span class="gold">тяжёлой атлетики</span></h2>
  <p>Покажем сектор, подиумы и грифы Eleiko, подберём формат тренировок на встрече. Позвоните — или напишите, мы ответим и договоримся о визите.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
- <div class="cta-note">Москва, Нижегородская ул., 29/33, стр. 3 — рядом станции Нижегородская и Текстильщики</div>
+ <div class="cta-note">Москва, Нижегородская ул., 29–33, стр. 3 — рядом станции Нижегородская и Текстильщики</div>
  <div class="cta-btns">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить</a>
  <a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=atletika" rel="noopener">Написать в Телеграм</a>
@@ -820,7 +820,7 @@ ym(111841988, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </section>
 <footer>
  <div class="wrap foot">
- <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
+ <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
@@ -847,7 +847,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
+ fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){

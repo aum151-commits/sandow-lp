@@ -47,7 +47,7 @@
    "telephone": "+7 (495) 795-69-57",
    "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Нижегородская ул., 29/33, стр. 3",
+    "streetAddress": "Нижегородская ул., 29–33, стр. 3",
     "addressLocality": "Москва",
     "addressCountry": "RU"
    },
@@ -445,7 +445,7 @@ if (document.readyState === 'loading') {
 <p>Многие, кто в итоге находит для себя подходящий формат физической активности, проходят через несколько проб разных направлений, прежде чем один из них закрепляется надолго. Бокс — не исключение: кому-то он подходит идеально с первого занятия, а кто-то пробует его и решает, что предпочитает другой формат тренировок в зале. Оба исхода — абсолютно нормальный результат первого занятия.</p>
 <h2>Итог: начать бокс проще, чем кажется со стороны</h2>
 <p>Путь в бокс для взрослого новичка начинается не со спарринга, а с постановки стойки, базовых ударов и работы на снарядах — и так происходит для каждого, вне зависимости от предыдущего опыта. Специальной подготовки заранее не требуется, а страх первого занятия — нормальная часть процесса, которая быстро проходит на практике.</p>
-<p>Клуб «Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3.</p>
+<p>Клуб «Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3.</p>
  <section class="faq-sec">
 <span class="tag">Частые вопросы</span>
 <div class="faq-item">
@@ -552,7 +552,7 @@ if (document.readyState === 'loading') {
 </section>
 <footer>
  <div class="wrap foot">
- <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3</div>
+ <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
@@ -579,7 +579,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
+ fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
