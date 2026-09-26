@@ -3,11 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Кикбоксинг в Москве, метро Нижегородская — Сандов Фитнес</title>
-<meta name="description" content="Кикбоксинг в Москве у метро Нижегородская: по четвергам самостоятельно и персонально с тренером. Бойцовский клуб 500 м², 7 мешков, татами.">
-<link rel="canonical" href="https://lp.sandowfitness.ru/kikboksing-moskva/">
-<meta property="og:title" content="Кикбоксинг в Москве — «Сандов Фитнес»">
-<meta property="og:description" content="Кикбоксинг по четвергам и персональные тренировки. Бойцовский клуб 500 м²: 7 мешков, сектор татами, октагон. От первого удара до спаррингов — по желанию.">
+<title>ММА и грэпплинг в Москве, м. Нижегородская | «Сандов Фитнес»</title>
+<meta name="description" content="ММА и грэпплинг в Москве у метро Нижегородская: группа по расписанию и один на один с тренером. Октагон, сектор татами, бойцовский клуб 500 м². Первое занятие в подарок.">
+<link rel="canonical" href="https://lp.sandowfitness.ru/mma-i-greppling-moskva/">
+<meta property="og:url" content="https://lp.sandowfitness.ru/mma-i-greppling-moskva/">
+<meta property="og:title" content="ММА и грэпплинг в Москве — «Сандов Фитнес»">
+<meta property="og:description" content="Групповые занятия ММА и грэпплингом по расписанию и работа один на один с тренером. Октагон, сектор татами, семь мешков — бойцовский клуб 500 м² у метро Нижегородская.">
+<meta property="og:image" content="https://lp.sandowfitness.ru/boytsovsky-klub-moskva/oktagon-hero.jpg">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,16 +19,35 @@
 {
  "@context": "https://schema.org",
  "@type": "SportsActivityLocation",
- "name": "Сандов Фитнес — кикбоксинг в Москве",
- "url": "https://lp.sandowfitness.ru/kikboksing-moskva/",
+ "name": "Сандов Фитнес — ММА и грэпплинг в Москве",
+ "url": "https://lp.sandowfitness.ru/mma-i-greppling-moskva/",
  "telephone": "+7 (495) 795-69-57",
+ "openingHoursSpecification": {
+ "@type": "OpeningHoursSpecification",
+ "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+ "opens": "00:00",
+ "closes": "23:59"
+ },
  "address": {
  "@type": "PostalAddress",
  "addressLocality": "Москва",
  "streetAddress": "Нижегородская ул., 29–33, стр. 3",
  "postalCode": "109052",
  "addressCountry": "RU"
- }
+ },
+ "geo": {
+ "@type": "GeoCoordinates",
+ "latitude": 55.733701,
+ "longitude": 37.711725
+ },
+ "sameAs": [
+ "https://sandowfitness.ru/",
+ "https://vk.com/sandowfitness",
+ "https://t.me/sandowfit",
+ "https://www.instagram.com/sandowfitness/",
+ "https://yandex.ru/maps/org/sandov_fitnes/1820685452/",
+ "https://2gis.ru/moscow/firm/70000001024833402"
+ ]
 }
 </script>
 <style>
@@ -141,11 +162,11 @@ header{
  isolation:isolate;
  overflow:hidden;
 }
-/* фото справа, срезано по диагонали как след удара */
+/* фото справа, срезано по диагонали */
 .hero-visual{
  position:absolute;inset:0 0 0 auto;z-index:-2;
  width:60%;
- background:url('bags-hero.jpg') center 50%/cover no-repeat;
+ background:url('/boytsovsky-klub-moskva/oktagon-hero.jpg') center 50%/cover no-repeat;
  clip-path:polygon(30% 0, 100% 0, 100% 100%, 0 100%);
 }
 .hero-visual::after{
@@ -193,7 +214,7 @@ header{
 .chip:nth-child(2n){transform:rotate(1.4deg) skewX(-6deg)}
 .chip b{color:var(--ink);font-weight:700}
 
-/* ---------- секция: два формата ---------- */
+/* ---------- секция: два направления ---------- */
 section{padding:88px 0}
 .sec-head{max-width:760px}
 .fmt2{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:46px;position:relative}
@@ -233,6 +254,36 @@ section{padding:88px 0}
  background:radial-gradient(circle, rgba(233,199,126,.14), transparent 70%);
 }
 
+/* ---------- секция: расписание и форматы ---------- */
+.sched-sec{padding:0 0 88px}
+.sched-card{
+ display:grid;grid-template-columns:1.05fr .95fr;gap:0;margin-top:40px;
+ border:1px solid var(--line);
+ background:linear-gradient(170deg, rgba(36,26,11,.72), rgba(17,12,6,.9));
+}
+.sched-list{list-style:none;margin:0;padding:28px 34px}
+.sched-list li{
+ display:grid;grid-template-columns:auto auto 1fr;gap:6px 20px;align-items:baseline;
+ padding:16px 0;border-bottom:1px solid var(--line);
+}
+.sched-list li:last-child{border-bottom:none}
+.sched-list .d{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bronze)}
+.sched-list .t{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--gold)}
+.sched-list .n{font-family:var(--head);font-weight:700;font-size:15px;text-transform:uppercase;color:var(--ink)}
+.sched-side{padding:28px 34px;border-left:1px solid var(--line);background:rgba(11,9,6,.45)}
+.sched-side h3{font-family:var(--head);font-weight:700;font-size:17px;text-transform:uppercase;margin-bottom:12px}
+.sched-side p{color:var(--muted);font-size:15.5px}
+.sched-side .pill{
+ display:inline-block;margin-top:20px;
+ border:1px solid rgba(233,199,126,.5);border-radius:999px;
+ font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+ color:var(--gold);padding:7px 14px;
+}
+@media (max-width:900px){
+ .sched-card{grid-template-columns:1fr}
+ .sched-side{border-left:none;border-top:1px solid var(--line)}
+}
+
 /* ---------- секция: площадка (фото-параллелограмм) ---------- */
 .arena{background:linear-gradient(180deg,var(--bg),#0F0B06 55%,var(--bg))}
 .arena-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
@@ -269,7 +320,7 @@ section{padding:88px 0}
 .arena-points li:last-child{border-bottom:1px solid var(--line)}
 .arena-points .ico{flex:0 0 auto;margin-top:3px}
 
-/* ---------- секция: путь от первого удара ---------- */
+/* ---------- секция: как проходит занятие ---------- */
 .path{position:relative;overflow:hidden}
 .path .ghost{
  position:absolute;left:-10px;bottom:-60px;
@@ -390,6 +441,10 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
  body{font-size:16px}
  .header-in{flex-wrap:wrap;row-gap:4px}
  section{padding:64px 0}
+ .sched-sec{padding:0 0 64px}
+ .sched-list,.sched-side{padding:22px 20px}
+ .sched-list li{grid-template-columns:auto 1fr}
+ .sched-list .n{grid-column:1 / -1}
  .logo{font-size:clamp(11px,3.8vw,14px)}
  .logo{gap:3px}
  .logo-icon{height:12px}
@@ -454,15 +509,20 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 }
 
 /* Первый экран на телефоне: фон приглушён, снимок показан отдельным
-   кадром между текстом и кнопками. Фоновая картинка на узком экране
-   обрезается в вертикальную полосу и тонет под затемнением, которое
-   нужно для читаемости текста. Отступы и кегли ужаты, кнопки в две
-   колонки, чтобы в первый экран попали и кадр, и оба призыва.
-   Правка после разбора замечаний. */
-/* На невысоких экранах (старые телефоны, 780 px и ниже) блок фото
+   кадром между текстом и кнопками. Отступы и кегли ужаты, кнопки в две
+   колонки, чтобы в первый экран попали и кадр, и оба призыва. */
+/* На невысоких экранах (старые телефоны, 800 px и ниже) блок фото
    ужимается ещё, иначе кнопки первого экрана уезжают за сгиб. */
 @media (max-width:600px) and (max-height:800px){
  .hero-visual{height:30svh;min-height:210px}
+}
+/* Заголовок этой страницы длиннее, чем у соседних лендингов, поэтому на
+   самых низких экранах (iPhone SE и подобные, 700 px и ниже) кадр и
+   отступы ужимаются ещё раз — иначе кнопки первого экрана уходят за сгиб. */
+@media (max-width:600px) and (max-height:700px){
+ .hero-visual{height:26svh;min-height:168px}
+ .hero{padding-top:74px}
+ .hero-sub{margin:10px 0 12px;font-size:15px;line-height:1.45}
 }
 @media(max-width:600px){
  .hero{padding-top:84px}
@@ -540,20 +600,20 @@ if (document.readyState === 'loading') {
 @media(max-width:600px){.transfer-sec{padding:48px 0}.transfer-card{padding:30px 22px}.transfer-btns .btn{flex:0 0 100%;width:100%;min-width:0;padding:16px 12px;font-size:12.5px;white-space:normal;line-height:1.4;flex-wrap:wrap;gap:4px 10px}}
 </style>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Когда проходят занятия кикбоксингом?","acceptedAnswer":{"@type":"Answer","text":"Групповое занятие по четвергам. Первое занятие кикбоксингом — в подарок."}},{"@type":"Question","name":"Что нужно для первой тренировки?","acceptedAnswer":{"@type":"Answer","text":"Спортивная форма и желание — остальное подскажет тренер."}},{"@type":"Question","name":"Что входит в абонемент?","acceptedAnswer":{"@type":"Answer","text":"Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка."}},{"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},{"@type":"Question","name":"Можно прийти и попробовать клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Чем ММА отличается от грэпплинга?","acceptedAnswer":{"@type":"Answer","text":"ММА — удары и борьба вместе: работа в стойке, переводы и продолжение боя на мате. Грэпплинг — борьба без ударов: захваты, переводы, контроль и выходы из позиций. В «Сандов Фитнес» это два отдельных групповых занятия, ходить можно на любое или на оба."}},{"@type":"Question","name":"Когда проходят групповые занятия ММА и грэпплингом?","acceptedAnswer":{"@type":"Answer","text":"ММА — во вторник в 18:00 и в субботу в 12:00, грэпплинг — в четверг в 18:00. Первое занятие в подарок. Позвоните: +7 (495) 795-69-57 — скажем, когда ближайшее."}},{"@type":"Question","name":"Я никогда не занимался единоборствами — можно прийти?","acceptedAnswer":{"@type":"Answer","text":"Да, группа рассчитана на любой уровень. Начинают с безопасного: как падать и страховать себя, как двигаться, как держать захват. Спарринги — дело добровольное."}},{"@type":"Question","name":"Что взять на первую тренировку?","acceptedAnswer":{"@type":"Answer","text":"Спортивную форму без карманов и молний, сменную обувь и бутылку под воду — питьевая вода в клубе без доплат, полотенце выдаём. На татами занимаются без обуви. Всё остальное подскажет тренер на занятии."}},{"@type":"Question","name":"Есть персональные тренировки по ММА и грэпплингу?","acceptedAnswer":{"@type":"Answer","text":"Да. Тренер работает один на один, подстраивает нагрузку под вашу подготовку, а время — под ваш график. Первое занятие в подарок и в этом формате."}},{"@type":"Question","name":"Можно тренироваться самостоятельно, без группы и тренера?","acceptedAnswer":{"@type":"Answer","text":"Да. Октагон, сектор татами и семь мешков открыты для самостоятельных тренировок — приходить можно одному или с друзьями. Клуб работает круглосуточно, 24/7."}},{"@type":"Question","name":"Что входит в абонемент?","acceptedAnswer":{"@type":"Answer","text":"Тренажёрный зал 1100 м², групповые программы, бойцовский клуб — октагон, сектор татами и семь мешков для самостоятельных тренировок, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка."}},{"@type":"Question","name":"Сколько стоит абонемент?","acceptedAnswer":{"@type":"Answer","text":"Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57."}},{"@type":"Question","name":"Можно прийти и попробовать клуб?","acceptedAnswer":{"@type":"Answer","text":"Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите."}}]}</script>
 </head>
 <body>
 
 <header>
  <div class="wrap header-in">
- <a class="logo" href="#"><img class="logo-icon" src="logo-emblem.png" alt="" width="28" height="28" loading="eager">Сандов <em>Фитнес</em></a>
+ <a class="logo" href="#"><img class="logo-icon" src="/logo-emblem.png" alt="" width="28" height="28" loading="eager">Сандов <em>Фитнес</em></a>
  <a class="head-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
 </div>
 </header>
 
 <!-- ГЕРОЙ: диагональный сплит -->
 <div class="hero">
- <div class="hero-visual" role="img" aria-label="Мешки в бойцовском клубе «Сандов Фитнес»"></div>
+ <div class="hero-visual" role="img" aria-label="Октагон в бойцовском клубе «Сандов Фитнес»"></div>
  <div class="hero-edge"></div>
  <svg class="speed" viewBox="0 0 600 300" fill="none" aria-hidden="true" preserveAspectRatio="none">
  <path d="M-20 260 L440 60" stroke="#E9C77E" stroke-width="1" opacity=".5"/>
@@ -561,42 +621,65 @@ if (document.readyState === 'loading') {
  <path d="M60 300 L600 70" stroke="#E9C77E" stroke-width=".6" opacity=".25"/>
  </svg>
  <div class="wrap hero-inner">
- <span class="label">Кикбоксинг · Москва, Нижегородская / Волгоградский проспект</span>
- <h1>Кикбоксинг в Москве — <span class="hit">по четвергам</span> и персонально</h1>
- <p class="hero-sub">Кикбоксинг по четвергам и персональные тренировки в отдельном <a href="/boytsovsky-klub-moskva/">бойцовском клубе</a> 500 м². От первого удара до спаррингов — в своём темпе, семь мешков свободны. <b>Приходить можно одному или с друзьями.</b></p>
+ <span class="label">ММА и грэпплинг · Москва, Нижегородская / Волгоградский проспект</span>
+ <h1>ММА и грэпплинг — <span class="hit">в группе</span> и один на один</h1>
+ <p class="hero-sub">Два отдельных занятия по расписанию и работа с тренером персонально — в <a href="/boytsovsky-klub-moskva/">бойцовском клубе</a> 500 м²: октагон, сектор татами, семь мешков. <b>Первое занятие — в подарок.</b></p>
  <div class="hero-cta">
- <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Телеграм</a>
+ <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=mma" rel="noopener">Написать в Телеграм</a>
 </div>
  <div class="chips">
+ <span class="chip"><b>ММА</b> вт 18:00 · сб 12:00</span>
+ <span class="chip"><b>грэпплинг</b> чт 18:00</span>
+ <span class="chip">полноценный <b>октагон</b></span>
  <span class="chip"><b>500 м²</b> бойцовский клуб</span>
- <span class="chip"><b>7</b> мешков</span>
- <span class="chip">сектор <b>татами</b></span>
- <span class="chip">по <b>четвергам</b></span>
 </div>
 </div>
 </div>
 
 <div class="slash-band" aria-hidden="true"></div>
 
-<!-- ДВА ФОРМАТА -->
+<!-- ДВА НАПРАВЛЕНИЯ: ЧЕМ ОТЛИЧАЮТСЯ -->
 <section>
  <div class="wrap">
  <div class="sec-head">
- <span class="label">Формат под вас</span>
- <h2>По четвергам самостоятельно или <span class="gold">один на один</span> с тренером</h2>
- <p class="txt">Не всем подходит персональная тренировка один на один — кому-то важнее прийти в своём темпе, одному или с друзьями. Здесь есть и то и другое, выбор за вами.</p>
+ <span class="label">Разберём разницу</span>
+ <h2>ММА и грэпплинг — <span class="gold">это не одно и то же</span></h2>
+ <p class="txt">Названия часто путают, а занятия разные — и по нагрузке, и по ощущениям. Одно про бой целиком, другое только про борьбу. Ходить можно на любое или на оба: это два отдельных занятия в расписании.</p>
 </div>
  <div class="fmt2">
  <div class="fmt2-card">
- <span class="num">Формат 01</span>
- <h3>По четвергам</h3>
- <p>Кикбоксинг — каждый четверг: работа на мешках, отработка связок на татами, свой темп. Приходить можно одному или с друзьями.</p>
- <span class="pill">Каждый четверг</span>
+ <span class="num">Направление 01</span>
+ <h3>ММА</h3>
+ <p>Смешанные единоборства — бой целиком: удары и борьба, стойка и мат. Перемещение, захват, перевод, продолжение на татами. Самое цельное, что можно взять из единоборств за одно занятие, и самый честный способ проверить свою выносливость.</p>
+ <span class="pill">Вторник 18:00 · суббота 12:00</span>
 </div>
  <div class="fmt2-card">
- <span class="num">Формат 02</span>
+ <span class="num">Направление 02</span>
+ <h3>Грэпплинг</h3>
+ <p>Борьба без ударов: захваты, переводы, контроль на мате, выходы из позиций. Ударов нет вовсе — работает техника и умение распределять силы. Хороший вход для тех, кому борьба интересна, а получать по голове не хочется.</p>
+ <span class="pill">Четверг 18:00</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- РАСПИСАНИЕ И ФОРМАТЫ -->
+<section class="sched-sec">
+ <div class="wrap">
+ <div class="sec-head">
+ <span class="label">Когда и с кем</span>
+ <h2>В группе по расписанию или <span class="gold">один на один</span></h2>
+ <p class="txt">Групповые занятия ведёт тренер по единоборствам: приходите в назначенное время, всё показывают и разбирают на месте. Если удобнее своё время и свой темп — есть работа с тренером персонально.</p>
+</div>
+ <div class="sched-card">
+ <ul class="sched-list">
+ <li><span class="d">Вторник</span><span class="t">18:00</span><span class="n">ММА · группа</span></li>
+ <li><span class="d">Четверг</span><span class="t">18:00</span><span class="n">Грэпплинг · группа</span></li>
+ <li><span class="d">Суббота</span><span class="t">12:00</span><span class="n">ММА · группа</span></li>
+ </ul>
+ <div class="sched-side">
  <h3>Персонально</h3>
- <p>Тренер работает только с вами: ставит технику под вашу подготовку и цели, подстраивает время под ваш график. Подходит и для первого шага, и для точечной шлифовки ударов.</p>
+ <p>Тренер работает только с вами: разбирает технику под вашу подготовку, держит нагрузку по вашему состоянию и подстраивает время под график. Подходит и для самого первого шага, и чтобы починить одно конкретное движение.</p>
  <span class="pill">Время — под ваш график</span>
 </div>
 </div>
@@ -607,56 +690,56 @@ if (document.readyState === 'loading') {
 <section class="arena">
  <div class="wrap arena-grid">
  <div class="para-frame">
- <img src="bags-row.jpg" alt="Ряд мешков в бойцовском клубе «Сандов Фитнес» — кикбоксинг в Москве" loading="lazy">
- <span class="para-tag">Бойцовский клуб · 500 м²</span>
+ <img src="/boytsovsky-klub-moskva/oktagon-full.jpg" alt="Октагон в бойцовском клубе «Сандов Фитнес» — ММА и грэпплинг в Москве" loading="lazy">
+ <span class="para-tag">Октагон · бойцовский клуб 500 м²</span>
 </div>
  <div>
  <span class="label">Площадка</span>
- <h2>Не угол с мешком, а <span class="gold">отдельный клуб</span></h2>
- <p class="txt">Кикбоксинг проходит не в общем зале между тренажёрами, а в выделенном бойцовском клубе на 500 м² — со своим оснащением под ударную работу.</p>
+ <h2>Борьба требует места — <span class="gold">здесь оно есть</span></h2>
+ <p class="txt">ММА и грэпплинг проходят не на пятачке между тренажёрами: под единоборства в клубе выделен отдельный <a href="/boytsovsky-klub-moskva/">бойцовский клуб</a> на 500 м² со своим оснащением.</p>
  <ul class="arena-points">
- <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 2v16M10 2v16M14 2v16" stroke="#E9C77E" stroke-width="1.2"/></svg>
- 7 мешков — место для ударной работы есть всегда, без очереди</li>
- <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="15" height="15" stroke="#E9C77E" stroke-width="1.2"/><path d="M2.5 10h15M10 2.5v15" stroke="#E9C77E" stroke-width=".8"/></svg>
- Сектор татами — для работы в парах и отработки связок</li>
  <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><polygon points="6,1.5 14,1.5 18.5,6 18.5,14 14,18.5 6,18.5 1.5,14 1.5,6" stroke="#E9C77E" stroke-width="1.2"/></svg>
- Октагон, который трансформируется в ринг под ударные форматы</li>
+ Октагон — восьмиугольная площадка, где хватает места и на работу в стойке, и на борьбу на мате</li>
+ <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="2.5" width="15" height="15" stroke="#E9C77E" stroke-width="1.2"/><path d="M2.5 10h15M10 2.5v15" stroke="#E9C77E" stroke-width=".8"/></svg>
+ Сектор татами — переводы и падения отрабатываются на мате, а не на жёстком полу</li>
+ <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 2v16M10 2v16M14 2v16" stroke="#E9C77E" stroke-width="1.2"/></svg>
+ Семь мешков — ударная часть ММА: место для работы есть всегда, без очереди</li>
  <li><svg class="ico" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8.5" stroke="#E9C77E" stroke-width="1.2"/><path d="M6.5 10.5l2.5 2.5 5-5.5" stroke="#E9C77E" stroke-width="1.2"/></svg>
- Здесь снимали бой проекта BODY MANIA (3,4 млн подписчиков) — уровень площадки подтверждён практикой</li>
+ На этом октагоне снимали бой проекта BODY MANIA (3,4 млн подписчиков) — с судьями и по международным стандартам</li>
  </ul>
 </div>
 </div>
 </section>
 
-<!-- ПУТЬ -->
+<!-- КАК ПРОХОДИТ ЗАНЯТИЕ -->
 <section class="path">
- <div class="ghost">Удар</div>
+ <div class="ghost">Партер</div>
  <div class="wrap">
  <div class="sec-head">
  <span class="label">Уровень любой</span>
- <h2>От первого удара <span class="gold">до спаррингов</span></h2>
- <p class="txt">Бойцовский клуб открыт и для тех, кто никогда не надевал перчатки, и для тех, кто уже выступал. Тренер ставит технику с нуля; спарринги — по желанию, а не по обязанности.</p>
+ <h2>Как проходит занятие — <span class="gold">от падений до спарринга</span></h2>
+ <p class="txt">В группу приходят и те, кто впервые встал на татами, и те, у кого за плечами соревнования. Начинают всегда с одного и того же: как падать самому и как не травмировать партнёра. В спарринг выходят по желанию — раньше времени на ковёр никто не выталкивает. Если нужен более спокойный вход, посмотрите <a href="/edinoborstva-dlya-nachinayuschih/">единоборства для начинающих</a>.</p>
 </div>
  <div class="steps">
  <div class="step">
  <span class="n">01</span>
- <h3>Первый удар</h3>
- <p>Стойка, перемещение, базовые удары руками и ногами. Никто не бросит новичка «в бой».</p>
+ <h3>Разминка и падения</h3>
+ <p>Борцовская разминка, страховка при падении, перемещения. Никого не выпускают бороться, пока тело не привыкло падать.</p>
 </div>
  <div class="step">
  <span class="n">02</span>
- <h3>Техника</h3>
- <p>Связки и защита, работа на мешках и лапах — темп растёт вместе с вами.</p>
+ <h3>Стойка</h3>
+ <p>Захваты, клинч, переводы в партер. В ММА к этому добавляется ударная работа, в грэпплинге — только борьба.</p>
 </div>
  <div class="step">
  <span class="n">03</span>
- <h3>Работа в парах</h3>
- <p>Контролируемая отработка на татами: дистанция, тайминг, реакция.</p>
+ <h3>Партер</h3>
+ <p>Контроль, смена позиций, выходы и защита на мате. Здесь решается большая часть борцовского боя — и здесь быстрее всего виден прогресс.</p>
 </div>
  <div class="step">
  <span class="n">04</span>
  <h3>Спарринги</h3>
- <p>Для тех, кто хочет проверить себя в деле — в защите и под присмотром тренера.</p>
+ <p>Вольная работа в октагоне под присмотром тренера — для тех, кто хочет проверить себя в деле.</p>
  <span class="opt">Только по желанию</span>
 </div>
 </div>
@@ -668,14 +751,14 @@ if (document.readyState === 'loading') {
  <div class="wrap">
  <div class="sec-head">
  <span class="label">Посмотрите сами</span>
- <h2>2500 м², которые проще <span class="gold">увидеть</span></h2>
- <p class="txt">Бойцовский клуб — часть «Сандов Фитнес»: рядом <a href="/trenazherny-zal-nizhegorodskaya/">тренажёрный зал</a> 1100 м², залы групповых программ, сауна и пространство отдыха.</p>
+ <h2>После борьбы — <span class="gold">сауна и 1100 м² железа</span></h2>
+ <p class="txt">Бойцовский клуб — часть «Сандов Фитнес»: рядом <a href="/trenazherny-zal-nizhegorodskaya/">тренажёрный зал</a> 1100 м², три зала <a href="/gruppovye-programmy-moskva/">групповых программ</a>, финская сауна с ведро-водопадом и пространство отдыха. Клуб работает с апреля 2017 года.</p>
 </div>
  <div class="gal-grid">
- <figure class="gal-card"><img src="tatami.jpg" alt="Сектор татами и мешки в бойцовском клубе «Сандов Фитнес»" loading="lazy"><figcaption>Сектор татами</figcaption></figure>
- <figure class="gal-card"><img src="zal-blue.jpg" alt="Тренажёрный зал «Сандов Фитнес» — 1100 м²" loading="lazy"><figcaption>Тренажёрный зал — 1100 м²</figcaption></figure>
- <figure class="gal-card"><img src="sauna.jpg" alt="Финская сауна клуба «Сандов Фитнес»" loading="lazy"><figcaption>Финская сауна</figcaption></figure>
- <figure class="gal-card"><img src="razdevalka.jpg" alt="Раздевалка клуба «Сандов Фитнес»" loading="lazy"><figcaption>Раздевалки</figcaption></figure>
+ <figure class="gal-card"><img src="/boytsovsky-klub-moskva/oktagon-wide.jpg" alt="Октагон бойцовского клуба «Сандов Фитнес» — занятия ММА" loading="lazy"><figcaption>Октагон</figcaption></figure>
+ <figure class="gal-card"><img src="/kikboksing-moskva/tatami.jpg" alt="Сектор татами для грэпплинга и борьбы в клубе «Сандов Фитнес»" loading="lazy"><figcaption>Сектор татами</figcaption></figure>
+ <figure class="gal-card"><img src="/kikboksing-moskva/zal-blue.jpg" alt="Тренажёрный зал «Сандов Фитнес» — 1100 м²" loading="lazy"><figcaption>Тренажёрный зал — 1100 м²</figcaption></figure>
+ <figure class="gal-card"><img src="/kikboksing-moskva/sauna.jpg" alt="Финская сауна клуба «Сандов Фитнес»" loading="lazy"><figcaption>Финская сауна</figcaption></figure>
 </div>
 </div>
 </section>
@@ -684,7 +767,7 @@ if (document.readyState === 'loading') {
 <div class="loc">
  <div class="loc-in">
  <div class="m">м. Нижегородская</div>
- <p>Клуб — на Нижегородской ул., 29–33, стр. 3: рядом метро Нижегородская, а также Волгоградский проспект (Таганско-Краснопресненская линия). Клуб работает круглосуточно — время тренировки подберём в разговоре.</p>
+ <p>Клуб — на Нижегородской ул., 29–33, стр. 3: рядом метро Нижегородская, а также Волгоградский проспект (Таганско-Краснопресненская линия). Клуб работает круглосуточно — на <a href="/oktagon-i-tatami-samostoyatelnye-trenirovki/">октагон и татами</a> членам клуба доступны в любое время суток, одному или с друзьями.</p>
  <a class="btn btn-ghost" href="tel:+74957956957">Позвонить</a>
 </div>
 </div>
@@ -694,14 +777,14 @@ if (document.readyState === 'loading') {
  <div class="cta-lines" aria-hidden="true"></div>
  <div class="wrap">
  <span class="label">Ваш выход</span>
- <h2>Кикбоксинг — <span class="gold">по четвергам</span></h2>
- <p>Для всех, независимо от уровня подготовки. Приходить можно одному или с друзьями — позвоните, и мы всё расскажем.</p>
+ <h2>Первое занятие — <span class="gold">в подарок</span></h2>
+ <p>ММА и грэпплинг: в группе по расписанию или один на один с тренером. Позвоните — скажем, когда ближайшее занятие, и подберём формат под вашу подготовку.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Позвоните — или напишите, мы ответим</div>
  <div class="cta-btns">
- <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=kik" rel="noopener">Написать в Телеграм</a>
+ <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=mma" rel="noopener">Написать в Телеграм</a>
 </div><div class="qform-wrap" style="max-width:560px;margin:20px auto 0">
-<div class="qform-note" style="font-size:14.5px;color:var(--ink);margin-bottom:4px">Перезвоним, подберём удобное время и дадим рекомендации по тренировкам под вашу цель.</div>
+<div class="qform-note" style="font-size:14.5px;color:var(--ink);margin-bottom:4px">Перезвоним, подберём удобное время и расскажем, с чего начать, если единоборств в вашей жизни ещё не было.</div>
    <form class="qform" id="zayavka" novalidate>
 <input type="tel" name="phone" placeholder="Ваш телефон" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон">
 <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -730,22 +813,36 @@ if (document.readyState === 'loading') {
 </div>
 </section>
 
-
-
 <!-- ЧАСТЫЕ ВОПРОСЫ -->
 <section>
  <div class="wrap" style="max-width:820px">
  <div class="sec-head">
- <span class="tag">01 · Частые вопросы</span>
- <h2>Что спрашивают <span class="gold">перед первым визитом</span></h2>
+ <span class="label">Частые вопросы</span>
+ <h2>Что спрашивают <span class="gold">перед первым занятием</span></h2>
 </div>
  <div class="faq-item">
- <h3>Когда проходят занятия кикбоксингом?</h3>
- <p>Групповое занятие по четвергам. Первое занятие кикбоксингом — в подарок.</p>
+ <h3>Чем ММА отличается от грэпплинга?</h3>
+ <p>ММА — удары и борьба вместе: работа в стойке, переводы и продолжение боя на мате. Грэпплинг — борьба без ударов: захваты, переводы, контроль и выходы из позиций. В «Сандов Фитнес» это два отдельных групповых занятия, ходить можно на любое или на оба.</p>
 </div>
  <div class="faq-item">
- <h3>Что нужно для первой тренировки?</h3>
- <p>Спортивная форма и желание — остальное подскажет тренер.</p>
+ <h3>Когда проходят групповые занятия ММА и грэпплингом?</h3>
+ <p>ММА — во вторник в 18:00 и в субботу в 12:00, грэпплинг — в четверг в 18:00. Первое занятие в подарок. Позвоните: +7 (495) 795-69-57 — скажем, когда ближайшее.</p>
+</div>
+ <div class="faq-item">
+ <h3>Я никогда не занимался единоборствами — можно прийти?</h3>
+ <p>Да, группа рассчитана на любой уровень. Начинают с безопасного: как падать и страховать себя, как двигаться, как держать захват. В спарринг выходят добровольно, когда сами захотите.</p>
+</div>
+ <div class="faq-item">
+ <h3>Что взять на первую тренировку?</h3>
+ <p>Спортивную форму без карманов и молний, сменную обувь и бутылку под воду — питьевая вода в клубе без доплат, полотенце выдаём. На татами занимаются без обуви. Всё остальное подскажет тренер на занятии.</p>
+</div>
+ <div class="faq-item">
+ <h3>Есть персональные тренировки по ММА и грэпплингу?</h3>
+ <p>Да. Тренер работает один на один, подстраивает нагрузку под вашу подготовку, а время — под ваш график. Первое занятие в подарок и в этом формате.</p>
+</div>
+ <div class="faq-item">
+ <h3>Можно тренироваться самостоятельно, без группы и тренера?</h3>
+ <p>Да. Октагон, <a href="/oktagon-i-tatami-samostoyatelnye-trenirovki/">сектор татами</a> и семь мешков открыты для самостоятельных тренировок — приходить можно одному или с друзьями. Клуб работает круглосуточно, 24/7.</p>
 </div>
  <div class="faq-item">
  <h3>Что входит в абонемент?</h3>
@@ -761,8 +858,6 @@ if (document.readyState === 'loading') {
 </div>
 </div>
 </section>
-<!-- ОТЗЫВЫ + КАРТА -->
-
 
 <!-- УДОБСТВА -->
 <style>
@@ -774,15 +869,16 @@ if (document.readyState === 'loading') {
 <section class="perk-line">
  <div class="wrap">
   <ul>
-   <li><b>Бойцовский клуб 500 м²</b> — октагон, татами, семь мешков</li>
-   <li><b>Три зала групповых программ</b> — тесно не бывает</li>
-   <li><b>Финская сауна</b> — входит в абонемент</li>
+   <li><b>Бойцовский клуб 500 м²</b> — октагон, сектор татами, семь мешков</li>
+   <li><b>Круглосуточно, 24/7</b> — борьба и после смены, и до работы</li>
+   <li><b>Финская сауна с ведро-водопадом</b> — входит в абонемент</li>
    <li><b>Охраняемая парковка</b></li>
+   <li><b>Полотенца и питьевая вода</b> — без доплат</li>
   </ul>
  </div>
 </section>
-<!-- ЖИЗНЬ КЛУБА -->
 
+<!-- ЖИЗНЬ КЛУБА -->
 <style>
 .life-sec{padding:64px 0;border-top:1px solid var(--line,rgba(240,234,222,.13))}
 .life-sec .life-h{font-family:var(--head,'Unbounded',system-ui,sans-serif);
@@ -811,19 +907,21 @@ if (document.readyState === 'loading') {
 </style>
 <section class="life-sec">
  <div class="wrap">
-  <span class="tag">Жизнь клуба</span>
-  <h2 class="life-h">Здесь снимают кино и куют <span class="gold">чемпионов</span></h2>
-  <p class="life-lead">Федеральные телесъёмки, звёзды мировых единоборств и собственные турниры — это не декорации, а обычная жизнь клуба.</p>
-  <div class="life-film"><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg" alt="Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Джефф Монсон</b><span>открытый мастер-класс у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg" alt="Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Сериал ТНТ</b><span>съёмки в тренажёрном зале</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg" alt="Отар Кушанашвили в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Отар Кушанашвили</b><span>готовился к бою у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg" alt="Открытый турнир по бодибилдингу и бикини на площадке клуба" loading="lazy" width="1000" height="700"><figcaption><b>Открытый турнир</b><span>бодибилдинг и бикини</span></figcaption></figure></div>
+  <span class="label">Жизнь клуба</span>
+  <h2 class="life-h">На этом октагоне работали <span class="gold">судьи и камеры</span></h2>
+  <p class="life-lead">Легенда мировых единоборств проводил здесь открытый мастер-класс, к бою в нашем бойцовском клубе готовился известный телеведущий, а федеральные съёмки в залах не редкость.</p>
+  <div class="life-film"><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg" alt="Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Джефф Монсон</b><span>открытый мастер-класс у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg" alt="Отар Кушанашвили в клубе «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Отар Кушанашвили</b><span>готовился к бою у нас</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg" alt="Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»" loading="lazy" width="1000" height="700"><figcaption><b>Сериал ТНТ</b><span>съёмки в тренажёрном зале</span></figcaption></figure><figure><img src="https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg" alt="Открытый турнир по бодибилдингу и бикини на площадке клуба" loading="lazy" width="1000" height="700"><figcaption><b>Открытый турнир</b><span>бодибилдинг и бикини</span></figcaption></figure></div>
   <p class="life-note">Здесь же снимали программу «Адская кухня» телеканала ТНТ, а на нашем октагоне — бой проекта BODY MANIA, у которого 3,4 млн подписчиков.</p>
  </div>
 </section>
+
+<!-- ОТЗЫВЫ + КАРТА -->
 <section class="proof-sec">
  <div class="wrap">
- <span class="tag">Реальные отзывы</span>
+ <span class="label">Реальные отзывы</span>
  <div class="proof-grid">
  <div class="rv-carousel">
- <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Отличный большой клуб, чисто очень, стильно. Очень комфортно, свободно — что редкость для московских клубов. Персонал отличный.»</p><div class="rv-author">Кристина З., Яндекс Карты, октябрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Отличный зал! Были на тренировке. Вежливый персонал. Компетентные тренера! Олег Черников отличный тренер.»</p><div class="rv-author">Бекмурзаев С., Яндекс Карты, август 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Хороший фитнес клуб. Большой и просторный зал, много разных тренажеров, есть зал для кроссфита и бокса. Радует, что есть сауна.»</p><div class="rv-author">Анна Владыкина, Яндекс Карты, сентябрь 2022</div></div></div>
+ <div class="rv-track"><div class="review-card"><div class="stars">★★★★★</div><p>«Зал довольно большой и что самое главное людей не много было, я занимался в обед. Зал единоборств вообще пустой, хожу там разминаюсь.»</p><div class="rv-author">Михаил К., Яндекс Карты, декабрь 2025</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Пришёл впервые на тренировку, очень приятный и доброжелательный персонал, быстро решили организационные вопросы… Тренера идут на встречу и вне зависимости от персональных тренировок могут указать на ошибки или дать небольшой совет.»</p><div class="rv-author">Михаил Сердюков, Яндекс Карты, май 2026</div></div><div class="review-card"><div class="stars">★★★★★</div><p>«Замечательные профессиональные тренеры, которые всегда подскажут, даже если ты занимаешься без персонального тренера… огромный плюс в том, что есть полноценный октагон.»</p><div class="rv-author">Иван Говоров, Яндекс Карты, август 2022</div></div></div>
  <div class="rv-dots"><button class="active" aria-label="Отзыв 1"></button><button class="" aria-label="Отзыв 2"></button><button class="" aria-label="Отзыв 3"></button></div>
  <div class="rv-hint">Листайте →</div>
 </div>
@@ -846,7 +944,7 @@ if (document.readyState === 'loading') {
 </section>
 <footer>
  <style>.sndw-links{padding:18px 20px 4px}.sndw-links b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:10px}.sndw-links a{display:inline-block;margin:0 14px 8px 0;font-size:15px;opacity:.85}.sndw-links a:hover{opacity:1}</style>
-<nav class="wrap sndw-links" aria-label="Направления клуба"><b>Ещё в «Сандов Фитнес»</b><a href="/trenazherny-zal-nizhegorodskaya/">Тренажёрный зал</a><a href="/krugosutochny-fitness-klub-metro/">Круглосуточный клуб</a><a href="/gruppovye-programmy-moskva/">Групповые программы</a><a href="/boytsovsky-klub-moskva/">Бойцовский клуб</a><a href="/mma-i-greppling-moskva/">ММА и грэпплинг</a><a href="/boks-metro-nizhegorodskaya/">Бокс</a><a href="/boks-dlya-zhenshchin-moskva/">Бокс для женщин</a><a href="/zumba-moskva/">Зумба</a><a href="/yoga-moskva/">Йога</a><a href="/rastyazhka-moskva/">Растяжка</a><a href="/zdorovaya-spina/">Здоровая спина</a><a href="/tyazhelaya-atletika-moskva/">Тяжёлая атлетика</a><a href="/fitness-klub-s-saunoy-moskva/">Клуб с сауной</a><a href="/razovoe-poseschenie-sportzala/">Разовое посещение</a><a href="/stati/">Статьи о тренировках</a></nav>
+<nav class="wrap sndw-links" aria-label="Направления клуба"><b>Ещё в «Сандов Фитнес»</b><a href="/boytsovsky-klub-moskva/">Бойцовский клуб</a><a href="/trenazherny-zal-nizhegorodskaya/">Тренажёрный зал</a><a href="/krugosutochny-fitness-klub-metro/">Круглосуточный клуб</a><a href="/gruppovye-programmy-moskva/">Групповые программы</a><a href="/boks-metro-nizhegorodskaya/">Бокс</a><a href="/kikboksing-moskva/">Кикбоксинг</a><a href="/boks-dlya-zhenshchin-moskva/">Бокс для женщин</a><a href="/zumba-moskva/">Зумба</a><a href="/yoga-moskva/">Йога</a><a href="/rastyazhka-moskva/">Растяжка</a><a href="/zdorovaya-spina/">Здоровая спина</a><a href="/tyazhelaya-atletika-moskva/">Тяжёлая атлетика</a><a href="/fitness-klub-s-saunoy-moskva/">Клуб с сауной</a><a href="/razovoe-poseschenie-sportzala/">Разовое посещение</a><a href="/stati/">Статьи о тренировках</a></nav>
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
