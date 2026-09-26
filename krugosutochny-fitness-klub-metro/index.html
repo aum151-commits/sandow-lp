@@ -29,7 +29,7 @@
  "address": {
  "@type": "PostalAddress",
  "addressLocality": "Москва",
- "streetAddress": "Нижегородская ул., 29/33, стр. 3",
+ "streetAddress": "Нижегородская ул., 29–33, стр. 3",
  "postalCode": "109052",
  "addressCountry": "RU"
  }
@@ -569,7 +569,7 @@ if (document.readyState === 'loading') {
  <div class="hero-cta">
  <a class="btn btn-gold" href="tel:+74957956957">Позвонить и записаться</a><a class="btn btn-ghost" href="https://t.me/sandowclub_bot?start=noch" rel="noopener">Написать в Телеграм</a>
 </div>
- <div class="hero-note">Москва, Нижегородская ул., 29/33, стр. 3</div>
+ <div class="hero-note">Москва, Нижегородская ул., 29–33, стр. 3</div>
 </div>
  <div class="dial-holder">
  <!-- 24-часовой циферблат -->
@@ -665,7 +665,7 @@ if (document.readyState === 'loading') {
  <div>
  <span class="label">Доказательство № 1</span>
  <h2>Не «до 23:00», а действительно <span class="gold">всегда</span></h2>
- <p class="txt">Клуб на Нижегородской ул., 29/33, стр. 3 не закрывается ни днём, ни ночью, ни в праздники. Это не рекламная фраза, а формат работы клуба с самого начала.</p>
+ <p class="txt">Клуб на Нижегородской ул., 29–33, стр. 3 не закрывается ни днём, ни ночью, ни в праздники. Это не рекламная фраза, а формат работы клуба с самого начала.</p>
  <div class="chips">
  <div class="chip"><b>24/7</b><span>без перерывов</span></div>
  <div class="chip"><b>365</b><span>дней в году</span></div>
@@ -892,7 +892,7 @@ if (document.readyState === 'loading') {
 </section>
 <footer>
  <div class="wrap foot">
- <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29/33, стр. 3 · круглосуточно</div>
+ <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3 · круглосуточно</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
 </div>
 </footer>
@@ -919,7 +919,7 @@ function initQuickForms(){
  btn.disabled = true;
  var was = btn.textContent;
  btn.textContent = 'Отправляем…';
- fetch('https://sandow-lead-bot-v2.onrender.com/site-lead', {
+ fetch('https://sandow-emergency-leads.pages.dev/site-lead', {
  method: 'POST', headers: {'Content-Type': 'application/json'},
  body: JSON.stringify({phone: input.value, company: (form.querySelector('.hp')||{}).value||'', page: location.pathname})
  }).then(function(r){ return r.json(); }).then(function(res){
