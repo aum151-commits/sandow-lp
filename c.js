@@ -56,6 +56,39 @@
     return сколько >= 5;
   }
 
+
+  /* ---------- Богородицк: собственный FAQ в разметке (27.09.2026) ----
+   * Общий head Тильды несёт московский FAQPage на все страницы домена.
+   * Page-level скрипт Богородицка удаляет его, но ничего не ставит
+   * взамен — JS-краулеры видели страницу без FAQ вовсе, а не-JS читали
+   * московские факты («круглосуточно», «бассейн», 2500 м²). Этот блок
+   * стоит ДО гейта чужойПроект() и работает ТОЛЬКО на /bogoroditsk. */
+  function богородицкFAQ() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '/bogoroditsk') return;
+    var МОСКОВСКИЕ = ['https://sandowfitness.ru/#faq',
+                      'https://sandowfitness.ru/#organization'];
+    var скрипты = document.querySelectorAll('script[type="application/ld+json"]');
+    for (var i = 0; i < скрипты.length; i++) {
+      try {
+        var д = JSON.parse(скрипты[i].textContent);
+        if (д && МОСКОВСКИЕ.indexOf(д['@id']) !== -1) {
+          скрипты[i].parentNode.removeChild(скрипты[i]);
+        }
+      } catch (e) {}
+    }
+    if (document.getElementById('sndw-bog-faq')) return;
+    var s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.id = 'sndw-bog-faq';
+    s.textContent = "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"@id\": \"https://sandowfitness.ru/bogoroditsk/#faq\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"Когда открывается клуб в Богородицке?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Открытие — 2026 год, клуб готовится в ТЦ «МегаБум» (Заводской проезд, 6А). Оставьте заявку на странице — сообщим об открытии первыми.\"}}, {\"@type\": \"Question\", \"name\": \"Какой режим работы будет у клуба?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Ежедневно с 7:00 до 23:00.\"}}, {\"@type\": \"Question\", \"name\": \"Что будет в клубе?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Тренажёрный зал от 700 м² на двух уровнях: силовые тренажёры, свободные веса, кардиотренажёры, душевые и раздевалки. Групповые программы будут — их состав сейчас определяется.\"}}, {\"@type\": \"Question\", \"name\": \"Как оплачивается членство?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Помесячная подписка без годовой карты: оплата раз в месяц, отменить можно в любой месяц. Тарифы — на этой странице.\"}}, {\"@type\": \"Question\", \"name\": \"Это тот же «Сандов Фитнес», что в Москве?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Да, это второй клуб сети «Сандов Фитнес» — московский клуб работает с 2017 года. Форматы, режим работы и условия у клубов разные.\"}}]}";
+    document.head.appendChild(s);
+  }
+  try { богородицкFAQ(); } catch (e) {}
+  document.addEventListener('DOMContentLoaded', function () {
+    try { богородицкFAQ(); } catch (e) {}
+  });
+
   if (чужойПроект()) return;   // ничего не добавляем на чужую страницу
 
   var ТЕЛЕФОН = '+74957956957';
