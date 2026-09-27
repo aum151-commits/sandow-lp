@@ -581,6 +581,30 @@
   }
 
 
+
+  /* ---------- 13 ссылок с главной на лендинги (добавлено 27.09.2026) ----------
+   * Показано Ольге макетом в Телеграм, одобрено («ок, публикуй»). Только
+   * главная страница — не трогаем /contacts, /group, /fightclub,
+   * /bogoroditsk (у него свой футер, но проверка path === '' лишней не будет). */
+  function ссылкиНаЛендинги() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '') return;
+    var блок = document.querySelector('.sndw2-footer-links');
+    if (!блок || блок.getAttribute('data-sndw-footer-lp-links')) return;
+    var НОВЫЕ = [["/personalnye-trenirovki-moskva/","Персональные тренировки"],["/fitnes-dlya-zhenshchin-moskva/","Фитнес для женщин"],["/mma-i-greppling-moskva/","ММА и грэпплинг"],["/boks-metro-nizhegorodskaya/","Бокс"],["/kikboksing-moskva/","Кикбоксинг"],["/boks-dlya-zhenshchin-moskva/","Бокс для женщин"],["/zumba-moskva/","Зумба"],["/yoga-moskva/","Йога"],["/rastyazhka-moskva/","Растяжка"],["/zdorovaya-spina/","Здоровая спина"],["/tyazhelaya-atletika-moskva/","Тяжёлая атлетика"],["/fitness-klub-s-saunoy-moskva/","Клуб с сауной"],["/sportivny-klub-moskva/","Спортивный клуб"]];
+    var якорь = блок.querySelector('a[href*="lp.sandowfitness.ru/stati"]');
+    for (var i = 0; i < НОВЫЕ.length; i++) {
+      if (блок.querySelector('a[href="https://lp.sandowfitness.ru' + НОВЫЕ[i][0] + '"]')) continue;
+      var a = document.createElement('a');
+      a.href = 'https://lp.sandowfitness.ru' + НОВЫЕ[i][0];
+      a.textContent = НОВЫЕ[i][1];
+      if (якорь) блок.insertBefore(a, якорь);
+      else блок.appendChild(a);
+    }
+    блок.setAttribute('data-sndw-footer-lp-links', '1');
+  }
+
+
   function единый_телеграм() {
     // Список пополнен 23.09 после проверки всех страниц сайта: на
     // /info1 нашлись ещё два бота. Богородицкий @sandow_bogoroditsk_bot
@@ -639,6 +663,10 @@
     window.addEventListener('load', function () {
       setTimeout(function () { try { якоря(); } catch (e) {} }, 800);
     });
+    window.addEventListener('load', function () {
+      setTimeout(function () { try { ссылкиНаЛендинги(); } catch (e) {} }, 300);
+    });
+
     window.addEventListener('load', function () {
       setTimeout(function () { try { разметкаОтзывов(); } catch (e) {} }, 300);
     });
