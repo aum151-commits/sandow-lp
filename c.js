@@ -638,6 +638,22 @@
   }
 
 
+
+  /* ---------- ссылка на клуб в Богородицке с главной (27.09.2026) ----
+   * На главной не было ни одного упоминания второго клуба — страница
+   * /bogoroditsk оставалась сиротой внутри собственного домена. */
+  function ссылкаБогородицк() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '') return;
+    var блок = document.querySelector('.sndw2-footer-links');
+    if (!блок || блок.querySelector('a[href="/bogoroditsk"]')) return;
+    var a = document.createElement('a');
+    a.href = '/bogoroditsk';
+    a.textContent = 'Клуб в Богородицке';
+    блок.appendChild(a);
+  }
+
+
   function единый_телеграм() {
     // Список пополнен 23.09 после проверки всех страниц сайта: на
     // /info1 нашлись ещё два бота. Богородицкий @sandow_bogoroditsk_bot
@@ -696,6 +712,10 @@
     window.addEventListener('load', function () {
       setTimeout(function () { try { якоря(); } catch (e) {} }, 800);
     });
+    window.addEventListener('load', function () {
+      setTimeout(function () { try { ссылкаБогородицк(); } catch (e) {} }, 350);
+    });
+
     window.addEventListener('load', function () {
       setTimeout(function () { try { ссылкиНаЛендинги(); } catch (e) {} }, 300);
     });
