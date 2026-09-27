@@ -509,6 +509,78 @@
   // этом стоит живой @sandowclub_bot. Решение Ольги 23.09.2026: свести
   // всё к живому боту. Канал @sandowfit не трогаем — это канал, а не
   // способ связи.
+
+  /* ---------- разметка отзывов и крошек (добавлено 27.09.2026) ----------
+   * На главной пять реальных отзывов с авторами и датами, но поисковик о
+   * них не знает: разметки нет. Собираем её ИЗ САМОЙ СТРАНИЦЫ, а не из
+   * зашитого списка — тогда она не разойдётся с видимым текстом.
+   * Сводную оценку не добавляем: своя оценка на своём сайте — плохой тон
+   * и поисковиками не приветствуется.
+   * Только главная и только наш проект: c.js подключён ко всему домену,
+   * включая раздел Богородицка. */
+  function разметкаОтзывов() {
+    if (document.getElementById('sndw-otzyvy-ld')) return;
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '') return;                       // только главная
+
+    var МЕСЯЦЫ = {
+      'январь': '01', 'января': '01', 'февраль': '02', 'февраля': '02',
+      'март': '03', 'марта': '03', 'апрель': '04', 'апреля': '04',
+      'май': '05', 'мая': '05', 'июнь': '06', 'июня': '06',
+      'июль': '07', 'июля': '07', 'август': '08', 'августа': '08',
+      'сентябрь': '09', 'сентября': '09', 'октябрь': '10', 'октября': '10',
+      'ноябрь': '11', 'ноября': '11', 'декабрь': '12', 'декабря': '12'
+    };
+
+    var отзывы = [];
+    var карточки = document.querySelectorAll('.s2-card');
+    for (var i = 0; i < карточки.length; i++) {
+      var к = карточки[i];
+      var абз = к.querySelector('p');
+      var подпись = к.querySelector('.s2-author');
+      if (!абз || !подпись) continue;
+      var текст = (абз.textContent || '').trim().replace(/^«|»$/g, '');
+      var части = (подпись.textContent || '').split(',');
+      if (!текст || !части[0]) continue;
+      var отзыв = {
+        '@type': 'Review',
+        'reviewRating': {'@type': 'Rating', 'ratingValue': 5,
+                         'bestRating': 5, 'worstRating': 1},
+        'author': {'@type': 'Person', 'name': части[0].trim()},
+        'reviewBody': текст,
+        'itemReviewed': {'@type': 'SportsActivityLocation',
+                         'name': 'Сандов Фитнес',
+                         'url': 'https://sandowfitness.ru/'}
+      };
+      if (части[1]) отзыв.publisher = {'@type': 'Organization',
+                                       'name': части[1].trim()};
+      if (части[2]) {
+        var д = части[2].trim().toLowerCase().match(/([а-яё]+)\s+(\d{4})/);
+        if (д && МЕСЯЦЫ[д[1]]) отзыв.datePublished = д[2] + '-' + МЕСЯЦЫ[д[1]] + '-01';
+      }
+      отзывы.push(отзыв);
+    }
+    if (!отзывы.length) return;
+
+    отзывы.push({
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {'@type': 'ListItem', 'position': 1, 'name': 'Сандов Фитнес',
+         'item': 'https://sandowfitness.ru/'},
+        {'@type': 'ListItem', 'position': 2, 'name': 'Фитнес-клуб на Нижегородской',
+         'item': 'https://sandowfitness.ru/'}
+      ]
+    });
+
+    var с = document.createElement('script');
+    с.type = 'application/ld+json';
+    с.id = 'sndw-otzyvy-ld';
+    с.textContent = JSON.stringify({'@context': 'https://schema.org',
+                                    '@graph': отзывы});
+    document.head.appendChild(с);
+  }
+
+
   function единый_телеграм() {
     // Список пополнен 23.09 после проверки всех страниц сайта: на
     // /info1 нашлись ещё два бота. Богородицкий @sandow_bogoroditsk_bot
@@ -567,5 +639,9 @@
     window.addEventListener('load', function () {
       setTimeout(function () { try { якоря(); } catch (e) {} }, 800);
     });
+    window.addEventListener('load', function () {
+      setTimeout(function () { try { разметкаОтзывов(); } catch (e) {} }, 300);
+    });
+
   });
 })();
