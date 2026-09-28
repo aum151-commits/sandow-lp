@@ -1,0 +1,63 @@
+# SLA заявок — скорость первого касания («Беру в работу»), в группу
+# «SF отчеты». Источник — data/lead_response_log.json, который пишет
+# sandow-lead-bot (site_lead() и Telegram-квиз, оба с v20 от 27.09.2026).
+#
+# Пара с конверсиями (conversions.yml) по устройству: то же окно
+# (после 11:40 МСК), тот же чат, но отдельное состояние (state_sla.json) —
+# сбой одного отчёта не должен молчать за счёт отметки другого.
+#
+# Задача из плана «лид → встреча» (27.09.2026, Шаг 1.1): раньше журнал
+# писался, но никто его не читал — эта задача закрывает именно чтение.
+# Честная оговорка внутри самого отчёта: время до клика «Беру в работу»,
+# не факт звонка — сцепка со звонками Билайна не сделана, это следующий шаг.
+name: SLA заявок
+
+on:
+  schedule:
+    - cron: '10 * * * *'
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять цифры из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Отправить сводку, если пришло время
+        working-directory: work
+        env:
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python report_sla.py
+
+      - name: Запомнить, что сводка отправлена
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add state_sla.json
+          git diff --staged --quiet || (
+            git commit -m "Отметка отправленной SLA-сводки" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
+              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            )
+          )
