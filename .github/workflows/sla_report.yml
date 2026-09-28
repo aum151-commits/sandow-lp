@@ -53,7 +53,7 @@ jobs:
         run: |
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
-          git add state_sla.json
+          git add state_sla.json 2>/dev/null || true
           git diff --staged --quiet || (
             git commit -m "Отметка отправленной SLA-сводки" &&
             git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
