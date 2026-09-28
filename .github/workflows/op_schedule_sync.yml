@@ -1,0 +1,155 @@
+# Синхронизация графика ОП: кто из менеджеров сейчас «активный» (кому
+# адресовать уведомление бота о новом лиде/незавершённой записи).
+#
+# Источник — Google Таблица «ОП SF-Сентябрь 2026», лист «График ОП».
+# Доступ — служебный аккаунт Google (sheets-reader@natural-iridium-
+# 462009-m2.iam.gserviceaccount.com), расшарен на этот один адрес лично
+# (решение Ольги 28.09.2026: НЕ публичная ссылка — в таблице личные
+# рабочие часы менеджеров, ссылку могли переслать куда угодно).
+#
+# Файл — загруженный .xlsx, не «родной» Google Sheets: Sheets API отдавал
+# «not supported for this document», поэтому именно Drive API
+# (files.get?alt=media) + openpyxl, не googleapiclient sheets.values.
+#
+# Правило ротации — упрощённая версия без слежки за тем, кто физически
+# пришёл первым (Ольга сама предложила её как запасной вариант, раз бот
+# не может видеть приход, не нарушая «только сессия рутины опрашивает
+# @SandowanalyticBot»): среди тех, кто сегодня работает и чья смена
+# покрывает текущий час, активность идёт по кругу равными отрезками
+# в порядке колонок таблицы. Логика и парсер — sandow-lead-bot не при чём,
+# это отдельный расчёт; бот только читает готовый результат.
+#
+# Результат пишется в приватный sandow-automation (тот же репозиторий,
+# что уже хранит tg_subscribers.json) — бот читает его существующим
+# gh_read_json, добавлять зависимости в образ бота не пришлось.
+
+name: График ОП — активный менеджер
+
+on:
+  schedule:
+    - cron: '*/20 6-21 * * *'   # каждые 20 минут, 9:00-24:00 МСК (UTC+3)
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Установить зависимости
+        run: pip install --quiet google-auth google-api-python-client openpyxl requests
+
+      - name: Скачать график, посчитать активного, записать в sandow-automation
+        env:
+          GOOGLE_SHEETS_SA_KEY: ${{ secrets.GOOGLE_SHEETS_SA_KEY }}
+          WRITE_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64
+          import io
+          import json
+          import os
+          import re
+          import datetime as dt
+
+          import requests
+          from google.oauth2 import service_account
+          from googleapiclient.discovery import build
+          from googleapiclient.http import MediaIoBaseDownload
+          from openpyxl import load_workbook
+
+          KEY_JSON = os.environ["GOOGLE_SHEETS_SA_KEY"]
+          WRITE_TOKEN = os.environ["WRITE_TOKEN"]
+          SHEET_ID = "1B0PuXN-YuE1MFV5A95B8QtCT3dobipq7"
+          SHEET_NAME = "График ОП"
+          MSK = dt.timezone(dt.timedelta(hours=3))
+          REPO = "aum151-commits/sandow-automation"
+          PATH = "data/op_active_manager.json"
+
+          creds_info = json.loads(KEY_JSON)
+          creds = service_account.Credentials.from_service_account_info(
+              creds_info, scopes=["https://www.googleapis.com/auth/drive.readonly"])
+          drive = build("drive", "v3", credentials=creds)
+          req = drive.files().get_media(fileId=SHEET_ID)
+          buf = io.BytesIO()
+          dl = MediaIoBaseDownload(buf, req)
+          done = False
+          while not done:
+              _, done = dl.next_chunk()
+          xlsx_bytes = buf.getvalue()
+
+          wb = load_workbook(io.BytesIO(xlsx_bytes), data_only=True)
+          ws = wb[SHEET_NAME]
+
+          managers = []
+          col = 3
+          while col <= ws.max_column:
+              name = ws.cell(row=1, column=col).value
+              if not name:
+                  break
+              managers.append((name, col))
+              col += 2
+
+          schedule = {}
+          for row in range(3, ws.max_row + 1):
+              day = ws.cell(row=row, column=1).value
+              if not isinstance(day, (int, float)):
+                  continue
+              day_managers = {}
+              for name, c in managers:
+                  status = str(ws.cell(row=row, column=c).value or "").strip()
+                  hours = str(ws.cell(row=row, column=c + 1).value or "").strip()
+                  day_managers[name] = (status, hours)
+              schedule[int(day)] = day_managers
+
+          now = dt.datetime.now(MSK)
+          day = schedule.get(now.day, {})
+          HOURS_RE = re.compile(r"^(\d{1,2})-(\d{1,2})$")
+          working = []
+          for name, (status, hours) in day.items():
+              if not status.lower().startswith("раб"):
+                  continue
+              m = HOURS_RE.match(hours)
+              if not m:
+                  continue
+              working.append((name, int(m.group(1)), int(m.group(2))))
+
+          covering = [w for w in working if w[1] <= now.hour < w[2]]
+          active = None
+          if len(covering) == 1:
+              active = covering[0][0]
+          elif covering:
+              win_start = min(w[1] for w in covering)
+              win_end = max(w[2] for w in covering)
+              span = max(1, win_end - win_start)
+              block = span / len(covering)
+              idx = min(len(covering) - 1,
+                        int((now.hour + now.minute / 60 - win_start) / block))
+              active = covering[idx][0]
+
+          result = {
+              "date": now.strftime("%Y-%m-%d"),
+              "time": now.strftime("%H:%M"),
+              "active_manager": active,
+              "working_today": [w[0] for w in working],
+              "computed_at": now.isoformat(),
+          }
+          print(json.dumps(result, ensure_ascii=False, indent=1))
+
+          gh_headers = {"Authorization": f"Bearer {WRITE_TOKEN}",
+                        "Accept": "application/vnd.github+json"}
+          url = f"https://api.github.com/repos/{REPO}/contents/{PATH}"
+          r = requests.get(url, headers=gh_headers, timeout=30)
+          sha = r.json().get("sha") if r.status_code == 200 else None
+          body = {
+              "message": f"график ОП: активный {active or '—'} ({now.strftime('%H:%M')})",
+              "content": base64.b64encode(
+                  json.dumps(result, ensure_ascii=False, indent=1).encode()).decode(),
+          }
+          if sha:
+              body["sha"] = sha
+          put = requests.put(url, headers=gh_headers, json=body, timeout=30)
+          print("запись в sandow-automation:", put.status_code)
+          put.raise_for_status()
+          PY
