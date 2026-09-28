@@ -1,0 +1,62 @@
+# SLA-эскалация: заявка 5 минут без «Беру в работу» → напоминание в
+# группу «Sandow заявки»; 15 минут → сигнал в «SF отчеты» (РОП).
+#
+# Из плана «лид → встреча» (27.09.2026, Шаг 1.2). Окна эскалации
+# ОГРАНИЧЕНЫ СВЕРХУ внутри sla_escalate.py (20 и 30 минут) — старые
+# необработанные заявки не поднимают эскалацию задним числом, это
+# проверено на реальных данных перед выкладкой.
+#
+# Раз в 5 минут — минимальный практичный шаг: реже теряет смысл норматива
+# в 5 минут, чаще упирается в лимиты бесплатного раннера GitHub.
+name: SLA-эскалация заявок
+
+on:
+  schedule:
+    - cron: '*/5 5-20 * * *'
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  escalate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код и журнал из приватного репозитория
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - run: pip install requests
+
+      - name: Проверить и разослать эскалации
+        working-directory: work
+        env:
+          CLIENT_BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
+          TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+        run: python sla_escalate.py
+
+      - name: Сохранить состояние эскалаций
+        working-directory: work
+        if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git config user.name "Sandow Bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add data/sla_escalations.json
+          git diff --staged --quiet || (
+            git commit -m "SLA-эскалация: обновлено состояние" &&
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
+              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
+              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
+            )
+          )
