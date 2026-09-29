@@ -639,6 +639,61 @@
 
 
 
+  /* ---------- сворачивание лендинг-ссылок подвала (29.09.2026) ----------
+   * Просьба собственника (передала Ольга 29.09): перечень всех
+   * направлений в подвале смотрится «полотном». Все ссылки на
+   * lp.sandowfitness.ru уезжают в раскрывающийся блок «Направления и
+   * услуги» (details/summary): в DOM они остаются — поисковики видят
+   * их как раньше, — а глазу видна одна строка со стрелкой.
+   * Только главная, только наш проект (чужойПроект отсёк c.js раньше).
+   * Откат: СВОРАЧИВАТЬ_ПОДВАЛ = false и перезалить файл. */
+  var СВОРАЧИВАТЬ_ПОДВАЛ = true;
+  function свернутьПодвал() {
+    if (!СВОРАЧИВАТЬ_ПОДВАЛ) return;
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '') return;
+    var блок = document.querySelector('.sndw2-footer-links');
+    if (!блок) return;
+    var лп = [].slice.call(блок.querySelectorAll('a')).filter(function (a) {
+      return a.href.indexOf('lp.sandowfitness.ru') !== -1;
+    });
+    var д = document.getElementById('sndw-footer-more');
+    if (д) {
+      // поздние дорисовки: доносим отставшие ссылки в уже созданный блок
+      var в = д.querySelector('.sndw-footer-more-in');
+      лп.forEach(function (a) { в.appendChild(a); });
+      return;
+    }
+    if (лп.length < 4) return; // дорисовка ещё не прошла — рано сворачивать
+    д = document.createElement('details');
+    д.id = 'sndw-footer-more';
+    var з = document.createElement('summary');
+    з.textContent = 'Направления и услуги';
+    д.appendChild(з);
+    var внутр = document.createElement('div');
+    внутр.className = 'sndw-footer-more-in';
+    лп.forEach(function (a) { внутр.appendChild(a); });
+    д.appendChild(внутр);
+    // details живёт ВНУТРИ строки подвала: тогда ссылки остаются под
+    // селектором «.sndw2-footer-links a» и не теряют фирменный стиль
+    блок.appendChild(д);
+    var ст = document.createElement('style');
+    ст.textContent =
+      '#sndw-footer-more{margin-top:10px;width:100%;flex-basis:100%}' +
+      '#sndw-footer-more summary{cursor:pointer;list-style:none;' +
+        'display:inline-flex;align-items:center;gap:8px;color:inherit;' +
+        'opacity:.85;user-select:none}' +
+      '#sndw-footer-more summary::-webkit-details-marker{display:none}' +
+      '#sndw-footer-more summary::after{content:"\\25BE";font-size:11px;' +
+        'transition:transform .2s;transform:rotate(-90deg)}' +
+      '#sndw-footer-more[open] summary::after{transform:rotate(0)}' +
+      '#sndw-footer-more summary:hover{opacity:1}' +
+      '.sndw-footer-more-in{display:flex;flex-wrap:wrap;' +
+        'gap:10px 22px;padding-top:12px}';
+    document.head.appendChild(ст);
+  }
+
+
   /* ---------- ссылка на клуб в Богородицке с главной (27.09.2026) ----
    * На главной не было ни одного упоминания второго клуба — страница
    * /bogoroditsk оставалась сиротой внутри собственного домена. */
@@ -722,6 +777,13 @@
 
     window.addEventListener('load', function () {
       setTimeout(function () { try { разметкаОтзывов(); } catch (e) {} }, 300);
+    });
+
+    // Сворачивание подвала — ПОСЛЕ всех дорисовок ссылок (самая поздняя —
+    // повтор ссылки_в_подвал на 2000 мс). Второй вызов доносит отставшие.
+    window.addEventListener('load', function () {
+      setTimeout(function () { try { свернутьПодвал(); } catch (e) {} }, 2600);
+      setTimeout(function () { try { свернутьПодвал(); } catch (e) {} }, 4500);
     });
 
   });
