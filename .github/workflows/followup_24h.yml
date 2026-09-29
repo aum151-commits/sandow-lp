@@ -1,0 +1,118 @@
+# Догоняющее сообщение тем, кто нажал /start в @sandowclub_bot, выбрал
+# «Хочу в клуб», но за сутки так и не оставил телефон.
+#
+# Правка Ольги 29.09.2026 (разбор лидогенерации): самая дешёвая
+# недожатая аудитория — люди, которые уже сами пришли в бот, просто
+# не дошли до конца. Раздел 8 согласованного сценария (БОТ-сценарий-
+# реплик-26.09.md) это предусматривал, но не было реализовано.
+#
+# Почему облако, а не таймер внутри бота: in-memory threading.Timer на
+# 24 часа не переживёт перезапуск/передеплой сервиса (а они случаются) —
+# ненадёжно для суточной задержки. Облачный workflow читает готовую базу
+# подписчиков (data/tg_subscribers.json, тот же файл, что уже пишет бот)
+# и не зависит от того, жив ли сейчас сам бот.
+#
+# Правило «без давления» соблюдено: ОДНО сообщение, отметка followed_up_24h
+# не даёт отправить дважды.
+
+name: Догнать недожатых через 24 часа
+
+on:
+  schedule:
+    - cron: '17 * * * *'   # раз в час
+  workflow_dispatch:
+
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  followup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Найти недожатых и написать один раз
+        env:
+          BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
+          WRITE_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          import datetime as dt
+
+          import requests
+
+          BOT_TOKEN = os.environ["BOT_TOKEN"]
+          WRITE_TOKEN = os.environ["WRITE_TOKEN"]
+          REPO = "aum151-commits/sandow-automation"
+          PATH = "data/tg_subscribers.json"
+          MSK = dt.timezone(dt.timedelta(hours=3))
+
+          gh_headers = {"Authorization": f"Bearer {WRITE_TOKEN}",
+                        "Accept": "application/vnd.github+json"}
+          url = f"https://api.github.com/repos/{REPO}/contents/{PATH}"
+          r = requests.get(url, headers=gh_headers, timeout=30)
+          if r.status_code != 200:
+              print("база подписчиков недоступна:", r.status_code)
+              raise SystemExit(0)
+          payload = r.json()
+          data = json.loads(base64.b64decode(payload["content"]).decode("utf-8"))
+          sha = payload["sha"]
+
+          now = dt.datetime.now(MSK)
+          changed = False
+          sent = 0
+
+          for chat_id, rec in data.items():
+              if rec.get("segment") != "new":
+                  continue
+              if rec.get("phone"):
+                  continue
+              if rec.get("followed_up_24h"):
+                  continue
+              first_seen = rec.get("first_seen")
+              if not first_seen:
+                  continue
+              try:
+                  seen_at = dt.datetime.strptime(first_seen, "%Y-%m-%d %H:%M").replace(tzinfo=MSK)
+              except ValueError:
+                  continue
+              age_hours = (now - seen_at).total_seconds() / 3600
+              if age_hours < 24:
+                  continue
+
+              name = rec.get("name") or rec.get("call_name") or ""
+              hi = f"{name}, возвращаюсь к вам." if name else "Возвращаюсь к вам."
+              text = (f"{hi} Самый простой шаг — посмотреть клуб вживую: "
+                      "20 минут, ни к чему не обязывает. Подобрать время?")
+              resp = requests.post(
+                  f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                  json={
+                      "chat_id": int(chat_id),
+                      "text": text,
+                      "reply_markup": {"inline_keyboard": [[
+                          {"text": "Подобрать время", "callback_data": "go"}
+                      ]]},
+                  },
+                  timeout=20,
+              )
+              ok = resp.json().get("ok")
+              print(chat_id, "->", ok, resp.json().get("description", ""))
+              rec["followed_up_24h"] = True
+              changed = True
+              if ok:
+                  sent += 1
+
+          print(f"отправлено: {sent}")
+
+          if changed:
+              body = {
+                  "message": f"tg-бот: догоняющее 24ч — отправлено {sent}",
+                  "content": base64.b64encode(
+                      json.dumps(data, ensure_ascii=False, indent=1).encode()).decode(),
+                  "sha": sha,
+              }
+              put = requests.put(url, headers=gh_headers, json=body, timeout=30)
+              print("запись базы:", put.status_code)
+              put.raise_for_status()
+          PY
