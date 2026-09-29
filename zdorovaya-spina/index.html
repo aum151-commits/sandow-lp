@@ -628,26 +628,11 @@ if (document.readyState === 'loading') {
  <span class="tag">04 · Частые вопросы</span>
  <h2>Что спрашивают <span class="gold">перед первым визитом</span></h2>
 </div>
- <div class="faq-item">
- <h3>Что это за программа?</h3>
- <p>Групповое занятие на укрепление мышц спины и осанку, в спокойном темпе, в зале групповых программ.</p>
-</div>
- <div class="faq-item">
- <h3>Можно ли заниматься при болях в спине?</h3>
- <p>Скажите об этом при записи — менеджер и тренер подберут нагрузку. При диагнозе нужна рекомендация врача.</p>
-</div>
- <div class="faq-item">
- <h3>Что входит в абонемент?</h3>
- <p>Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка.</p>
-</div>
- <div class="faq-item">
- <h3>Сколько стоит абонемент?</h3>
- <p>Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57.</p>
-</div>
- <div class="faq-item">
- <h3>Можно прийти и попробовать клуб?</h3>
- <p>Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите.</p>
-</div>
+ <details class="faq-item"><summary><h3>Что это за программа?</h3></summary><p>Групповое занятие на укрепление мышц спины и осанку, в спокойном темпе, в зале групповых программ.</p></details>
+ <details class="faq-item"><summary><h3>Можно ли заниматься при болях в спине?</h3></summary><p>Скажите об этом при записи — менеджер и тренер подберут нагрузку. При диагнозе нужна рекомендация врача.</p></details>
+ <details class="faq-item"><summary><h3>Что входит в абонемент?</h3></summary><p>Тренажёрный зал 1100 м², групповые программы, бойцовский клуб, финская сауна, полотенца и питьевая вода без доплат. У клуба — охраняемая парковка.</p></details>
+ <details class="faq-item"><summary><h3>Сколько стоит абонемент?</h3></summary><p>Стоимость подбираем под ваши задачи и считаем при встрече — форматы у клуба разные, и цифра зависит от того, что именно вам нужно. Есть рассрочка и разбивка платежей. Позвоните: +7 (495) 795-69-57.</p></details>
+ <details class="faq-item"><summary><h3>Можно прийти и попробовать клуб?</h3></summary><p>Да. Позвоните: +7 (495) 795-69-57 — менеджер договорится о визите.</p></details>
 </div>
 </section>
 <!-- ОТЗЫВЫ + КАРТА -->
@@ -679,7 +664,7 @@ if (document.readyState === 'loading') {
 .faq-item:last-child{border-bottom:none}
 .faq-item h3{font-family:var(--body);font-weight:600;font-size:17px;color:var(--gold);margin-bottom:9px;line-height:1.45;text-transform:none}
 .faq-item p{margin:0;color:var(--muted);font-size:16px;line-height:1.65}
-</style>
+details.faq-item summary{cursor:pointer;list-style:none;display:block}details.faq-item summary::-webkit-details-marker{display:none}details.faq-item summary h3{display:inline;margin-bottom:0}details.faq-item summary::after{content:"\25BE";display:inline-block;margin-left:8px;color:var(--gold);transition:transform .25s}details.faq-item[open] summary::after{transform:rotate(180deg)}details.faq-item p{margin-top:9px}</style>
 <section class="life-sec">
  <div class="wrap">
   <span class="tag">Жизнь клуба</span>
@@ -716,8 +701,8 @@ if (document.readyState === 'loading') {
 </div>
 </section>
 <footer>
- <style>.sndw-links{padding:18px 20px 4px}.sndw-links b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:10px}.sndw-links a{display:inline-block;margin:0 14px 8px 0;font-size:15px;opacity:.85}.sndw-links a:hover{opacity:1}</style>
-<nav class="wrap sndw-links" aria-label="Направления клуба"><b>Ещё в «Сандов Фитнес»</b><a href="/trenazherny-zal-nizhegorodskaya/">Тренажёрный зал</a><a href="/krugosutochny-fitness-klub-metro/">Круглосуточный клуб</a><a href="/gruppovye-programmy-moskva/">Групповые программы</a><a href="/boytsovsky-klub-moskva/">Бойцовский клуб</a><a href="/mma-i-greppling-moskva/">ММА и грэпплинг</a><a href="/boks-metro-nizhegorodskaya/">Бокс</a><a href="/kikboksing-moskva/">Кикбоксинг</a><a href="/boks-dlya-zhenshchin-moskva/">Бокс для женщин</a><a href="/zumba-moskva/">Зумба</a><a href="/yoga-moskva/">Йога</a><a href="/rastyazhka-moskva/">Растяжка</a><a href="/tyazhelaya-atletika-moskva/">Тяжёлая атлетика</a><a href="/fitness-klub-s-saunoy-moskva/">Клуб с сауной</a><a href="/razovoe-poseschenie-sportzala/">Разовое посещение</a><a href="/personalnye-trenirovki-moskva/">Персональные тренировки</a><a href="/fitnes-dlya-zhenshchin-moskva/">Фитнес для женщин</a><a href="/fitnes-tekstilshchiki/">Фитнес Текстильщики</a><a href="/fitnes-pechatniki/">Фитнес Печатники</a><a href="/fitnes-karacharovo/">Фитнес в Карачарове</a><a href="/stati/">Статьи о тренировках</a></nav>
+ <style>.sndw-links{padding:18px 20px 4px}.sndw-links b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:10px}.sndw-links a{display:inline-block;margin:0 14px 8px 0;font-size:15px;opacity:.85}.sndw-links a:hover{opacity:1}.sndw-links summary{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;cursor:pointer;list-style:none;color:inherit}.sndw-links summary:hover{opacity:1}.sndw-links summary::-webkit-details-marker{display:none}.sndw-links summary::after{content:"\25BE";display:inline-block;margin-left:8px;transition:transform .25s}.sndw-links details[open] summary::after{transform:rotate(180deg)}.sndw-links details[open] summary{margin-bottom:10px}</style>
+<nav class="wrap sndw-links" aria-label="Направления клуба"><details class="sndw-more"><summary>Ещё в «Сандов Фитнес»</summary><div class="sndw-more-list"><a href="/trenazherny-zal-nizhegorodskaya/">Тренажёрный зал</a><a href="/krugosutochny-fitness-klub-metro/">Круглосуточный клуб</a><a href="/gruppovye-programmy-moskva/">Групповые программы</a><a href="/boytsovsky-klub-moskva/">Бойцовский клуб</a><a href="/mma-i-greppling-moskva/">ММА и грэпплинг</a><a href="/boks-metro-nizhegorodskaya/">Бокс</a><a href="/kikboksing-moskva/">Кикбоксинг</a><a href="/boks-dlya-zhenshchin-moskva/">Бокс для женщин</a><a href="/zumba-moskva/">Зумба</a><a href="/yoga-moskva/">Йога</a><a href="/rastyazhka-moskva/">Растяжка</a><a href="/tyazhelaya-atletika-moskva/">Тяжёлая атлетика</a><a href="/fitness-klub-s-saunoy-moskva/">Клуб с сауной</a><a href="/razovoe-poseschenie-sportzala/">Разовое посещение</a><a href="/personalnye-trenirovki-moskva/">Персональные тренировки</a><a href="/fitnes-dlya-zhenshchin-moskva/">Фитнес для женщин</a><a href="/fitnes-tekstilshchiki/">Фитнес Текстильщики</a><a href="/fitnes-pechatniki/">Фитнес Печатники</a><a href="/fitnes-karacharovo/">Фитнес в Карачарове</a><a href="/stati/">Статьи о тренировках</a></div></details></nav>
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
