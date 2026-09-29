@@ -40,7 +40,7 @@ jobs:
           TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
         shell: python
         run: |
-          import json, os, urllib.request
+          import json, os, re, urllib.request
           from playwright.sync_api import sync_playwright
 
           # Страницы других проектов и слова, которых на них быть не должно.
@@ -49,11 +49,18 @@ jobs:
           }
           МОСКОВСКОЕ = ["год в подарок", "получи год", "забрать год"]
 
+          # Счётчик Метрики не должен видеть эту проверку: за сентябрь наши
+          # же Playwright-прогоны дали 339 визитов сайту и 391 лендингам,
+          # и штатная фильтрация роботов ловила их лишь частично. Рвём
+          # запрос к сборщику статистики — хит не уходит вовсе.
+          МЕТРИКА = re.compile(r"^https?://(?:mc\d*\.yandex\.[a-z.]+|mc\.webvisor\.(?:com|org))/", re.I)
+
           беды = []
           with sync_playwright() as p:
               бр = p.chromium.launch()
               for адрес, имя in ЧУЖИЕ.items():
                   стр = бр.new_page(viewport={"width": 390, "height": 844})
+                  стр.route(МЕТРИКА, lambda route: route.abort())
                   try:
                       стр.goto(адрес, wait_until="domcontentloaded", timeout=60000)
                       # ждём дольше обычного: оффер дописывается скриптами
