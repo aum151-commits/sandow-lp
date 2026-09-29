@@ -38,6 +38,7 @@ jobs:
           import base64
           import json
           import os
+          import time
           import datetime as dt
 
           import requests
@@ -60,8 +61,7 @@ jobs:
           sha = payload["sha"]
 
           now = dt.datetime.now(MSK)
-          changed = False
-          sent = 0
+          to_process = []
 
           for chat_id, rec in data.items():
               if rec.get("segment") != "new":
@@ -82,6 +82,11 @@ jobs:
                   continue
 
               name = rec.get("name") or rec.get("call_name") or ""
+              to_process.append((chat_id, name))
+
+          print(f"кандидатов: {len(to_process)}")
+          sent = 0
+          for chat_id, name in to_process:
               hi = f"{name}, возвращаюсь к вам." if name else "Возвращаюсь к вам."
               text = (f"{hi} Самый простой шаг — посмотреть клуб вживую: "
                       "20 минут, ни к чему не обязывает. Подобрать время?")
@@ -98,21 +103,38 @@ jobs:
               )
               ok = resp.json().get("ok")
               print(chat_id, "->", ok, resp.json().get("description", ""))
-              rec["followed_up_24h"] = True
-              changed = True
               if ok:
                   sent += 1
-
           print(f"отправлено: {sent}")
 
-          if changed:
-              body = {
-                  "message": f"tg-бот: догоняющее 24ч — отправлено {sent}",
-                  "content": base64.b64encode(
-                      json.dumps(data, ensure_ascii=False, indent=1).encode()).decode(),
-                  "sha": sha,
-              }
-              put = requests.put(url, headers=gh_headers, json=body, timeout=30)
-              print("запись базы:", put.status_code)
-              put.raise_for_status()
+          # Отметку «followed_up_24h» пишем ПОСЛЕДНИМ отдельным заходом —
+          # перечитываем базу заново прямо перед записью и повторяем при
+          # конфликте (409): 28.09/29.09 живой прогон поймал гонку с
+          # обычной записью бота (кто-то писал в базу параллельно), запись
+          # не прошла, а разослать уже разослали — без повтора эти же люди
+          # получили бы то же сообщение снова на следующий час.
+          if to_process:
+              ids = {cid for cid, _ in to_process}
+              for attempt in range(5):
+                  rr = requests.get(url, headers=gh_headers, timeout=30)
+                  rr.raise_for_status()
+                  fresh_payload = rr.json()
+                  fresh_data = json.loads(base64.b64decode(fresh_payload["content"]).decode("utf-8"))
+                  fresh_sha = fresh_payload["sha"]
+                  for cid in ids:
+                      if cid in fresh_data:
+                          fresh_data[cid]["followed_up_24h"] = True
+                  body = {
+                      "message": f"tg-бот: догоняющее 24ч — отправлено {sent}/{len(to_process)}",
+                      "content": base64.b64encode(
+                          json.dumps(fresh_data, ensure_ascii=False, indent=1).encode()).decode(),
+                      "sha": fresh_sha,
+                  }
+                  put = requests.put(url, headers=gh_headers, json=body, timeout=30)
+                  print("запись базы, попытка", attempt + 1, "->", put.status_code)
+                  if put.status_code in (200, 201):
+                      break
+                  time.sleep(3)
+              else:
+                  raise SystemExit("не удалось записать followed_up_24h после 5 попыток")
           PY
