@@ -729,6 +729,46 @@
     return заменено;
   }
 
+  /* ---------- Бойцовский клуб: форма "Хочу попробовать бесплатно" (30.09.2026) ----
+   * Ольга нашла три дефекта у кнопки/полей формы блока rec1523000501 на
+   * /fightclub: 1) текст кнопки светлый на жёлтом фоне; 2) кнопка не по
+   * центру контейнера формы; 3) у полей «Имя»/«Телефон» нет отступа слева.
+   * Разведка Playwright 30.09 показала: родная настройка Тильды для текста
+   * кнопки УЖЕ верная (color:#101010) — её перекрашивает main.js инлайном
+   * с !important ПОСЛЕ загрузки (видит золотой градиент кнопки как «тёмный
+   * фон» — тот же баг, что 16.09 на /bogoroditsk, см. память
+   * tilda-project-script-repaints-buttons). Сам main.js трогать нельзя —
+   * общий с московским сайтом. Чиним тем же приёмом: свой инлайн
+   * !important поверх, переустанавливаем в том же стороже 1,5с x N, что
+   * уже борется с перерисовками main.js ниже. Центрирование и отступы
+   * полей main.js не трогает — их можно поставить один раз, но для
+   * единообразия идут через ту же функцию (присвоение идемпотентно). */
+  function формаБойцовскогоКлуба() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '/fightclub') return;
+    var блок = document.getElementById('rec1523000501');
+    if (!блок) return;
+
+    var текстКнопки = блок.querySelectorAll('.t-submit .t-submit__text');
+    [].slice.call(текстКнопки).forEach(function (el) {
+      el.style.setProperty('color', '#101010', 'important');
+    });
+
+    var кнопка = блок.querySelector('.t-submit');
+    if (кнопка) {
+      кнопка.style.marginLeft = 'auto';
+      кнопка.style.marginRight = 'auto';
+    }
+
+    var поля = блок.querySelectorAll('.t-input-group .t-input');
+    [].slice.call(поля).forEach(function (el) {
+      el.style.setProperty('padding-left', '14px', 'important');
+      el.style.setProperty('padding-right', '14px', 'important');
+      el.style.setProperty('box-sizing', 'border-box', 'important');
+    });
+  }
+
+
   готово(function () {
     try { фавикон(); } catch (e) {}
     try { единый_телеграм(); } catch (e) {}
@@ -737,6 +777,7 @@
     try { панель_пк(); } catch (e) {}
     try { первый_экран(); } catch (e) {}
     try { строка_доверия(); } catch (e) {}
+    try { формаБойцовскогоКлуба(); } catch (e) {}
     // Тильда достраивает блоки после загрузки — ждём, иначе .t-rec ещё нет
     setTimeout(function () { try { якоря(); } catch (e) {} }, 1200);
     // подвал рисуется одним из последних — повторяем, когда он уже есть
@@ -751,6 +792,7 @@
         первый_экран();
         строка_доверия();
         единый_телеграм();
+        формаБойцовскогоКлуба();
       } catch (e) {}
       if (++восстановлений > 9) clearInterval(сторож);
     }, 1500);
