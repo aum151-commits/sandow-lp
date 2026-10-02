@@ -80,6 +80,7 @@ app = Flask(__name__)
     # Отчёты второго клуба (Богородицк) — свои цели Метрики заведены 02.10.2026.
     "bogoroditsk_daily.yml@aum151-commits/sandow-automation":  (720, range(21, 23)),          # отчёт за день, вечером
     "bogoroditsk_weekly.yml@aum151-commits/sandow-automation": (720, range(9, 12), {0}),    # сводка за неделю, пн утром
+    "scorecard.yml@aum151-commits/sandow-automation": (720, range(9, 12), {0}),  # scorecard недели, пн утром
     # Контент-завод снят с расписания 03.09.2026: соцсети переводятся
     # на контент-завод «Тренер Хаба», два конвейера сразу не нужны.
     # Вернуть — снять решётку и включить задачу в GitHub.
