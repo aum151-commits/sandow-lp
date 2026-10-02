@@ -21,3 +21,4 @@ Allow: /
 
 Sitemap: https://lp.sandowfitness.ru/sitemap.xml
 Sitemap: https://lp.sandowfitness.ru/sitemap-images.xml
+Sitemap: https://lp.sandowfitness.ru/sitemap-commercial.xml
