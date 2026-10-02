@@ -49,6 +49,10 @@ jobs:
           pip install requests playwright python-dotenv beautifulsoup4 openpyxl
           playwright install --with-deps chromium
 
+      # Отзывы здесь больше не проверяются: у них своя задача
+      # «Отзывы — новые, рейтинг, снятые» (ежечасно 9:00–22:00).
+      # Два запуска одного модуля писали состояние в один файл и
+      # могли прислать один отзыв дважды (разбор 02.10.2026).
       - name: Разложить сессии кабинетов
         working-directory: work/rpa
         env:
@@ -88,16 +92,6 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python -m src.rpa.lead_errors_watch
-
-      - name: Новые отзывы (Яндекс и 2ГИС)
-        working-directory: work/rpa
-        continue-on-error: true
-        env:
-          YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
-          GIS_STORAGE_STATE: ${{ secrets.GIS_STORAGE_STATE }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python -m src.rpa.watch_new_reviews
 
       - name: Снимок статистики карточки Яндекса
         if: github.event.schedule == '0 17 * * *' || github.event_name == 'workflow_dispatch'
