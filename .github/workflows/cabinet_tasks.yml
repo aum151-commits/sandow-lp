@@ -117,15 +117,22 @@ jobs:
         run: |
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
-          # состояние задач: что уже отправлено, какие заявки видели
-          git add -A rpa/data 2>/dev/null || true
+          # Кладём ТОЛЬКО своё состояние. Раньше здесь стоял
+          # `git add -A rpa/data`, и в коммит попадал чужой файл —
+          # public_reviews.json, который каждые несколько минут пишет
+          # задача «Отзывы». Два коммита на один файл из разных задач
+          # давали конфликт, push падал, состояние терялось, и следующий
+          # запуск слал те же уведомления заново (02.10.2026).
+          for f in lead_errors_seen.json lead_errors_blind_since.txt tilda_leads_by_day.json; do
+            git add -A "rpa/data/$f" 2>/dev/null || true
+          done
           git diff --staged --quiet || (
-            git commit -m "Кабинетные задачи: обновлено состояние" &&
-            # Задачи идут одновременно и пишут состояние в один репозиторий.
-            # Кто пришёл вторым, получал отказ «fetch first» и терял свою
-            # запись — тогда следующий запуск слал те же уведомления заново.
-            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
-              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
-              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
-            )
+            git commit -m "Кабинетные задачи: обновлено состояние"
+            # Перед push подтягиваем то, что записали другие задачи.
+            # Слияние, а не rebase: при конфликте на файле состояния
+            # остаётся наша, только что прочитанная версия — за это
+            # отвечает `-X ours`.
+            git fetch "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main
+            git merge -X ours --no-edit FETCH_HEAD
+            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
           )
