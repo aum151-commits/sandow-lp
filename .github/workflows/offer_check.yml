@@ -14,6 +14,10 @@ on:
         description: "Прислать замер прямо сейчас"
         type: boolean
         default: false
+      probe:
+        description: "Проверка без отправки: напечатать отчёт в лог"
+        type: boolean
+        default: false
 
 env:
   TZ: Europe/Moscow
@@ -40,6 +44,7 @@ jobs:
           TELEGRAM_CHAT_ID_OLGA: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
           YANDEX_METRIKA_TOKEN: ${{ secrets.YANDEX_METRIKA_TOKEN }}
           FORCE_SEND: ${{ github.event.inputs.force == 'true' && '1' || '' }}
+          DRY_RUN: ${{ github.event.inputs.probe == 'true' && '1' || '' }}
         run: python report_offer_check.py
       - name: Вернуть отметку в приватный репозиторий
         working-directory: work
