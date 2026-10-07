@@ -315,7 +315,13 @@ async function createLead(page, entry) {
      Богородицка собран на Тильде, то же значение, что у реальных заявок
      Москвы), "Он-Лайн" для Telegram-бота (отдельной строки под бота в
      справочнике 1С нет, это ближайшее по смыслу существующее значение). */
-  const sourceLabel = entry.adSource === 'tilda' ? 'tilda' : 'Он-Лайн';
+  /* Ольга 08.10.2026: «Рекламный источник — Стойка, а не онлайн!».
+     Личная встреча на стойке в ТЦ — отдельный источник, и в отчётах 1С он
+     должен читаться именно так. «Он-Лайн» остаётся для Telegram-бота:
+     отдельной строки под бота в справочнике 1С нет, это ближайшее по смыслу
+     существующее значение. */
+  const sourceLabel = entry.adSource === 'tilda' ? 'tilda'
+    : entry.adSource === 'stoyka' ? 'Стойка' : 'Он-Лайн';
   await page.mouse.click(620, 408);
   await page.waitForTimeout(2000);
   const showAllSource = await findByText(page, 'Показать все', true);
@@ -328,6 +334,12 @@ async function createLead(page, entry) {
       await page.waitForTimeout(1500);
       const selectBtn2 = await findByText(page, 'Выбрать', true);
       if (selectBtn2) { await page.mouse.click(selectBtn2.x, selectBtn2.y); await page.waitForTimeout(2000); }
+    } else {
+      /* Значения нет в справочнике — поле останется пустым, и молчать об
+         этом нельзя: по логу должно быть видно, что справочник надо
+         дополнить, а не что робот сломался (грабля «форма отработала, а
+         поля нет» из истории с именем и структурной единицей). */
+      log(`ВНИМАНИЕ: в справочнике 1С нет рекламного источника «${sourceLabel}» — поле оставлено пустым`);
     }
   }
 
