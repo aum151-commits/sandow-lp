@@ -691,6 +691,40 @@ async function createLead(page, entry) {
   }
 }
 
+/* Сообщение в служебный чат (правка 08.10.2026).
+
+   Робот молчал пять дней, и никто этого не заметил: шаг воркфлоу рапортовал
+   «успех» при нуле созданных заявок. Честный провал это лечит, но узнать о нём
+   всё равно можно только открыв GitHub. Поэтому итог прогона уходит туда же,
+   где и остальные служебные отчёты клуба: канал берётся из секретов
+   ALERT_BOT_TOKEN / ALERT_CHAT_ID (те же, что у «Сверки состава» в этом же
+   репозитории — новых заводить не нужно). Нет секретов — просто пишем в лог:
+   уведомление не должно быть тем, из-за чего прогон падает. */
+function сообщить(текст) {
+  const бот = readEnv('ALERT_BOT_TOKEN');
+  const чат = readEnv('ALERT_CHAT_ID');
+  if (!бот || !чат) {
+    log('уведомление не отправлено: нет ALERT_BOT_TOKEN/ALERT_CHAT_ID');
+    return;
+  }
+  try {
+    const тело = JSON.stringify({ chat_id: чат, text: текст, disable_web_page_preview: true });
+    const запрос = require('https').request({
+      hostname: 'api.telegram.org', path: `/bot${бот}/sendMessage`, method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(тело) },
+    }, (ответ) => {
+      let кусок = '';
+      ответ.on('data', (д) => { кусок += д; });
+      ответ.on('end', () => log(`уведомление: ${ответ.statusCode} ${кусок.slice(0, 120)}`));
+    });
+    запрос.on('error', (e) => log(`уведомление не ушло: ${e.message}`));
+    запрос.write(тело);
+    запрос.end();
+  } catch (e) {
+    log(`уведомление не ушло: ${e.message}`);
+  }
+}
+
 async function run() {
   if (!GH_TOKEN) { log('нет токена GitHub (PRIVATE_REPO_TOKEN/GITHUB_TOKEN_WORKFLOW) — стоп'); return; }
 
@@ -739,11 +773,14 @@ async function run() {
     await browser.close();
     log('ВХОД В 1С НЕ СОСТОЯЛСЯ: интерфейс не загрузился (см. «после входа» выше). ' +
         'Заявки не тронуты, очередь осталась как была.');
+    сообщить(`⚠️ Робот заявок Богородицка: вход в 1С не состоялся, ${entries.length} заявок ` +
+             'остались в очереди. Заявки в чате заявок — продажи их видят.');
     process.exitCode = 1;
     return;
   }
 
   const failed = [];
+  let перваяОшибка = null;
   for (const entry of entries) {
     try {
       /* Перед каждой заявкой — заново открываем список: после сохранения
@@ -754,6 +791,7 @@ async function run() {
       log(`создано: ${entry.phone} (${entry.tranid})`);
     } catch (e) {
       log(`ОШИБКА для ${entry.tranid} (${entry.phone}): ${e.message}`);
+      if (!перваяОшибка) перваяОшибка = e.message;
       try { await page.screenshot({ path: path.join(__dirname, `error-${entry.tranid}.png`), fullPage: true }); } catch (e2) {}
       await слепокЭкрана(page, entry.tranid);
       failed.push(entry);
@@ -772,7 +810,13 @@ async function run() {
      робота (08.10.2026, слепые клики по меню CRM) жила незамеченной. */
   if (failed.length) {
     log(`ПРОВАЛ: ${failed.length} заявок не заведены — это ошибка прогона, а не норма`);
+    const первая = String(перваяОшибка || '').trim();
+    сообщить(`⚠️ Робот заявок Богородицка: ${failed.length} из ${entries.length} заявок не заведены в 1С.` +
+             (первая ? `\nПричина: ${первая}` : '') +
+             '\nОчередь не тронута, заявки уедут следующим прогоном. В чате заявок они есть — продажи их видят.');
     process.exitCode = 1;
+  } else {
+    сообщить(`✅ Робот заявок Богородицка: завёл в 1С ${entries.length} заявок.`);
   }
 }
 
