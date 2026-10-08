@@ -151,6 +151,53 @@ async function dismissOk(page) {
   }
 }
 
+/* Закрыть любые всплывающие окна (правка 08.10.2026).
+
+   Что нашлось: на снимках экрана при сбое видно модальное окно «Клиент с таким
+   данным уже существует» — телефон уже есть в базе, и 1С спрашивает, что
+   делать. Кнопка в этом окне называется не «OK», а иначе, поэтому dismissOk()
+   его не закрывал: окно висело, перекрывало интерфейс, и следующий шаг робота
+   («найти ссылку „Заявки“») не мог ничего нажать. Так он и «слеп» с 3 октября,
+   создав первые 2-3 заявки.
+
+   Здесь два действия: сначала честные кнопки по приоритету (для диалога о
+   существующем клиенте важнее всего продолжить — заявку всё равно надо
+   завести), потом Escape как универсальный «закрыть окно». Что именно нажали —
+   пишем в лог, чтобы причина сбоя читалась, а не угадывалась. */
+async function закрытьОкна(page, где) {
+  const метки = ['Да', 'Продолжить', 'Создать', 'OK', 'Ok', 'Понятно', 'Закрыть', 'Отмена'];
+  for (let i = 0; i < 3; i++) {
+    let нажали = null;
+    for (const метка of метки) {
+      const к = await findByText(page, метка, true);
+      if (к) {
+        await page.mouse.click(к.x, к.y);
+        await page.waitForTimeout(1200);
+        нажали = метка;
+        break;
+      }
+    }
+    if (!нажали) break;
+    log(`${где}: закрыл окно кнопкой «${нажали}»`);
+  }
+  const остались = await page.evaluate(() => {
+    const модалок = [...document.querySelectorAll('div[class*=modal], div[class*=wnd], div[class*=dialog], div[class*=message]')]
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        const с = getComputedStyle(el);
+        return r.width > 200 && r.height > 80 && с.visibility !== 'hidden' && с.display !== 'none';
+      });
+    return модалок.length;
+  });
+  if (остались) {
+    log(`${где}: окон на экране ${остались} — пробую Escape`);
+    for (let i = 0; i < 2; i++) {
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(900);
+    }
+  }
+}
+
 /* Страховка от повреждённого текста на входе (кривая кодировка в источнике,
    символ замены U+FFFD) — такой текст один раз уже сорвал сохранение
    заявки в 1С (запись 094, 19-20.09.2026): комментарий с "кракозябрами"
@@ -193,7 +240,7 @@ async function login(page) {
   const enter = await page.$('text=Войти');
   if (enter) await enter.click();
   await page.waitForTimeout(15000);
-  await dismissOk(page);
+  await закрытьОкна(page, 'окна');
 }
 
 async function openLeadsList(page) {
@@ -235,13 +282,13 @@ async function openLeadsList(page) {
       await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
       await page.waitForTimeout(9000);
     }
-    await dismissOk(page);
+    await закрытьОкна(page, 'окна');
     let ссылка = await найти();
     if (!ссылка) {
       for (const с of await секции()) {
         await page.mouse.click(с.x, с.y);
         await page.waitForTimeout(2500);
-        await dismissOk(page);
+        await закрытьОкна(page, 'окна');
         ссылка = await найти();
         if (ссылка) break;
       }
@@ -249,7 +296,7 @@ async function openLeadsList(page) {
     if (ссылка) {
       await page.mouse.click(ссылка.x, ссылка.y);
       await page.waitForTimeout(9000);
-      await dismissOk(page);
+      await закрытьОкна(page, 'список заявок');
       return;
     }
   }
@@ -291,7 +338,7 @@ async function selectBogoroditsk(page) {
 async function createLead(page, entry) {
   await page.mouse.click(195, 229); // "+ Создать заявку" в колонке "Не обработана"
   await page.waitForTimeout(7000);
-  await dismissOk(page);
+  await закрытьОкна(page, 'окна');
 
   await selectBogoroditsk(page);
 
@@ -421,7 +468,7 @@ async function createLead(page, entry) {
   if (!saveBtn) throw new Error('нет кнопки «Сохранить»');
   await page.mouse.click(saveBtn.x, saveBtn.y);
   await page.waitForTimeout(7000);
-  await dismissOk(page);
+  await закрытьОкна(page, 'после сохранения');
 
   /* Настоящая проверка сохранения — не «клик прошёл без ошибки JS».
      Один раз (заявка 094, 19-20.09.2026) форма 1С показала диалог с
