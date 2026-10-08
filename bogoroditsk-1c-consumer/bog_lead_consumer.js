@@ -103,9 +103,28 @@ async function writeQueue(entries, sha) {
     content: Buffer.from(content, 'utf8').toString('base64'),
   };
   if (sha) body.sha = sha;
-  const r = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  if (!r.ok) log(`ОШИБКА записи очереди обратно: ${r.status} ${await r.text()}`);
-  return r.ok;
+  let r = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (r.ok) return true;
+
+  /* 409 — файл изменили, пока шёл прогон (08.10.2026: параллельно чистили
+     очередь, и запись не прошла — заявки остались в очереди, а часть была уже
+     создана, то есть повис риск дублей). Перечитываем очередь и пишем заново,
+     выкидывая уже созданные записи по tranid. */
+  if (r.status === 409) {
+    log('очередь изменилась во время прогона — перечитываю и пишу заново');
+    const свежая = await fetchQueue();
+    const созданные = new Set(entries.map((e) => e.tranid));
+    const остаток = свежая.entries.filter((e) => !созданные.has(e.tranid));
+    const тело2 = {
+      message: `Очередь Богородицка: обработано, осталось ${остаток.length}`,
+      content: Buffer.from(остаток.map((e) => JSON.stringify(e)).join('\n') + (остаток.length ? '\n' : ''), 'utf8').toString('base64'),
+    };
+    if (свежая.sha) тело2.sha = свежая.sha;
+    r = await fetch(url, { method: 'PUT', headers: { ...ghHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(тело2) });
+    if (r.ok) { log(`очередь обновлена со второй попытки, осталось ${остаток.length}`); return true; }
+  }
+  log(`ОШИБКА записи очереди обратно: ${r.status} ${await r.text()}`);
+  return false;
 }
 
 function findByText(page, needle, exact) {
@@ -178,17 +197,63 @@ async function login(page) {
 }
 
 async function openLeadsList(page) {
-  let leadsLink = null;
-  for (let i = 0; i < 4 && !leadsLink; i++) {
-    await page.mouse.click(29, 125); // иконка CRM в левом сайдбаре
-    await page.waitForTimeout(3500);
+  /* Правка 08.10.2026. Было: клик по жёсткой координате (29,125) — «иконка CRM
+     в сайдбаре» — и поиск ссылки ровно с текстом «Заявки». После обновления
+     интерфейса 1С по этой координате оказался переключатель темы, меню CRM не
+     раскрывалось, и робот писал «не нашёл ссылку «Заявки» в меню CRM». За один
+     прогон он успевал завести 2-3 заявки (пока форма открыта с прошлого шага) и
+     слеп на всех остальных — а шаг воркфлоу при этом рапортовал «успех».
+
+     Теперь: сначала пробуем найти «Заявки» как есть; если нет — перебираем
+     иконки секций в левой полосе (.themeBox) и после каждого клика проверяем,
+     не появилась ли ссылка. Координата (29,125) больше не используется.
+     Три попытки, между ними — возврат на стартовую страницу приложения
+     (сессия сохраняется, повторного входа и лимита логинов нет). */
+  const найти = async () => {
+    const точное = await findByText(page, 'Заявки', true);
+    if (точное) return точное;
+    return page.evaluate(() => {
+      let найденное = null;
+      document.querySelectorAll('div, span, td, a, button').forEach((el) => {
+        if (el.children.length) return;
+        const t = (el.innerText || '').trim();
+        if (!/^Заявки\b/.test(t) || t.length > 14) return;
+        const r = el.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) найденное = { x: r.x + r.width / 2, y: r.y + r.height / 2, t };
+      });
+      return найденное;
+    });
+  };
+  const секции = () => page.evaluate(() => [...document.querySelectorAll('.themeBox')].map((el, i) => {
+    const r = el.getBoundingClientRect();
+    return { i, x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) };
+  }));
+
+  for (let попытка = 1; попытка <= 3; попытка++) {
+    if (попытка > 1) {
+      log(`список заявок не открылся — попытка ${попытка}: возвращаюсь на стартовую страницу`);
+      await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+      await page.waitForTimeout(9000);
+    }
     await dismissOk(page);
-    leadsLink = await findByText(page, 'Заявки', true);
+    let ссылка = await найти();
+    if (!ссылка) {
+      for (const с of await секции()) {
+        await page.mouse.click(с.x, с.y);
+        await page.waitForTimeout(2500);
+        await dismissOk(page);
+        ссылка = await найти();
+        if (ссылка) break;
+      }
+    }
+    if (ссылка) {
+      await page.mouse.click(ссылка.x, ссылка.y);
+      await page.waitForTimeout(9000);
+      await dismissOk(page);
+      return;
+    }
   }
-  if (!leadsLink) throw new Error('не нашёл ссылку «Заявки» в меню CRM');
-  await page.mouse.click(leadsLink.x, leadsLink.y);
-  await page.waitForTimeout(9000);
-  await dismissOk(page);
+  throw new Error('не удалось открыть список заявок в меню CRM (три попытки)');
 }
 
 async function selectBogoroditsk(page) {
@@ -374,9 +439,29 @@ async function createLead(page, entry) {
 async function run() {
   if (!GH_TOKEN) { log('нет токена GitHub (PRIVATE_REPO_TOKEN/GITHUB_TOKEN_WORKFLOW) — стоп'); return; }
 
-  const { entries, sha } = await fetchQueue();
-  if (!entries.length) { log('очередь пуста — в 1С не захожу'); return; }
-  log(`в очереди ${entries.length} заявок`);
+  const { entries: все, sha } = await fetchQueue();
+  if (!все.length) { log('очередь пуста — в 1С не захожу'); return; }
+
+  /* Чистим очередь перед работой (правка 08.10.2026):
+     - тестовые записи (в имени «Тест», «ТЕСТ», «проверка») в CRM не заводим;
+     - один и тот же телефон оставляем один раз: дубли появляются, когда
+       запись очереди не удалось записать обратно, и в 1С уезжают две заявки
+       на одного человека (в API 1С прямо сказано: на один номер в сутки —
+       одна заявка). */
+  const видели = new Set();
+  const entries = [];
+  for (const e of все) {
+    if (/тест|проверк/i.test(String(e.name || ''))) { log(`пропускаю тестовую запись: ${e.name} (${e.phone})`); continue; }
+    if (видели.has(e.phone)) { log(`пропускаю дубль по номеру: ${e.phone}`); continue; }
+    видели.add(e.phone);
+    entries.push(e);
+  }
+  if (!entries.length) {
+    log('после чистки заводить нечего — обновляю очередь и выхожу');
+    await writeQueue([], sha);
+    return;
+  }
+  log(`в очереди ${все.length} заявок, к заведению ${entries.length}`);
 
   const browser = await chromium.launch({ headless: true });
   const ctx = await browser.newContext({ viewport: { width: 1700, height: 1050 }, locale: 'ru-RU' });
@@ -385,9 +470,12 @@ async function run() {
   await login(page);
 
   const failed = [];
-  for (const entry of entries) {
+  for (const [i, entry] of entries.entries()) {
     try {
-      await openLeadsList(page);
+      /* Перед каждой заявкой — заново открываем список: после сохранения
+         интерфейс остаётся в другом состоянии, и именно на этом робот и
+         спотыкался (первая-вторая заявка проходили, дальше он слеп). */
+      if (i > 0 || true) await openLeadsList(page);
       await createLead(page, entry);
       log(`создано: ${entry.phone} (${entry.tranid})`);
     } catch (e) {
@@ -403,6 +491,14 @@ async function run() {
   log(ok
     ? `готово: успешно ${entries.length - failed.length}, осталось в очереди ${failed.length}`
     : 'готово, но очередь на GitHub не обновилась — при следующем запуске возможны повторы');
+
+  /* Честный сигнал: если хоть одна заявка не завелась — прогон красный.
+     Раньше шаг рапортовал «успех» при нуле созданных заявок, и поломка
+     робота (08.10.2026, слепые клики по меню CRM) жила незамеченной. */
+  if (failed.length) {
+    log(`ПРОВАЛ: ${failed.length} заявок не заведены — это ошибка прогона, а не норма`);
+    process.exitCode = 1;
+  }
 }
 
 run().catch((e) => { log('НЕОЖИДАННАЯ ОШИБКА: ' + (e && e.stack || e)); process.exit(1); });
