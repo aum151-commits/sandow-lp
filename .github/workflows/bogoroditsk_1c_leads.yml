@@ -14,6 +14,16 @@ name: Заявки Богородицка в 1С
 
 on:
   workflow_dispatch:
+    inputs:
+      # Правка 08.10.2026. Робот ходит в 1С под учёткой управляющей, а 1С держит
+      # одну активную сессию на пользователя: пока она работает, сеансы выбивают
+      # друг друга (прогон 37765646115 — шесть потерь сеанса и ноль заявок).
+      # Поэтому по умолчанию робот работает только в тихие часы (22:00–08:00 МСК),
+      # а этот флаг нужен для ручного запуска, когда заявки надо завести сразу.
+      now:
+        description: 'Заводить заявки сейчас, не глядя на тихие часы'
+        type: boolean
+        default: false
 
 concurrency:
   group: bogoroditsk-1c-leads
@@ -46,6 +56,7 @@ jobs:
           FITNESS_1C_LOGIN: ${{ secrets.FITNESS_1C_LOGIN }}
           FITNESS_1C_PASSWORD: ${{ secrets.FITNESS_1C_PASSWORD }}
           PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          BOG_1C_NOW: ${{ inputs.now && '1' || '' }}
         run: node bog_lead_consumer.js
 
       # Правка 08.10.2026: раньше забирались только error-*.png. Диагностика
