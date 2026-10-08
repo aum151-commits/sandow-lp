@@ -48,11 +48,18 @@ jobs:
           PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: node bog_lead_consumer.js
 
-      - name: Снимки экрана при ошибках
+      # Правка 08.10.2026: раньше забирались только error-*.png. Диагностика
+      # сбоя 10:15/10:23 (UTC) упёрлась именно в это: текстовые слепки экрана
+      # (error-*.txt) и снимок входа (posle-vhoda.png) оставались на раннере и
+      # исчезали вместе с ним, а по пустым PNG нельзя понять, что показал 1С.
+      - name: Снимки экрана и слепки при ошибках
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: error-screenshots
-          path: bogoroditsk-1c-consumer/error-*.png
+          path: |
+            bogoroditsk-1c-consumer/error-*.png
+            bogoroditsk-1c-consumer/error-*.txt
+            bogoroditsk-1c-consumer/posle-vhoda.png
           if-no-files-found: ignore
           retention-days: 14
