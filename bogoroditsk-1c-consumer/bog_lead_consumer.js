@@ -165,7 +165,27 @@ async function dismissOk(page) {
    завести), потом Escape как универсальный «закрыть окно». Что именно нажали —
    пишем в лог, чтобы причина сбоя читалась, а не угадывалась. */
 async function закрытьОкна(page, где) {
-  const метки = ['Да', 'Продолжить', 'Создать', 'OK', 'Ok', 'Понятно', 'Закрыть', 'Отмена'];
+  /* Правка 08.10.2026 (вторая). Из списка убраны «Закрыть» и «Отмена»:
+     прогон 37763149007 показал, что пустая страница (about:blank) получалась
+     ровно через 13 мс после клика по «Отмена». Похоже, это кнопка диалога
+     «не удалось соединиться» — она не закрывает окно, а прекращает попытку
+     подключения, и клиент 1С уходит в about:blank. Робот сам себе гасил
+     страницу, а в логе это выглядело как «не удалось открыть список заявок».
+
+     Теперь вслепую жмём только безопасные кнопки подтверждения. Если ничего
+     из списка нет — не жмём ничего, а записываем в лог тексты видимых окон:
+     причина сбоя должна читаться, а не угадываться. */
+  const метки = ['Да', 'Продолжить', 'Создать', 'OK', 'Ok', 'Понятно'];
+  const окна = await page.evaluate(() => {
+    return [...document.querySelectorAll('div[class*=modal], div[class*=wnd], div[class*=dialog], div[class*=message]')]
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        const с = getComputedStyle(el);
+        return r.width > 200 && r.height > 80 && с.visibility !== 'hidden' && с.display !== 'none';
+      })
+      .map((el) => (el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 200));
+  });
+  if (окна.length) log(`${где}: на экране окон ${окна.length} — ${окна.join(' | ').slice(0, 500)}`);
   for (let i = 0; i < 3; i++) {
     let нажали = null;
     for (const метка of метки) {
@@ -241,6 +261,53 @@ async function login(page) {
   if (enter) await enter.click();
   await page.waitForTimeout(15000);
   await закрытьОкна(page, 'окна');
+  return осмотрВхода(page);
+}
+
+/* Осмотр сразу после входа (правка 08.10.2026).
+
+   Зачем: прогоны 10:15 и 10:23 (UTC) падали все до одной с «не удалось
+   открыть список заявок», а слепок показывал about:blank — то есть 1С не
+   открылся вовсе, и виноват был не поиск меню. В логе при этом не было ни
+   слова о том, что именно показал 1С. Здесь после входа пишем адрес, число
+   секций меню и первые тексты экрана — этого достаточно, чтобы отличить
+   «не пустило по логину», «превышено число соединений» и «меню поменялось». */
+async function осмотрВхода(page) {
+  try {
+    const снять = () => page.evaluate(() => {
+      const тексты = [];
+      document.querySelectorAll('div, span, td, a, button, h1, h2').forEach((el) => {
+        if (el.children.length) return;
+        const t = (el.innerText || '').replace(/\s+/g, ' ').trim();
+        if (t && t.length > 1 && t.length < 60 && !тексты.includes(t)) тексты.push(t);
+      });
+      return {
+        адрес: location.href,
+        заголовок: document.title,
+        секций: document.querySelectorAll('.themeBox').length,
+        полей: document.querySelectorAll('input').length,
+        тексты: тексты.slice(0, 60),
+      };
+    });
+    let д = await снять();
+    if (д.секций === 0) {
+      /* Одна попытка перезагрузки: клиент 1С иногда отдаёт страницу раньше,
+         чем достраивает интерфейс. Если и после неё секций нет — в базу не
+         пустили, и дальше идти некуда: 12 слепых попыток по 20 секунд только
+         сожгут время и создадут вид бурной работы. */
+      log(`после входа интерфейса нет (секций 0, адрес ${д.адрес}) — перезагружаю страницу и жду 25 секунд`);
+      await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+      await page.waitForTimeout(25000);
+      д = await снять();
+    }
+    log(`после входа: адрес ${д.адрес}, заголовок «${д.заголовок}», секций ${д.секций}, полей ввода ${д.полей}`);
+    log(`после входа, что на экране: ${д.тексты.join(' · ').slice(0, 1500)}`);
+    await page.screenshot({ path: path.join(__dirname, 'posle-vhoda.png'), fullPage: false }).catch(() => {});
+    return д.секций > 0;
+  } catch (e) {
+    log(`осмотр входа не удался: ${e.message}`);
+    return true; /* не мешаем работе из-за самой диагностики */
+  }
 }
 
 async function openLeadsList(page) {
@@ -560,15 +627,26 @@ async function run() {
   const ctx = await browser.newContext({ viewport: { width: 1700, height: 1050 }, locale: 'ru-RU' });
   const page = await ctx.newPage();
 
-  await login(page);
+  const вошли = await login(page);
+  if (!вошли) {
+    /* Раньше на этом месте робот 12 раз подряд пытался открыть меню на пустой
+       странице, писал «успешно 0» и оставлял очередь нетронутой — провал
+       выглядел как обычная работа. Теперь падаем сразу и громко: очередь при
+       этом не переписывается, заявки остаются и уедут следующим прогоном. */
+    await browser.close();
+    log('ВХОД В 1С НЕ СОСТОЯЛСЯ: интерфейс не загрузился (см. «после входа» выше). ' +
+        'Заявки не тронуты, очередь осталась как была.');
+    process.exitCode = 1;
+    return;
+  }
 
   const failed = [];
-  for (const [i, entry] of entries.entries()) {
+  for (const entry of entries) {
     try {
       /* Перед каждой заявкой — заново открываем список: после сохранения
          интерфейс остаётся в другом состоянии, и именно на этом робот и
          спотыкался (первая-вторая заявка проходили, дальше он слеп). */
-      if (i > 0 || true) await openLeadsList(page);
+      await openLeadsList(page);
       await createLead(page, entry);
       log(`создано: ${entry.phone} (${entry.tranid})`);
     } catch (e) {
