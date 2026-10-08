@@ -57,6 +57,11 @@ jobs:
           FITNESS_1C_PASSWORD: ${{ secrets.FITNESS_1C_PASSWORD }}
           PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
           BOG_1C_NOW: ${{ inputs.now && '1' || '' }}
+          # Тот же служебный канал, что у «Сверки состава» в этом репозитории.
+          # Робот молчал пять дней (шаг рапортовал «успех» при нуле заявок) —
+          # теперь итог прогона видно в чате, а не только в GitHub.
+          ALERT_BOT_TOKEN: ${{ secrets.ALERT_BOT_TOKEN }}
+          ALERT_CHAT_ID: ${{ secrets.ALERT_CHAT_ID }}
         run: node bog_lead_consumer.js
 
       # Правка 08.10.2026: раньше забирались только error-*.png. Диагностика
