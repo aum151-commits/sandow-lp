@@ -63,6 +63,13 @@ const GH_TOKEN = readEnv('PRIVATE_REPO_TOKEN') || readEnv('GITHUB_TOKEN_WORKFLOW
 const GH_REPO = readEnv('GITHUB_REPO') || 'aum151-commits/sandow-automation';
 const QUEUE_PATH = 'data/intake/bogoroditsk_1c_queue.jsonl';
 
+/* Сколько раз за прогон разрешено войти в 1С заново, если сеанс выбили.
+   Предел нужен не из экономии: каждый повторный вход — это ещё один вход под
+   учёткой Ольги, а значит ещё один повод выбить ЕЁ сеанс. Полдюжины попыток
+   хватает, чтобы пережить случайную потерю, и мало, чтобы устроить перепалку. */
+const ПРЕДЕЛ_ПОВТОРНЫХ_ВХОДОВ = 6;
+let повторныхВходов = 0;
+
 const LOG_FILE = path.join(__dirname, 'logs', 'bog_lead_consumer.log');
 
 function log(msg) {
@@ -252,6 +259,51 @@ async function fieldNear(page, label) {
   }, label);
 }
 
+/* Потеряли ли сеанс 1С и нужно ли входить заново (правка 08.10.2026).
+
+   Разбор артефактов прогона 37764194184 показал прямо: после входа интерфейс
+   был на месте (8 секций меню, на экране «Заявки · 7 новых»), а через 15-30
+   секунд страница оказалась формой входа — «Пользователь», «Пароль», «Войти».
+   То есть робота не «слепого» водили по меню, его выбрасывало из базы.
+   Причина — вторая сеансная сессия под той же учёткой: 1С:Фитнес держит одну
+   активную сессию на пользователя, и кто вошёл позже, того и выкидывает.
+   Та самая «учётка как у Ольги» — она же у робота.
+
+   Что это значит на практике: робот должен уметь войти заново, а не падать.
+   Ниже — вход по требованию; число повторных входов за прогон ограничено,
+   чтобы не устраивать перепалку сессий с человеком, который в этот момент
+   работает в 1С. */
+async function нуженВход(page) {
+  try {
+    return await page.evaluate(() => {
+      const u = document.querySelector('#userName');
+      if (!u) return false;
+      const r = u.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    });
+  } catch (e) {
+    return false;
+  }
+}
+
+async function войтиЗаново(page) {
+  if (повторныхВходов >= ПРЕДЕЛ_ПОВТОРНЫХ_ВХОДОВ) {
+    throw new Error(`сеанс 1С терялся ${повторныхВходов} раз за прогон — похоже, под этой учёткой ` +
+                    'работает человек; роботу нужен отдельный пользователь 1С');
+  }
+  повторныхВходов += 1;
+  log(`сеанс 1С потерян (на экране форма входа) — вхожу заново, раз ${повторныхВходов}`);
+  await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+  await page.waitForTimeout(5000);
+  if (await нуженВход(page)) {
+    await page.fill('#userName', LOGIN).catch(() => {});
+    await page.fill('#userPassword', PASS).catch(() => {});
+    const enter = await page.$('text=Войти');
+    if (enter) await enter.click();
+    await page.waitForTimeout(16000);
+  }
+}
+
 async function login(page) {
   await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(4000);
@@ -344,6 +396,7 @@ async function openLeadsList(page) {
   }));
 
   for (let попытка = 1; попытка <= 3; попытка++) {
+    if (await нуженВход(page)) await войтиЗаново(page);
     if (попытка > 1) {
       log(`список заявок не открылся — попытка ${попытка}: возвращаюсь на стартовую страницу`);
       await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
@@ -399,6 +452,8 @@ async function слепокЭкрана(page, tranid) {
         .map((el) => (el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 160));
       return {
         адрес: location.href,
+        заголовок: document.title,
+        формаВхода: !!(document.querySelector('#userName') && document.querySelector('#userPassword')),
         секций: document.querySelectorAll('.themeBox').length,
         пунктовМеню: [...document.querySelectorAll('.functionItem')].map((el) => (el.innerText || '').trim().slice(0, 30)),
         естьЗаявки: [...тексты].some((t) => t.includes('Заявк')),
@@ -408,7 +463,9 @@ async function слепокЭкрана(page, tranid) {
     });
     fs.writeFileSync(path.join(__dirname, `error-${tranid}.txt`),
                      JSON.stringify(данные, null, 2), 'utf8');
-    log(`слепок экрана: error-${tranid}.txt — адрес ${данные.адрес}, секций ${данные.секций}, ` +
+    log(`слепок экрана: error-${tranid}.txt — адрес ${данные.адрес}, ` +
+        `${данные.формаВхода ? 'НА ЭКРАНЕ ФОРМА ВХОДА (сеанс выбит), ' : ''}` +
+        `секций ${данные.секций}, ` +
         `пунктов меню ${данные.пунктовМеню.length}, «Заявки» ${данные.естьЗаявки ? 'есть' : 'нет'}, ` +
         `окон ${данные.модалки.length}`);
   } catch (e) {
