@@ -282,13 +282,21 @@ async function openLeadsList(page) {
       await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
       await page.waitForTimeout(9000);
     }
-    await закрытьОкна(page, 'окна');
+    await закрытьОкна(page, 'перед списком');
     let ссылка = await найти();
     if (!ссылка) {
       for (const с of await секции()) {
+        /* Меню секции в 1С раскрывается НАВЕДЕНИЕМ, а не кликом (проверено
+           08.10.2026: клик по иконке меню состояния не менял, наведение —
+           меняло). Поэтому сначала ведём курсор и ждём, и только если ссылка
+           появилась — жмём её; клик остаётся как вторая попытка. */
+        await page.mouse.move(с.x, с.y);
+        await page.waitForTimeout(1400);
+        ссылка = await найти();
+        if (ссылка) break;
         await page.mouse.click(с.x, с.y);
-        await page.waitForTimeout(2500);
-        await закрытьОкна(page, 'окна');
+        await page.waitForTimeout(2200);
+        await закрытьОкна(page, 'секция');
         ссылка = await найти();
         if (ссылка) break;
       }
@@ -301,6 +309,44 @@ async function openLeadsList(page) {
     }
   }
   throw new Error('не удалось открыть список заявок в меню CRM (три попытки)');
+}
+
+/* Текстовый слепок экрана — вместо картинок.
+
+   Диагностировать сбой робота по скриншотам неудобно: картинку смотрит
+   человек, а в логе её нет (08.10.2026 на разбор ушёл час). Здесь снимаем то
+   же самое текстом: адрес, сколько секций в сайдбаре, какие пункты меню
+   видны, есть ли где-то «Заявки» и какие окна открыты. Файл кладётся рядом с
+   логом и уезжает артефактом прогона. */
+async function слепокЭкрана(page, tranid) {
+  try {
+    const данные = await page.evaluate(() => {
+      const тексты = new Set();
+      document.querySelectorAll('div, span, td, a, button').forEach((el) => {
+        if (el.children.length) return;
+        const t = (el.innerText || '').trim();
+        if (t && t.length < 50) тексты.add(t);
+      });
+      const модалки = [...document.querySelectorAll('div[class*=modal], div[class*=wnd], div[class*=dialog], div[class*=message]')]
+        .filter((el) => { const r = el.getBoundingClientRect(); return r.width > 200 && r.height > 80; })
+        .map((el) => (el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 160));
+      return {
+        адрес: location.href,
+        секций: document.querySelectorAll('.themeBox').length,
+        пунктовМеню: [...document.querySelectorAll('.functionItem')].map((el) => (el.innerText || '').trim().slice(0, 30)),
+        естьЗаявки: [...тексты].some((t) => t.includes('Заявк')),
+        модалки,
+        тексты: [...тексты].slice(0, 120),
+      };
+    });
+    fs.writeFileSync(path.join(__dirname, `error-${tranid}.txt`),
+                     JSON.stringify(данные, null, 2), 'utf8');
+    log(`слепок экрана: error-${tranid}.txt — адрес ${данные.адрес}, секций ${данные.секций}, ` +
+        `пунктов меню ${данные.пунктовМеню.length}, «Заявки» ${данные.естьЗаявки ? 'есть' : 'нет'}, ` +
+        `окон ${данные.модалки.length}`);
+  } catch (e) {
+    log(`слепок экрана не снялся: ${e.message}`);
+  }
 }
 
 async function selectBogoroditsk(page) {
@@ -528,6 +574,7 @@ async function run() {
     } catch (e) {
       log(`ОШИБКА для ${entry.tranid} (${entry.phone}): ${e.message}`);
       try { await page.screenshot({ path: path.join(__dirname, `error-${entry.tranid}.png`), fullPage: true }); } catch (e2) {}
+      await слепокЭкрана(page, entry.tranid);
       failed.push(entry);
     }
   }
