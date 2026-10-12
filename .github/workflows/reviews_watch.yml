@@ -43,6 +43,11 @@ jobs:
           # человеку, который ему ни разу не написал.
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Токен 2ГИС-API. Кабинет 2ГИС не пускает зарубежные адреса
+          # GitHub-раннеров, поэтому отзывы 2ГИС читаются напрямую по
+          # токену — без браузера. Секрет снят на ноутбуке 12.10.2026.
+          # Если секрета нет, скрипт идёт прежним путём, через кабинет.
+          GIS_API_TOKEN: ${{ secrets.GIS_API_TOKEN }}
         run: python -m src.rpa.watch_new_reviews
 
       - name: Вернуть состояние
