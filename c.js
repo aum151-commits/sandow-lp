@@ -23,8 +23,8 @@
    *
    * Этот файл подключён в head ВСЕГО домена sandowfitness.ru, поэтому по
    * умолчанию работает и на страницах других клубов сети. 24.09.2026 из-за
-   * этого на /bogoroditsk оказался московский оффер: три кнопки «Забрать
-   * год в подарок» и липкая панель. Богородицк — отдельный проект со
+   * этого на /bogoroditsk оказался московский оффер: три московские
+   * кнопки с подарком и липкая панель. Богородицк — отдельный проект со
    * своими условиями (клуб 7:00-23:00, своя подписка, свои цены),
    * московские акции там неприменимы и вводят людей в заблуждение.
    *
@@ -115,6 +115,31 @@
   var ПОКАЗЫВАТЬ_РЕЙТИНГ = true;
   var ПОКАЗЫВАТЬ_ТЕЛЕГРАМ = true;   // кнопка «Написать» в нижней полосе
   var ТЕЛЕГРАМ = 'https://t.me/sandowclub_bot';
+  // Официальные знаки мессенджеров (правка Ольги 14.10.2026: «надо чтобы иконки
+  // мессенджеров выглядели также как на их официальных приложениях, иначе они
+  // не так узнаваемы»). Оба файла — подлинники из официальных источников:
+  //   znak-telegram.png — telegram.org/img/t_logo.png (синий круг, белый самолёт)
+  //   znak-max.png      — max.ru/apple-touch-icon.png (официальный знак MAX)
+  // Лежат в корне сайта, отдаются с того же адреса, что favicon.
+  var ЗНАК_ТЕЛЕГРАМА = БАЗА + 'znak-telegram.png';
+  var ЗНАК_МАКСА = БАЗА + 'znak-max.png';
+
+  // MAX — задача Ольги 14.10.2026: «разместить иконку макс на сайте рядом с
+  // иконкой ТГ, чтобы вела на московский макс-бот, и также липкой сделать
+  // рядом с липкой иконкой ТГ». Только московский бот: богородицкий клуб
+  // живёт на своём домене и через гейт чужойПроект() сюда не доходит (§0б).
+  var ПОКАЗЫВАТЬ_МАКС = true;       // иконка MAX рядом с Телеграмом
+  var МАКС = 'https://max.ru/id7722464364_bot';
+
+  /* Иконка MAX -----------------------------------------------------------
+   * Официальный знак мессенджера MAX (правка Ольги 14.10.2026). Раньше здесь
+   * был нарисованный «по памяти» нейтральный круг с буквой M — Ольга сказала,
+   * что такие иконки не узнаются, и попросила официальные. Файл скачан с
+   * max.ru (apple-touch-icon.png), 96 px, лежит в корне сайта. */
+  function знакМакс() {
+    return '<img class="sndw-знак" src="' + ЗНАК_МАКСА + '" width="26" height="26" ' +
+      'alt="MAX" loading="lazy">';
+  }
 
   function готово(что) {
     if (document.readyState === 'loading') {
@@ -196,11 +221,26 @@
       // на 360 px подпись ломалась на две строки — уменьшаем кегль
       '@media (max-width:380px){#sndw-bar a{font-size:13px;padding:0 6px}' +
       '#sndw-bar{gap:6px;padding-left:8px;padding-right:8px}}' +
-      // Телеграм — квадратной иконкой, а не третьей надписью: на 360 px
-      // три подписи не помещаются и ломаются
-      '#sndw-bar .sndw-tg{flex:0 0 48px;width:48px;padding:0;' +
-      'background:transparent;border:1px solid rgba(233,199,126,.55)}' +
-      '#sndw-bar .sndw-tg svg{width:22px;height:22px;display:block}' +
+      // Телеграм и MAX — официальными круглыми иконками приложений
+      // (правка Ольги 14.10.2026). Рамку и фон убрал: вокруг официального
+      // круглого знака золотое кольцо читалось как два круга.
+      '#sndw-bar .sndw-tg,#sndw-bar .sndw-mx{flex:0 0 48px;width:48px;padding:0;' +
+      'background:transparent;border:0}' +
+      '#sndw-bar .sndw-знак{width:32px;height:32px;display:block;border-radius:50%}' +
+      // С двумя иконками в строку уже не влезает оффер: замер 14.10.2026 на
+      // живом сайте — кнопкам нужно ~470 px, а на 360–414 px вылезало на
+      // 31–67 px. Поэтому до 480 px оффер уходит на вторую строку целиком:
+      // ни один текст не режется и подписи остаются прежними (менять текст
+      // оффера без слова Ольги нельзя).
+      '@media (max-width:479px){#sndw-bar{flex-wrap:wrap;gap:6px}' +
+      '#sndw-bar a{box-sizing:border-box}' +
+      '#sndw-bar .sndw-lead{flex:1 0 100%;width:100%;max-width:100%}' +
+      'body{padding-bottom:140px}}' +
+      // на самых узких (360 px) обе иконки ужимаются до 44 px — запас на
+      // случай, когда в первой строке окажется три элемента
+      '@media (max-width:380px){#sndw-bar .sndw-tg,#sndw-bar .sndw-mx{' +
+      'flex:0 0 44px;width:44px}' +
+      '#sndw-bar .sndw-знак{width:28px;height:28px}}' +
       '#sndw-bar .sndw-call{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
       '#sndw-bar .sndw-lead{background:transparent;color:' + ЗОЛОТО + ';' +
       'border:1px solid rgba(233,199,126,.55)}' +
@@ -214,12 +254,17 @@
     var тг = ПОКАЗЫВАТЬ_ТЕЛЕГРАМ
       ? '<a class="sndw-tg" href="' + ТЕЛЕГРАМ + '" target="_blank" rel="noopener" ' +
         'aria-label="Написать в Телеграм">' +
-        '<svg viewBox="0 0 24 24" fill="' + ЗОЛОТО + '">' +
-        '<path d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.2 13 2.7 11.6c-1-.3-1-1 .2-1.4l17.7-6.8c.8-.3 1.5.2 1.3 1z"/>' +
-        '</svg></a>'
+        '<img class="sndw-знак" src="' + ЗНАК_ТЕЛЕГРАМА + '" width="28" height="28" ' +
+        'alt="Telegram" loading="lazy"></a>'
+      : '';
+    // MAX — сразу за Телеграмом (задача Ольги 14.10.2026), тот же размер,
+    // чтобы пара читалась как одна группа
+    var макс = ПОКАЗЫВАТЬ_МАКС
+      ? '<a class="sndw-mx" href="' + МАКС + '" target="_blank" rel="noopener" ' +
+        'aria-label="Написать в MAX">' + знакМакс() + '</a>'
       : '';
     панель.innerHTML =
-      тг +
+      тг + макс +
       '<a class="sndw-call" href="tel:' + ТЕЛЕФОН + '">Позвонить</a>' +
       '<a class="sndw-lead" href="#sndw-form">План тренировок в подарок</a>';
     document.body.appendChild(панель);
@@ -722,6 +767,102 @@
   }
 
 
+  /* Единый MAX ----------------------------------------------------------
+   * То же по смыслу, что единый_телеграм() выше: если на московской странице
+   * найдётся ссылка на ДРУГОЙ MAX-бот (старый адрес или чужой клуб), уводим
+   * её на московский. Богородицкие адреса не трогаем — у второго клуба свой
+   * бот и свой приёмник заявок (§0б). Сейчас ссылок max.ru на страницах нет
+   * вовсе; функция стоит на будущее, чтобы «потом добавят и забудут» не
+   * превратилось в битую кнопку. */
+  function единый_макс() {
+    var НЕ_ТРОГАТЬ = ['bogoroditsk', 'bogorodick'];
+    var заменено = 0;
+    [].slice.call(document.querySelectorAll('a[href*="max.ru/"]')).forEach(function (a) {
+      var h = (a.getAttribute('href') || '').toLowerCase();
+      if (h.indexOf(МАКС.toLowerCase()) >= 0) return;
+      for (var i = 0; i < НЕ_ТРОГАТЬ.length; i++) {
+        if (h.indexOf(НЕ_ТРОГАТЬ[i]) >= 0) return;
+      }
+      a.setAttribute('href', МАКС);
+      заменено++;
+    });
+    return заменено;
+  }
+
+
+  /* Иконка MAX в плавающем блоке мессенджеров ---------------------------
+   * Задача Ольги 14.10.2026: «разместить иконку макс на сайте рядом с
+   * иконкой ТГ». Блок .sndw2-mess с кнопкой Телеграма уже есть в самой
+   * странице Тильды — разметку страницы не правим, а ставим MAX рядом с
+   * Телеграмом тем же размером и формой. Снимается одной строкой:
+   * ПОКАЗЫВАТЬ_МАКС = false. */
+  function иконкаМаксВМессенджерах() {
+    var блок = document.querySelector('.sndw2-mess');
+    if (!блок) return 0;
+    var тг = блок.querySelector('.sndw2-mess-tg') ||
+             блок.querySelector('a[href*="t.me/"]');
+    var своя = блок.querySelector('.sndw2-mess-mx');
+    if (своя && !ПОКАЗЫВАТЬ_МАКС) { своя.parentNode.removeChild(своя); своя = null; }
+    if (своя) своя.setAttribute('href', МАКС);
+
+    // Официальные знаки вместо нарисованных (правка Ольги 14.10.2026). Кнопки
+    // остаются прежними по размеру и месту, меняется только картинка внутри —
+    // поэтому «официальный вид» не ломает разметку страницы Тильды.
+    if (!document.getElementById('sndw-mx-css')) {
+      var стиль = document.createElement('style');
+      стиль.id = 'sndw-mx-css';
+      стиль.textContent =
+        '.sndw2-mess-tg,.sndw2-mess-mx{background:transparent;border:0;padding:0}' +
+        '.sndw2-mess-tg svg{display:none}' +
+        '.sndw2-mess-tg img,.sndw2-mess-mx img{width:52px;height:52px;display:block;' +
+        'border-radius:50%}';
+      document.head.appendChild(стиль);
+    }
+    // Телеграм: подменяем иконку в кнопке, которая уже есть на странице
+    if (тг && !тг.querySelector('img') && !(тг.textContent || '').trim()) {
+      тг.innerHTML = '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" width="52" height="52" ' +
+        'alt="Telegram" loading="lazy">';
+    }
+    if (!ПОКАЗЫВАТЬ_МАКС || !тг || своя) return 0;
+    var а = document.createElement('a');
+    а.className = 'sndw2-mess-btn sndw2-mess-mx';
+    а.setAttribute('href', МАКС);
+    а.setAttribute('target', '_blank');
+    а.setAttribute('rel', 'noopener');
+    а.setAttribute('aria-label', 'Написать в MAX');
+    а.innerHTML = знакМакс();
+    тг.insertAdjacentElement('afterend', а);
+    return 1;
+  }
+
+
+  /* Ссылка MAX в подвале — рядом с текстовой ссылкой «Telegram» -------- */
+  function ссылкаМаксВПодвал() {
+    var тг = null;
+    [].slice.call(document.querySelectorAll('a[href*="t.me/"]')).forEach(function (a) {
+      if (тг) return;
+      if ((a.textContent || '').trim().toLowerCase() !== 'telegram') return;
+      тг = a;
+    });
+    if (!тг || !тг.parentNode) return 0;
+    var своя = тг.parentNode.querySelector('a[href*="max.ru/"]');
+    if (своя) {
+      if (!ПОКАЗЫВАТЬ_МАКС) { своя.parentNode.removeChild(своя); return 0; }
+      своя.setAttribute('href', МАКС);
+      return 0;
+    }
+    if (!ПОКАЗЫВАТЬ_МАКС) return 0;
+    var а = тг.cloneNode(true);
+    а.textContent = 'MAX';
+    а.setAttribute('href', МАКС);
+    а.setAttribute('target', '_blank');
+    а.setAttribute('rel', 'noopener');
+    а.setAttribute('aria-label', 'Написать в MAX');
+    тг.insertAdjacentElement('afterend', а);
+    return 1;
+  }
+
+
   function единый_телеграм() {
     // Список пополнен 23.09 после проверки всех страниц сайта: на
     // /info1 нашлись ещё два бота. Богородицкий @sandow_bogoroditsk_bot
@@ -809,7 +950,7 @@
 
 
   /* 02.10.2026 · /fightclub, /coaches, /contacts: мёртвый оффер «карта»
-   * → «Год в подарок». На /coaches и /contacts найден 02.10 живым
+   * → «План тренировок в подарок». На /coaches и /contacts найден 02.10 живым
    * рендером (в отчётах их не было): кнопки, попап и пункт меню.
    *
    * Почему через c.js, а не правкой в Тильде: тексты живут в Zero-блоках
@@ -927,7 +1068,10 @@
   готово(function () {
     try { фавикон(); } catch (e) {}
     try { единый_телеграм(); } catch (e) {}
+    try { единый_макс(); } catch (e) {}
+    try { иконкаМаксВМессенджерах(); } catch (e) {}
     try { ссылки_в_подвал(); } catch (e) {}
+    try { ссылкаМаксВПодвал(); } catch (e) {}
     try { липкая_панель(); } catch (e) {}
     try { панель_пк(); } catch (e) {}
     try { первый_экран(); } catch (e) {}
@@ -953,6 +1097,9 @@
     setTimeout(function () { try { якоря(); } catch (e) {} }, 1200);
     // подвал рисуется одним из последних — повторяем, когда он уже есть
     setTimeout(function () { try { ссылки_в_подвал(); } catch (e) {} }, 2000);
+    setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 2100);
+    // плавающий блок мессенджеров Тильда тоже достраивает позже
+    setTimeout(function () { try { иконкаМаксВМессенджерах(); } catch (e) {} }, 2200);
     setTimeout(function () { try { первый_экран(); } catch (e) {} }, 1400);
     // Единый слой сайта (main.js) пересобирает первый экран шесть раз
     // с интервалом 1,5 с — и затирает строку доверия. Восстанавливаем,
@@ -963,6 +1110,8 @@
         первый_экран();
         строка_доверия();
         единый_телеграм();
+        единый_макс();
+        иконкаМаксВМессенджерах();
         формаБойцовскогоКлуба();
       } catch (e) {}
       if (++восстановлений > 9) clearInterval(сторож);
@@ -1005,6 +1154,10 @@
     window.addEventListener('load', function () {
       setTimeout(function () { try { свернутьПодвал(); } catch (e) {} }, 2600);
       setTimeout(function () { try { свернутьПодвал(); } catch (e) {} }, 4500);
+      // сворачивание подвала перестраивает список ссылок — MAX возвращаем
+      // после него, иначе пара «Telegram / MAX» распадается
+      setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 2900);
+      setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 4800);
     });
 
   });
