@@ -588,26 +588,30 @@
       var стиль = document.createElement('style');
       стиль.id = 'sndw-choice-css';
       стиль.textContent =
-        '#sndw-choice{box-sizing:border-box;margin:26px 0 0;border:1px solid rgba(233,199,126,.28);' +
+        '#sndw-choice{box-sizing:border-box;width:100% !important;margin:26px 0 0;' +
+        'border:1px solid rgba(233,199,126,.28);' +
         'border-radius:16px;background:rgba(240,234,222,.04);padding:16px 14px 12px}' +
         '#sndw-choice .sndw-choice-q{font-family:Archivo,Arial,sans-serif;font-weight:700;' +
         'font-size:15px;line-height:1.3;color:#F0EADE;margin:0 0 12px}' +
         '#sndw-choice .sndw-choice-btn{box-sizing:border-box;display:flex;align-items:center;' +
-        'gap:10px;width:100%;height:46px;padding:0 15px;border-radius:34px;text-decoration:none;' +
-        'font-family:Archivo,Arial,sans-serif;font-weight:700;font-size:14px;margin-bottom:9px}' +
-        '#sndw-choice .sndw-choice-btn img{width:22px;height:22px;border-radius:50%;flex:0 0 22px;display:block}' +
+        'gap:10px;width:100% !important;height:46px;padding:0 15px;border-radius:34px;' +
+        'text-decoration:none;font-family:Archivo,Arial,sans-serif;font-weight:700;' +
+        'font-size:14px;margin-bottom:9px}' +
+        '#sndw-choice .sndw-choice-btn img{width:22px;height:22px;border-radius:50%;' +
+        'flex:0 0 22px;display:block}' +
+        '#sndw-choice .sndw-choice-btn span{white-space:nowrap;overflow:hidden;' +
+        'text-overflow:ellipsis}' +
         '#sndw-choice .sndw-choice-tg{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
-        '#sndw-choice .sndw-choice-mx{border:1px solid rgba(233,199,126,.45);color:#F0EADE;margin-bottom:6px}' +
+        '#sndw-choice .sndw-choice-mx{border:1px solid rgba(233,199,126,.45);color:#F0EADE;' +
+        'margin-bottom:6px}' +
         '#sndw-choice .sndw-choice-phone{background:none;border:0;padding:4px 0;cursor:pointer;' +
         'font-family:Archivo,Arial,sans-serif;font-size:12.5px;color:rgba(240,234,222,.75);' +
         'text-decoration:underline}' +
-        // пока человек не выбрал телефон — поля формы не показываем
-        '.t-form[data-sndw-choice="1"] .t-input-group,' +
-        '.t-form[data-sndw-choice="1"] .t-form__submit{display:none !important}' +
-        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group,' +
-        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
-        '{display:block !important}' +
-        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] #sndw-choice{display:none !important}';
+        // Пока человек не выбрал телефон, саму форму не показываем: панель стоит
+        // рядом с ней, а не внутри, поэтому ширина не зависит от вёрстки Тильды
+        // (на мобильной версии блок внутри формы сжимался до 206 px — правка 15.10.2026).
+        '.t-form[data-sndw-choice="1"]{display:none !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]{display:block !important}';
       document.head.appendChild(стиль);
     }
 
@@ -618,17 +622,20 @@
       '<a class="sndw-choice-btn sndw-choice-tg" href="' + ВХОД_В_БОТ + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
-      'Написать в Telegram</a>' +
+      '<span>Написать в Telegram</span></a>' +
       '<a class="sndw-choice-btn sndw-choice-mx" href="' + МАКС + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">' +
-      'Написать в MAX</a>' +
+      '<span>Написать в MAX</span></a>' +
       '<button type="button" class="sndw-choice-phone">или оставьте номер — перезвоним</button>';
-    коробка.insertBefore(панель, коробка.firstChild);
+    // Ставим ПЕРЕД формой, а не внутрь неё: внутри на мобильной версии Тильды
+    // блок попадал в обёртку 206 px и обрезался (найдено 15.10.2026 по снимку Ольги).
+    форма.parentNode.insertBefore(панель, форма);
 
     панель.querySelector('.sndw-choice-phone').addEventListener('click', function (e) {
       e.preventDefault();
       форма.setAttribute('data-sndw-mode', 'phone');
+      панель.style.display = 'none';   // панель стоит перед формой, CSS назад её не выберет
       var поле = форма.querySelector('input[type="text"],input[name*="ame"]');
       if (поле && поле.focus) setTimeout(function () { поле.focus({ preventScroll: true }); }, 60);
     });
