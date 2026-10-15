@@ -53,5 +53,9 @@ jobs:
           GH_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN_MARKETING }}
           LOOKUP_URL: ${{ secrets.LOOKUP_URL }}
+          # Ключи облака нужны, чтобы проверить свежесть копии данных в России:
+          # перенос держится на зеркалах, а зеркало может замолчать молча.
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
           CHECK_REPORT: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
         run: python data_guard.py
