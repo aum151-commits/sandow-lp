@@ -78,11 +78,14 @@ jobs:
           ONEC_LOGIN: ${{ secrets.ONEC_MOSCOW_LOGIN }}
           ONEC_PASSWORD: ${{ secrets.ONEC_MOSCOW_PASSWORD }}
         run: |
-          МЕСЯЦЕВ="${{ github.event.inputs.months || '2' }}"
-          ФЛАГ=""
-          if [ -z "${{ github.event.inputs.notes }}" ]; then ФЛАГ="--без-заметок"; fi
-          echo "собираем месяцев: $МЕСЯЦЕВ, флаг: ${ФЛАГ:-нет}"
-          node scripts/1c/ночная-выгрузка.js "$МЕСЯЦЕВ" $ФЛАГ
+          # Имена переменных только латиницей: bash не принимает кириллицу в
+          # именах и падает с «МЕСЯЦЕВ=2: command not found» — на этом упал
+          # первый облачный прогон 15.10.2026.
+          MONTHS="${{ github.event.inputs.months || '2' }}"
+          FLAG=""
+          if [ -z "${{ github.event.inputs.notes }}" ]; then FLAG="--без-заметок"; fi
+          echo "собираем месяцев: $MONTHS, флаг: ${FLAG:-нет}"
+          node scripts/1c/ночная-выгрузка.js "$MONTHS" $FLAG
 
       - name: Короткая сводка в лог прогона
         # Только месяцы и количества. Ничего личного сюда попадать не должно:
