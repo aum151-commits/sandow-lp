@@ -543,6 +543,98 @@
     });
   }
 
+  /* Выбор мессенджера в форме первого экрана ---------------------------
+   * Задача Ольги 14.10.2026: заявки с формы доходят до 1С и до чата заявок,
+   * но дозвониться удаётся не до всех — автоответчики, антиспам, «недоступен».
+   * Поэтому первым делом человек выбирает, куда ему удобнее написать
+   * (Telegram или MAX), а телефон остаётся запасным путём для тех, у кого
+   * мессенджеров нет.
+   *
+   * Как сделано: поля родной формы Тильды прячутся, вместо них панель с
+   * вопросом, двумя кнопками и мелкой строкой «или оставьте номер —
+   * перезвоним». Нажатие строки возвращает поля на место (data-sndw-mode=phone).
+   *
+   * ВАЖНО: имена и состав полей формы НЕ меняются. Любое новое поле Тильда
+   * отправила бы в 1С вместе с заявкой, а 1С незнакомые поля отвергает
+   * целиком (`Invalid structure attribute name`) — заявка потерялась бы
+   * молча. Поэтому вторая галочка про рекламные сообщения в живой форме
+   * НЕ добавлена: на сайте рассылок нет, спрашивать согласие не на что.
+   *
+   * Откат: ПОКАЗЫВАТЬ_ВЫБОР_МЕССЕНДЖЕРА = false и перезалить файл.
+   */
+  var ПОКАЗЫВАТЬ_ВЫБОР_МЕССЕНДЖЕРА = true;
+  var ФОРМА_ПЕРВОГО_ЭКРАНА = 'form2478331411';
+  var ВХОД_В_БОТ = 'https://t.me/sandowclub_bot?start=sayt';
+
+  function выборМессенджера() {
+    // 1. Строка под формой — прямая правка Ольги 14.10.2026: текста на
+    //    первом экране слишком много, оффер из-за неё не читается.
+    [].slice.call(document.querySelectorAll('p')).forEach(function (п) {
+      if ((п.textContent || '').indexOf('Покупать ничего не нужно') >= 0) {
+        п.style.display = 'none';
+      }
+    });
+
+    if (!ПОКАЗЫВАТЬ_ВЫБОР_МЕССЕНДЖЕРА) return 0;
+    var форма = document.getElementById(ФОРМА_ПЕРВОГО_ЭКРАНА);
+    if (!форма) return 0;
+    var коробка = форма.querySelector('.t-form__inputsbox');
+    if (!коробка) return 0;
+
+    if (форма.getAttribute('data-sndw-choice') === '1') return 1;   // уже сделано
+    форма.setAttribute('data-sndw-choice', '1');
+
+    if (!document.getElementById('sndw-choice-css')) {
+      var стиль = document.createElement('style');
+      стиль.id = 'sndw-choice-css';
+      стиль.textContent =
+        '#sndw-choice{box-sizing:border-box;margin:26px 0 0;border:1px solid rgba(233,199,126,.28);' +
+        'border-radius:16px;background:rgba(240,234,222,.04);padding:16px 14px 12px}' +
+        '#sndw-choice .sndw-choice-q{font-family:Archivo,Arial,sans-serif;font-weight:700;' +
+        'font-size:15px;line-height:1.3;color:#F0EADE;margin:0 0 12px}' +
+        '#sndw-choice .sndw-choice-btn{box-sizing:border-box;display:flex;align-items:center;' +
+        'gap:10px;width:100%;height:46px;padding:0 15px;border-radius:34px;text-decoration:none;' +
+        'font-family:Archivo,Arial,sans-serif;font-weight:700;font-size:14px;margin-bottom:9px}' +
+        '#sndw-choice .sndw-choice-btn img{width:22px;height:22px;border-radius:50%;flex:0 0 22px;display:block}' +
+        '#sndw-choice .sndw-choice-tg{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
+        '#sndw-choice .sndw-choice-mx{border:1px solid rgba(233,199,126,.45);color:#F0EADE;margin-bottom:6px}' +
+        '#sndw-choice .sndw-choice-phone{background:none;border:0;padding:4px 0;cursor:pointer;' +
+        'font-family:Archivo,Arial,sans-serif;font-size:12.5px;color:rgba(240,234,222,.75);' +
+        'text-decoration:underline}' +
+        // пока человек не выбрал телефон — поля формы не показываем
+        '.t-form[data-sndw-choice="1"] .t-input-group,' +
+        '.t-form[data-sndw-choice="1"] .t-form__submit{display:none !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group,' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
+        '{display:block !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] #sndw-choice{display:none !important}';
+      document.head.appendChild(стиль);
+    }
+
+    var панель = document.createElement('div');
+    панель.id = 'sndw-choice';
+    панель.innerHTML =
+      '<div class="sndw-choice-q">Как удобнее продолжить?</div>' +
+      '<a class="sndw-choice-btn sndw-choice-tg" href="' + ВХОД_В_БОТ + '"' +
+      ' target="_blank" rel="noopener">' +
+      '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
+      'Написать в Telegram</a>' +
+      '<a class="sndw-choice-btn sndw-choice-mx" href="' + МАКС + '"' +
+      ' target="_blank" rel="noopener">' +
+      '<img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">' +
+      'Написать в MAX</a>' +
+      '<button type="button" class="sndw-choice-phone">или оставьте номер — перезвоним</button>';
+    коробка.insertBefore(панель, коробка.firstChild);
+
+    панель.querySelector('.sndw-choice-phone').addEventListener('click', function (e) {
+      e.preventDefault();
+      форма.setAttribute('data-sndw-mode', 'phone');
+      var поле = форма.querySelector('input[type="text"],input[name*="ame"]');
+      if (поле && поле.focus) setTimeout(function () { поле.focus({ preventScroll: true }); }, 60);
+    });
+    return 1;
+  }
+
   /* Ссылки на разделы lp.sandowfitness.ru в подвале.
    *
    * Зачем: замер 20.09.2026 показал, что с главной на 129 страниц
@@ -1075,6 +1167,7 @@
     try { липкая_панель(); } catch (e) {}
     try { панель_пк(); } catch (e) {}
     try { первый_экран(); } catch (e) {}
+    try { выборМессенджера(); } catch (e) {}
     try { строка_доверия(); } catch (e) {}
     try { формаБойцовскогоКлуба(); } catch (e) {}
     try { офферГодВПодарок(); } catch (e) {}
@@ -1101,6 +1194,7 @@
     // плавающий блок мессенджеров Тильда тоже достраивает позже
     setTimeout(function () { try { иконкаМаксВМессенджерах(); } catch (e) {} }, 2200);
     setTimeout(function () { try { первый_экран(); } catch (e) {} }, 1400);
+    setTimeout(function () { try { выборМессенджера(); } catch (e) {} }, 1500);
     // Единый слой сайта (main.js) пересобирает первый экран шесть раз
     // с интервалом 1,5 с — и затирает строку доверия. Восстанавливаем,
     // пока он это делает: дешевле, чем встраиваться в его цикл.
@@ -1108,6 +1202,7 @@
     var сторож = setInterval(function () {
       try {
         первый_экран();
+        выборМессенджера();
         строка_доверия();
         единый_телеграм();
         единый_макс();
