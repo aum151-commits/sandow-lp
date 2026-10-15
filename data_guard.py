@@ -38,7 +38,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -46,6 +46,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ВЕТКА = "main"
 
 # Приватный бакет: снаружи обязан отвечать 403.
+# Бакет, куда переезжают клиентские данные (перенос хранения, шаг 3).
+БАКЕТ_ПЕРЕНОСА = "sandow-lead-data"
 БАКЕТ = "https://sandow-calls-lookup.storage.yandexcloud.net/справочник.json.gz"
 
 ЛИЧКА_ОЛЬГИ = "220285486"
@@ -64,6 +66,17 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     r"trainer_subscribers\.json", r"tg_subscribers\.json",
     r"lead_response_log", r"векторизация-базы/.*\.(csv|xlsx|json)$",
 ]
+# Переносится прямо сейчас (шаг 3, 15.10.2026): эти файлы ещё лежат в приватном
+# репозитории, но у них уже есть свежая копия в России — бот зеркалит их при
+# каждой записи, остальной контур обновляется задачей каждые 15 минут.
+# Сообщать о них каждое утро как о проблеме — значит приучать не читать
+# сторожа; поэтому они идут отдельной строкой, а не в списке бед.
+ПЕРЕНОСИТСЯ = (
+    "data/lead_response_log.json",
+    "data/tg_subscribers.json",
+    "data/trainer_subscribers.json",
+    "data/max_subscribers.json",
+)
 МАСКИ_СЕССИЙ = [
     r"storage_state", r"_lk_state\.json$", r"skillspace_state\.json$",
     r"сессия-.*\.json$", r"1c-выгрузка/state\.json$",
@@ -162,6 +175,8 @@ def проверить_приватный_репозиторий() -> list:
             continue
         что = имя_подозрительно(путь)
         if что:
+            if путь in ПЕРЕНОСИТСЯ:
+                continue      # переносится, копия в России уже есть — см. main
             беды.append(f"в приватном репозитории {что}: {путь}")
             continue
         if not путь.lower().endswith(РАСШИРЕНИЯ_ДАННЫХ):
@@ -236,6 +251,72 @@ def отправить(текст: str) -> bool:
         return False
 
 
+def проверить_российскую_копию() -> tuple[bool | None, str]:
+    """Свежа ли копия данных в России.
+
+    Возвращает (True/False/None, чем это видно). None — проверить не удалось
+    (нет ключей): это не беда, но и не «всё хорошо», поэтому так и говорим.
+
+    Зачем проверять: перенос хранения в Россию держится на зеркалах — бота
+    и задачи каждые 15 минут. Зеркало может замолчать молча, как это было
+    с отзывами 2ГИС (295 прогонов подряд без результата), и без этой проверки
+    «данные в России» осталось бы нашим обещанием, а не фактом.
+    """
+    ключ = env("YC_S3_KEY_ID")
+    секрет = env("YC_S3_SECRET")
+    if not (ключ and секрет):
+        return None, "копия в России: ключей нет, проверить не могу"
+    try:
+        import hashlib
+        import hmac
+        from email.utils import parsedate_to_datetime
+
+        объект = "data/tg_subscribers.json"
+        # Имя бакета — своё: выше в файле БАКЕТ это адрес справочника
+        # «телефон — имя», и подставлять его сюда нельзя (URL с кириллицей
+        # падает на UnicodeEncodeError — поймано 15.10.2026).
+        адрес = (f"https://storage.yandexcloud.net/{БАКЕТ_ПЕРЕНОСА}/"
+                 f"{urllib.parse.quote(объект, safe='/')}")
+        хост = "storage.yandexcloud.net"
+        сейчас = datetime.now(timezone.utc)
+        дата, метка = сейчас.strftime("%Y%m%d"), сейчас.strftime("%Y%m%dT%H%M%SZ")
+        пустой = hashlib.sha256(b"").hexdigest()
+        подписываем = "host;x-amz-content-sha256;x-amz-date"
+        канонический = "\n".join([
+            "HEAD", "/" + БАКЕТ_ПЕРЕНОСА + "/" + urllib.parse.quote(объект, safe="/"), "",
+            f"host:{хост}", f"x-amz-content-sha256:{пустой}", f"x-amz-date:{метка}",
+            "", подписываем, пустой])
+        область = f"{дата}/ru-central1/s3/aws4_request"
+        к_подписи = "\n".join(["AWS4-HMAC-SHA256", метка, область,
+                               hashlib.sha256(канонический.encode()).hexdigest()])
+        к = ("AWS4" + секрет).encode()
+        for часть in (дата, "ru-central1", "s3", "aws4_request"):
+            к = hmac.new(к, часть.encode(), hashlib.sha256).digest()
+        подпись = hmac.new(к, к_подписи.encode(), hashlib.sha256).hexdigest()
+        запрос = urllib.request.Request(адрес, method="HEAD", headers={
+            "x-amz-date": метка, "x-amz-content-sha256": пустой,
+            "Authorization": (f"AWS4-HMAC-SHA256 Credential={ключ}/{область}, "
+                              f"SignedHeaders={подписываем}, Signature={подпись}")})
+        with urllib.request.urlopen(запрос, timeout=25) as ответ:
+            изменён = ответ.headers.get("Last-Modified")
+    except Exception as ошибка:  # noqa: BLE001
+        return None, f"копия в России: не проверить ({type(ошибка).__name__})"
+
+    if not изменён:
+        return None, "копия в России: нет отметки времени"
+    # Оба времени приводим к UTC с зоной: вычитать «наивное» из «сознательного»
+    # Python не даёт (TypeError — поймано 15.10.2026).
+    изменён_когда = parsedate_to_datetime(изменён)
+    if изменён_когда.tzinfo is None:
+        изменён_когда = изменён_когда.replace(tzinfo=timezone.utc)
+    возраст = datetime.now(timezone.utc) - изменён_когда.astimezone(timezone.utc)
+    минуты = int(возраст.total_seconds() // 60)
+    if минуты > 90:
+        return False, (f"копия в России устарела: последнее обновление {минуты // 60} ч "
+                       f"{минуты % 60} мин назад")
+    return True, f"копия в России свежая ({минуты} мин назад)"
+
+
 def main() -> int:
     проблемы = []
     хорошее = []
@@ -256,6 +337,13 @@ def main() -> int:
     if not беды_публич:
         хорошее.append("в публичном репозитории клиентских данных нет")
 
+    свежо, чтоКопия = проверить_российскую_копию()
+    print("  " + ("ок: " if свежо else "ПЛОХО: " if свежо is False else "?: ") + чтоКопия)
+    if свежо is False:
+        проблемы.append(чтоКопия)
+    elif свежо is True:
+        хорошее.append(чтоКопия)
+
     понедельник = datetime.now().weekday() == 0
 
     if проблемы:
@@ -268,7 +356,12 @@ def main() -> int:
         return 1   # красный прогон — сбой видно и в GitHub, а не только в Телеграме
 
     if ОТЧЁТ_ВСЕГДА or понедельник:
-        отправить("Сторож клиентских данных: всё в порядке. " + "; ".join(хорошее) + ".")
+        # Отдельной строкой — что ещё переезжает: об этом знать полезно,
+        # но это не беда, и будить этим каждое утро нельзя.
+        хвост = ("" if not ПЕРЕНОСИТСЯ else
+                 "\nПереносится в Россию: " + ", ".join(ПЕРЕНОСИТСЯ) +
+                 " (копия уже есть, основным пока остаётся репозиторий).")
+        отправить("Сторож клиентских данных: всё в порядке. " + "; ".join(хорошее) + "." + хвост)
     print("всё в порядке")
     return 0
 
