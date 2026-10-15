@@ -520,7 +520,14 @@
         // не доживало до отправки. Маске телефона Тильды нужен ещё и фокус —
         // без него скрытое поле Phone остаётся пустым (замер 15.10.2026).
         var внести = function () {
-          var поле = ф.querySelector('input[type="tel"],input[name*="hone"],input[name*="el"]');
+          // Только НАСТОЯЩЕЕ поле телефона. Раньше здесь стоял список
+          // «input[type=tel],input[name*=hone],input[name*=el]», и
+          // querySelector возвращал первое совпадение по документу — а это
+          // служебное скрытое поле Тильды `tildaspec-phone-part[]-iso`,
+          // которое стоит в разметке раньше телефона. Номер уходил в
+          // невидимый инпут, и в форме оставалась пустота (найдено 15.10.2026).
+          var поле = ф.querySelector('input[type="tel"]') ||
+                     ф.querySelector('input[name="tildaspec-phone-part[]"]');
           if (!поле) return;
           поле.value = номер;
           поле.dispatchEvent(new Event('focus', { bubbles: true }));
