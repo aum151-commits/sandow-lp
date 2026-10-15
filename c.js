@@ -373,21 +373,34 @@
 
   /* 4. Кнопки-якоря по ходу страницы ----------------------------------- */
   function найти_форму() {
+    // Панель выбора мессенджера стоит перед формой первого экрана и на первом
+    // экране ЗАМЕНЯЕТ её (форма в этом режиме скрыта). Поэтому пока панель
+    // видна — ведём к ней. Без этой ветки кнопка «План тренировок в подарок»
+    // в липкой полосе не реагировала вовсе: форма скрыта, а поиск искал
+    // именно форму и не находил ни одной видимой (найдено 15.10.2026).
+    var выбор = document.getElementById('sndw-choice');
+    if (выбор && выбор.getBoundingClientRect().height > 0) return выбор;
     var формы = [].slice.call(document.querySelectorAll('form'));
     for (var i = 0; i < формы.length; i++) {
       var r = формы[i].getBoundingClientRect();
-      if (r.width > 0) return формы[i];
+      // t-form__inputsbox: у формы Тильды бывают скрытые дубли-обёртки,
+      // по одной ширине формы они не отличаются
+      if (r.width > 0 && r.height > 0) return формы[i];
     }
     return null;
   }
 
   function к_форме() {
     var ф = найти_форму();
-    if (!ф) return;
+    if (!ф) return false;
     var верх = ф.getBoundingClientRect().top + window.scrollY - 90;
     window.scrollTo({ top: Math.max(0, верх), behavior: 'smooth' });
-    var поле = ф.querySelector('input[type="text"],input[name*="ame"],input');
-    if (поле) setTimeout(function () { поле.focus({ preventScroll: true }); }, 700);
+    // фокус ставим только в поле живой формы; у панели выбора полей нет
+    if (ф.tagName === 'FORM') {
+      var поле = ф.querySelector('input[type="text"],input[name*="ame"],input');
+      if (поле && поле.focus) setTimeout(function () { поле.focus({ preventScroll: true }); }, 700);
+    }
+    return true;
   }
 
   function якоря() {
