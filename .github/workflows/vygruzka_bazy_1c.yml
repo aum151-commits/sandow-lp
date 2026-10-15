@@ -130,7 +130,19 @@ jobs:
               echo "трек не изменился"
             else
               git commit -m "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
-              git push
+              # В репозиторий пишут и другие задачи (сторож, планы, рассылки),
+              # поэтому перед отправкой обязательно подтягиваем чужое: иначе
+              # push отбивается «failed to push some refs» — так и вышло
+              # 15.10.2026, трек не записался.
+              for попытка in 1 2 3; do
+                git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+                if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                  echo "трек отправлен"
+                  break
+                fi
+                echo "попытка $попытка не удалась, ждём и повторяем"
+                sleep 5
+              done
             fi
           else
             echo "файла трека нет — пропускаю"
