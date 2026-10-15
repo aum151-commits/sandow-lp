@@ -44,6 +44,31 @@ jobs:
 
       - run: pip install requests
 
+      # 15.10.2026. Основной дверью журнала стала служба кабинета
+      # (cdrStatisticsService). Она отдаёт больше звонков, чем программный
+      # портал — замер 15.10.2026 за сутки: 70 против 46, — и не ложится
+      # вместе с порталом на техработы (15.10 портал отвечал 503 восемь
+      # часов, и задача падала каждый час). Ходит она по cookies кабинета,
+      # поэтому сессию надо разложить из секрета — так же, как это делают
+      # «Прочие задачи» и «Отзывы». Секрета нет — задача не падает: скрипт
+      # вернётся на портал и скажет об этом в логе.
+      - name: Положить сессию кабинета АТС
+        working-directory: work
+        env:
+          BEELINE_STORAGE_STATE: ${{ secrets.BEELINE_STORAGE_STATE }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import base64, os, pathlib
+          значение = os.environ.get("BEELINE_STORAGE_STATE", "").strip()
+          if not значение:
+              print("секрета сессии нет — журнал будет читаться порталом")
+              raise SystemExit(0)
+          pathlib.Path("data/beeline_storage_state.json").write_bytes(
+              base64.b64decode(значение))
+          print("сессия кабинета разложена")
+          PY
+
       - name: Разобрать свежие звонки
         working-directory: work
         env:
