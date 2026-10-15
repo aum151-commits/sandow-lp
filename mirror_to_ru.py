@@ -52,6 +52,22 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 # Снимки входов и прочие состояния, которые в бакет не нужны.
 ПРОПУСКАТЬ = ("storage_state", "state.json", ".png", ".log", ".md", "requirements")
 
+# Файлы, у которых ОСНОВНОЕ хранилище — уже Россия (переключено 15.10.2026):
+# их ведёт бот, он пишет в бакет первым, а GitHub получает копию. Копировать
+# их сюда из репозитория НЕЛЬЗЯ: копия в GitHub отстаёт, и такое «зеркало»
+# затёрло бы свежую российскую запись — то есть потеряло бы заявки и
+# подписчиков, ради защиты которых всё и делается.
+ВЕДЁТ_БОТ = (
+    "data/tg_subscribers.json",
+    "data/lead_response_log.json",
+    "data/site_leads_by_day.json",
+    "data/trainer_subscribers.json",
+    "data/trainer_slots.json",
+    "data/bot_scheduler_state.json",
+    "data/tg_bookings.json",
+    "data/op_active_manager.json",
+)
+
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
 
 
@@ -77,6 +93,8 @@ def список_файлов() -> list:
             continue
         if any(часть in путь for часть in ПРОПУСКАТЬ):
             continue
+        if путь in ВЕДЁТ_БОТ:
+            continue      # основное хранилище — Россия, отсюда копировать нельзя
         if not путь.endswith((".json", ".jsonl", ".csv", ".txt")):
             continue
         if (узел.get("size") or 0) > ПРЕДЕЛ_ФАЙЛА:
