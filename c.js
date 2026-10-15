@@ -285,6 +285,92 @@
     пересчёт();
   }
 
+  /* Выбор мессенджера в липкой панели внизу экрана ----------------------
+   * Панель `#sndw2Dock` — разметка самой Тильды, поэтому правим её из c.js:
+   * при раскрытии («Забрать план») вместо полей имени и телефона показываем
+   * те же два пути, что и в форме первого экрана, а телефон остаётся за
+   * мелкой строкой. Просьба Ольги 15.10.2026: на телефоне порядок должен
+   * быть одинаковым и там, и там.
+   *
+   * Откат: ПОКАЗЫВАТЬ_ВЫБОР_В_ДОКЕ = false и перезалить файл.
+   */
+  var ПОКАЗЫВАТЬ_ВЫБОР_В_ДОКЕ = true;
+
+  function выборВДоке() {
+    if (!ПОКАЗЫВАТЬ_ВЫБОР_В_ДОКЕ) return 0;
+    var док = document.getElementById('sndw2Dock');
+    if (!док) return 0;
+    var бар = док.querySelector('.sndw2-dock-bar');
+    if (!бар) return 0;
+    if (док.getAttribute('data-sndw-choice') === '1') return 1;
+    док.setAttribute('data-sndw-choice', '1');
+
+    if (!document.getElementById('sndw-dock-choice-css')) {
+      var стиль = document.createElement('style');
+      стиль.id = 'sndw-dock-choice-css';
+      стиль.textContent =
+        // пока человек не выбрал телефон — поля, согласие и кнопку не показываем
+        '.sndw2-dock[data-sndw-choice="1"].sndw2-dock-exp .sndw2-dock-fields,' +
+        '.sndw2-dock[data-sndw-choice="1"].sndw2-dock-exp .sndw2-dock-pd,' +
+        '.sndw2-dock[data-sndw-choice="1"].sndw2-dock-exp #sndw2DockSubmit' +
+        '{display:none !important}' +
+        '.sndw2-dock[data-sndw-choice="1"][data-sndw-mode="phone"] .sndw2-dock-fields' +
+        '{display:flex !important}' +
+        '.sndw2-dock[data-sndw-choice="1"][data-sndw-mode="phone"] .sndw2-dock-pd' +
+        '{display:flex !important}' +
+        '.sndw2-dock[data-sndw-choice="1"][data-sndw-mode="phone"] #sndw2DockSubmit' +
+        '{display:block !important}' +
+        '#sndw-dock-choice{display:none;width:100%;box-sizing:border-box}' +
+        '.sndw2-dock[data-sndw-choice="1"].sndw2-dock-exp #sndw-dock-choice{display:block}' +
+        '.sndw2-dock[data-sndw-choice="1"][data-sndw-mode="phone"] #sndw-dock-choice' +
+        '{display:none !important}' +
+        '#sndw-dock-choice .sndw-dock-row{display:flex;gap:8px;margin:2px 0 6px}' +
+        '#sndw-dock-choice .sndw-dock-btn{flex:1;box-sizing:border-box;display:flex;' +
+        'align-items:center;justify-content:center;gap:8px;height:46px;border-radius:24px;' +
+        'text-decoration:none;font-family:Archivo,Arial,sans-serif;font-weight:700;font-size:14px}' +
+        '#sndw-dock-choice .sndw-dock-btn img{width:24px;height:24px;border-radius:50%;display:block}' +
+        '#sndw-dock-choice .sndw-dock-tg{background:' + ЗОЛОТО + ';color:' + ТЁМНЫЙ + '}' +
+        '#sndw-dock-choice .sndw-dock-mx{border:1px solid rgba(233,199,126,.55);color:#F0EADE}' +
+        '#sndw-dock-choice .sndw-dock-phone{display:block;width:100%;background:none;border:0;' +
+        'padding:2px 0 4px;cursor:pointer;font-family:Archivo,Arial,sans-serif;font-size:12.5px;' +
+        'color:rgba(240,234,222,.75);text-decoration:underline;text-align:center}';
+      document.head.appendChild(стиль);
+    }
+
+    var панель = document.createElement('div');
+    панель.id = 'sndw-dock-choice';
+    панель.innerHTML =
+      '<div class="sndw-dock-row">' +
+      '<a class="sndw-dock-btn sndw-dock-tg" href="' + ВХОД_В_БОТ + '" target="_blank" ' +
+      'rel="noopener"><img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
+      'Telegram</a>' +
+      '<a class="sndw-dock-btn sndw-dock-mx" href="' + МАКС + '" target="_blank" ' +
+      'rel="noopener"><img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">MAX</a>' +
+      '</div>' +
+      '<button type="button" class="sndw-dock-phone">или оставьте номер — перезвоним</button>';
+    var поляДока = док.querySelector('.sndw2-dock-fields');
+    if (поляДока) поляДока.insertAdjacentElement('beforebegin', панель);
+    else бар.appendChild(панель);
+
+    панель.querySelector('.sndw-dock-phone').addEventListener('click', function (e) {
+      e.preventDefault();
+      док.setAttribute('data-sndw-mode', 'phone');
+      // форму первого экрана тоже переводим на телефоны: панель копирует
+      // значения именно в неё, и без этого submit ушёл бы из скрытой формы
+      var форма = document.getElementById(ФОРМА_ПЕРВОГО_ЭКРАНА);
+      if (форма && форма.getAttribute('data-sndw-choice') === '1') {
+        форма.setAttribute('data-sndw-mode', 'phone');
+        var выбор = document.getElementById('sndw-choice');
+        if (выбор) выбор.style.display = 'none';
+      }
+      if (поляДока) {
+        var поле = поляДока.querySelector('input');
+        if (поле && поле.focus) setTimeout(function () { поле.focus({ preventScroll: true }); }, 60);
+      }
+    });
+    return 1;
+  }
+
   /* 4. Кнопки-якоря по ходу страницы ----------------------------------- */
   function найти_форму() {
     var формы = [].slice.call(document.querySelectorAll('form'));
@@ -1175,6 +1261,7 @@
     try { панель_пк(); } catch (e) {}
     try { первый_экран(); } catch (e) {}
     try { выборМессенджера(); } catch (e) {}
+    try { выборВДоке(); } catch (e) {}
     try { строка_доверия(); } catch (e) {}
     try { формаБойцовскогоКлуба(); } catch (e) {}
     try { офферГодВПодарок(); } catch (e) {}
@@ -1202,6 +1289,7 @@
     setTimeout(function () { try { иконкаМаксВМессенджерах(); } catch (e) {} }, 2200);
     setTimeout(function () { try { первый_экран(); } catch (e) {} }, 1400);
     setTimeout(function () { try { выборМессенджера(); } catch (e) {} }, 1500);
+    setTimeout(function () { try { выборВДоке(); } catch (e) {} }, 1600);
     // Единый слой сайта (main.js) пересобирает первый экран шесть раз
     // с интервалом 1,5 с — и затирает строку доверия. Восстанавливаем,
     // пока он это делает: дешевле, чем встраиваться в его цикл.
@@ -1210,6 +1298,7 @@
       try {
         первый_экран();
         выборМессенджера();
+        выборВДоке();
         строка_доверия();
         единый_телеграм();
         единый_макс();
