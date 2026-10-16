@@ -694,46 +694,7 @@
       <image:title>«Сандов Фитнес»</image:title>
     </image:image>
   </url>
-  <url>
-    <loc>https://lp.sandowfitness.ru/mma-i-greppling-moskva/</loc>
-    <image:image>
-      <image:loc>https://lp.sandowfitness.ru/boytsovsky-klub-moskva/oktagon-full.jpg</image:loc>
-      <image:title>Октагон в бойцовском клубе «Сандов Фитнес» — ММА и грэпплинг в Москве</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://lp.sandowfitness.ru/boytsovsky-klub-moskva/oktagon-wide.jpg</image:loc>
-      <image:title>Октагон бойцовского клуба «Сандов Фитнес» — занятия ММА, метро Нижегородская</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://lp.sandowfitness.ru/kikboksing-moskva/tatami.jpg</image:loc>
-      <image:title>Сектор татами для грэпплинга и борьбы в клубе «Сандов Фитнес», метро Нижегородская</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://lp.sandowfitness.ru/kikboksing-moskva/zal-blue.jpg</image:loc>
-      <image:title>Тренажёрный зал «Сандов Фитнес» — 1100 м², метро Нижегородская</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://lp.sandowfitness.ru/kikboksing-moskva/sauna.jpg</image:loc>
-      <image:title>Финская сауна клуба «Сандов Фитнес»</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://aum151-commits.github.io/sandow-assets/life/life-monson.jpg</image:loc>
-      <image:title>Джефф Монсон на мастер-классе в клубе «Сандов Фитнес»</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://aum151-commits.github.io/sandow-assets/life/otar-kakovo.jpg</image:loc>
-      <image:title>Отар Кушанашвили в клубе «Сандов Фитнес»</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://aum151-commits.github.io/sandow-assets/life/life-tnt.jpg</image:loc>
-      <image:title>Съёмки сериала телеканала ТНТ в зале клуба «Сандов Фитнес»</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://aum151-commits.github.io/sandow-assets/life/life-tournament.jpg</image:loc>
-      <image:title>Открытый турнир по бодибилдингу и бикини на площадке клуба</image:title>
-    </image:image>
-  </url>
-  <url>
+<url>
     <loc>https://lp.sandowfitness.ru/motivatsiya-dlya-trenirovok/</loc>
     <image:image>
       <image:loc>https://raw.githubusercontent.com/aum151-commits/sandow-assets/main/og/zal-day.jpg</image:loc>
