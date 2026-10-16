@@ -911,7 +911,7 @@
     if (путь !== '') return;
     var блок = document.querySelector('.sndw2-footer-links');
     if (!блок || блок.getAttribute('data-sndw-footer-lp-links')) return;
-    var НОВЫЕ = [["/personalnye-trenirovki-moskva/","Персональные тренировки"],["/fitnes-dlya-zhenshchin-moskva/","Фитнес для женщин"],["/mma-i-greppling-moskva/","ММА и грэпплинг"],["/boks-metro-nizhegorodskaya/","Бокс"],["/kikboksing-moskva/","Кикбоксинг"],["/boks-dlya-zhenshchin-moskva/","Бокс для женщин"],["/zumba-moskva/","Зумба"],["/yoga-moskva/","Йога"],["/rastyazhka-moskva/","Растяжка"],["/zdorovaya-spina/","Здоровая спина"],["/tyazhelaya-atletika-moskva/","Тяжёлая атлетика"],["/fitness-klub-s-saunoy-moskva/","Клуб с сауной"],["/sportivny-klub-moskva/","Спортивный клуб"]];
+    var НОВЫЕ = [["/personalnye-trenirovki-moskva/","Персональные тренировки"],["/fitnes-dlya-zhenshchin-moskva/","Фитнес для женщин"],["/boks-metro-nizhegorodskaya/","Бокс"],["/kikboksing-moskva/","Кикбоксинг"],["/boks-dlya-zhenshchin-moskva/","Бокс для женщин"],["/zumba-moskva/","Зумба"],["/yoga-moskva/","Йога"],["/rastyazhka-moskva/","Растяжка"],["/zdorovaya-spina/","Здоровая спина"],["/tyazhelaya-atletika-moskva/","Тяжёлая атлетика"],["/fitness-klub-s-saunoy-moskva/","Клуб с сауной"],["/sportivny-klub-moskva/","Спортивный клуб"]];
     var якорь = блок.querySelector('a[href*="lp.sandowfitness.ru/stati"]');
     for (var i = 0; i < НОВЫЕ.length; i++) {
       if (блок.querySelector('a[href="https://lp.sandowfitness.ru' + НОВЫЕ[i][0] + '"]')) continue;
