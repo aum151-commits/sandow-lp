@@ -43,6 +43,10 @@ jobs:
         env:
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+          # 16.10.2026. Журнал заявок ведёт Россия: источник отчёта берётся из
+          # бакета, репозиторий остаётся запасным путём. Ключи — из секретов.
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python report_sla.py
 
       - name: Запомнить, что сводка отправлена

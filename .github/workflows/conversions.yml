@@ -51,6 +51,11 @@ jobs:
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
           TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+          # 16.10.2026. «Назначено» берётся из журнала встреч, который ведёт
+          # российский бакет: репозиторий получает копию и отстаёт. Ключи —
+          # только из секретов, в репозитории их нет.
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python report_conversions.py
 
       - name: Запомнить, что сводка отправлена

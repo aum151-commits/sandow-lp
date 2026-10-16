@@ -88,6 +88,11 @@ jobs:
           GROQ_ANALYSIS_MODEL: ${{ secrets.GROQ_ANALYSIS_MODEL }}
           PAID_LLM_API_KEY: ${{ secrets.PAID_LLM_API_KEY }}
           PAID_LLM_BASE_URL: ${{ secrets.PAID_LLM_BASE_URL }}
+          # 16.10.2026. Журнал встреч и список разобранных звонков переехали в
+          # российский бакет: задача читает их оттуда, туда же пишет, а
+          # репозиторий остаётся запасным путём. Ключи — только из секретов.
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python cloud_appointments.py
 
       - name: Вернуть журнал в приватный репозиторий
@@ -97,7 +102,12 @@ jobs:
         run: |
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
-          git add data/conversions/appointments.jsonl data/conversions/processed_calls.json
+          # 16.10.2026. Журнал и список разобранных звонков теперь ведёт Россия:
+          # они выведены из репозитория и закрыты в .gitignore, поэтому этот
+          # git add молча ничего не делает. Пока копия ещё лежала здесь, та же
+          # строка коммитила её — переход прошёл без разрыва. Отказ add больше
+          # не должен ронять прогон: данные уже сохранены в бакете.
+          git add data/conversions/appointments.jsonl data/conversions/processed_calls.json 2>/dev/null || true
           git diff --staged --quiet || (
             git commit -m "Назначенные встречи из звонков" &&
             # Задачи идут одновременно и пишут состояние в один репозиторий.
