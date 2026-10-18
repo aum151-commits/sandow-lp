@@ -279,24 +279,24 @@ def проверить_российскую_копию() -> tuple[bool | None, s
     секрет = env("YC_S3_SECRET")
     if not (ключ and секрет):
         return None, "копия в России: ключей нет, проверить не могу"
-    try:
+    def когда_менялся(объект: str):
+        """Время последнего изменения файла в хранилище (UTC) — или None."""
         import hashlib
         import hmac
         from email.utils import parsedate_to_datetime
 
-        объект = "data/tg_subscribers.json"
         # Имя бакета — своё: выше в файле БАКЕТ это адрес справочника
         # «телефон — имя», и подставлять его сюда нельзя (URL с кириллицей
         # падает на UnicodeEncodeError — поймано 15.10.2026).
-        адрес = (f"https://storage.yandexcloud.net/{БАКЕТ_ПЕРЕНОСА}/"
-                 f"{urllib.parse.quote(объект, safe='/')}")
+        путь = "/" + БАКЕТ_ПЕРЕНОСА + "/" + urllib.parse.quote(объект, safe="/")
+        адрес = "https://storage.yandexcloud.net" + путь
         хост = "storage.yandexcloud.net"
         сейчас = datetime.now(timezone.utc)
         дата, метка = сейчас.strftime("%Y%m%d"), сейчас.strftime("%Y%m%dT%H%M%SZ")
         пустой = hashlib.sha256(b"").hexdigest()
         подписываем = "host;x-amz-content-sha256;x-amz-date"
         канонический = "\n".join([
-            "HEAD", "/" + БАКЕТ_ПЕРЕНОСА + "/" + urllib.parse.quote(объект, safe="/"), "",
+            "HEAD", путь, "",
             f"host:{хост}", f"x-amz-content-sha256:{пустой}", f"x-amz-date:{метка}",
             "", подписываем, пустой])
         область = f"{дата}/ru-central1/s3/aws4_request"
@@ -310,24 +310,47 @@ def проверить_российскую_копию() -> tuple[bool | None, s
             "x-amz-date": метка, "x-amz-content-sha256": пустой,
             "Authorization": (f"AWS4-HMAC-SHA256 Credential={ключ}/{область}, "
                               f"SignedHeaders={подписываем}, Signature={подпись}")})
-        with urllib.request.urlopen(запрос, timeout=25) as ответ:
-            изменён = ответ.headers.get("Last-Modified")
-    except Exception as ошибка:  # noqa: BLE001
-        return None, f"копия в России: не проверить ({type(ошибка).__name__})"
+        try:
+            with urllib.request.urlopen(запрос, timeout=25) as ответ:
+                изменён = ответ.headers.get("Last-Modified")
+        except Exception:  # noqa: BLE001
+            return None
+        if not изменён:
+            return None
+        # Время приводим к UTC с зоной: вычитать «наивное» из «сознательного»
+        # Python не даёт (TypeError — поймано 15.10.2026).
+        когда = parsedate_to_datetime(изменён)
+        if когда.tzinfo is None:
+            когда = когда.replace(tzinfo=timezone.utc)
+        return когда.astimezone(timezone.utc)
 
-    if not изменён:
-        return None, "копия в России: нет отметки времени"
-    # Оба времени приводим к UTC с зоной: вычитать «наивное» из «сознательного»
-    # Python не даёт (TypeError — поймано 15.10.2026).
-    изменён_когда = parsedate_to_datetime(изменён)
-    if изменён_когда.tzinfo is None:
-        изменён_когда = изменён_когда.replace(tzinfo=timezone.utc)
-    возраст = datetime.now(timezone.utc) - изменён_когда.astimezone(timezone.utc)
+    # Смотрим НЕСКОЛЬКО файлов и берём самый свежий, а не один. Почему так:
+    # раньше проверка смотрела только на список подписчиков — а он меняется лишь
+    # когда придёт новая подписка. Раз в сутки это норма, но сторож каждый день
+    # кричал «копия устарела», и крик про правильную вещь перестают читать
+    # (18.10.2026: 1 ч 52 мин без новой подписки — и уже тревога).
+    #
+    # Зачем проверять вообще: перенос хранения держится на зеркалах, которые
+    # могут замолчать молча (как отзывы 2ГИС — 295 прогонов впустую). Порог в
+    # 12 часов, а не в полтора: бот спит ночью, и тишина с 23:00 до 08:00 —
+    # это норма, а не поломка. За сутки молчания сторож всё равно заметит.
+    файлы_свежести = ("data/lead_response_log.json",   # заявки: меняется в течение дня
+                      "data/trainer_slots.json",       # окна тренеров: каждый вечер
+                      "data/tg_subscribers.json",      # подписки
+                      "data/max_subscribers.json")     # подписки MAX
+    пределы_минут = 12 * 60
+
+    отметки = [т for т in (когда_менялся(ф) for ф in файлы_свежести) if т]
+    if not отметки:
+        return None, "копия в России: не проверить (нет ответа от хранилища)"
+    возраст = datetime.now(timezone.utc) - max(отметки)
     минуты = int(возраст.total_seconds() // 60)
-    if минуты > 90:
-        return False, (f"копия в России устарела: последнее обновление {минуты // 60} ч "
-                       f"{минуты % 60} мин назад")
-    return True, f"копия в России свежая ({минуты} мин назад)"
+    if минуты > пределы_минут:
+        return False, (f"копия в России устарела: самое свежее изменение "
+                       f"{минуты // 60} ч {минуты % 60} мин назад")
+    return True, (f"копия в России свежая (самое свежее изменение {минуты} мин "
+                  f"назад; проверить удалось {len(отметки)} файлов "
+                  f"из {len(файлы_свежести)})")
 
 
 def main() -> int:

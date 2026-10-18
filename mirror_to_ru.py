@@ -66,6 +66,13 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     "data/bot_scheduler_state.json",
     "data/tg_bookings.json",
     "data/op_active_manager.json",
+    # Файлы MAX-бота (18.10.2026): их основное хранилище — Россия, и копировать
+    # их сюда из репозитория нельзя по той же причине — копия отстаёт.
+    "data/max_subscribers.json",
+    "data/max_bookings.json",
+    "data/max_trainer_subscribers.json",
+    "data/max_bot_scheduler_state.json",
+    "data/trainers/queue.json",
 )
 
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
