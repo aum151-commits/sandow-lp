@@ -78,6 +78,16 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     # отстаёт, и зеркало затёрло бы свежую пометку.
     "data/conversions/meetings.jsonl",
     "data/conversions/sales_marks.jsonl",
+    # 19.10.2026, последний заход: данные людей из бота и задач — копии в репозитории
+    # больше не ведутся, зеркалить их сюда нельзя.
+    "data/tg_bookings.json",
+    "data/trainers/profiles.json",
+    "data/op_schedule.json",
+    "data/op_active_manager.json",
+    "data/staff/staff.json",
+    "data/staff/authors.jsonl",
+    "data/call_tasks.json",
+    "data/sla_escalations.json",
 )
 
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
