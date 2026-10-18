@@ -73,6 +73,11 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     "data/max_trainer_subscribers.json",
     "data/max_bot_scheduler_state.json",
     "data/trainers/queue.json",
+    # Журналы встреч и отметок продаж (19.10.2026): основное хранилище — Россия.
+    # Пишут их облачная задача и бот пометками из чата; копия в репозитории
+    # отстаёт, и зеркало затёрло бы свежую пометку.
+    "data/conversions/meetings.jsonl",
+    "data/conversions/sales_marks.jsonl",
 )
 
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
