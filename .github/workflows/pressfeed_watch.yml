@@ -234,7 +234,11 @@ jobs:
         if: failure()
         env:
           TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID_OLGA }}
+          # Куда идёт тревога: тема «Отчёты» в закрытой группе
+          # «Сандов · Москва» — запросы журналистов это PR московского клуба.
+          # Раньше уходило в личный чат, где тонуло в общей ленте.
+          TG_CHAT: -1003919783019
+          TG_THREAD: 7
           GH_TOKEN: ${{ github.token }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: python
@@ -277,5 +281,6 @@ jobs:
           urllib.request.urlopen(urllib.request.Request(
               f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage",
               data=json.dumps({"chat_id": os.environ["TG_CHAT"],
+                               "message_thread_id": int(os.environ["TG_THREAD"]),
                                "text": текст}).encode(),
               headers={"Content-Type": "application/json"}), timeout=30)

@@ -58,7 +58,15 @@ jobs:
           BOT: ${{ secrets.CLIENT_BOT_TOKEN }}
           HOOK_SECRET: ${{ secrets.HOOK_SECRET }}
           ALERT_BOT: ${{ secrets.ALERT_BOT_TOKEN }}
-          ALERT_CHAT: ${{ secrets.ALERT_CHAT_ID }}
+          # Тревоги — в тему «Сторожа» закрытой группы «Сандов · Служебное»
+          # (там только Ольга и служебный бот). Раньше уходило в личный чат,
+          # где тонуло среди прочих сообщений.
+          ALERT_CHAT: -1004490310856
+          ALERT_THREAD: 3
+          # Карточки заявок при запасном приёме — в тему «Заявки и звонки»
+          # группы «Сандов · Москва»: это работа с клиентом, а не служебное.
+          LEADS_CHAT: -1003919783019
+          LEADS_THREAD: 4
         run: |
           python3 - <<'PY'
           import json, os, time, urllib.parse, urllib.request
@@ -67,6 +75,9 @@ jobs:
           SECRET = os.environ["HOOK_SECRET"]
           ALERT_BOT = os.environ["ALERT_BOT"]
           ALERT_CHAT = os.environ["ALERT_CHAT"]
+          ALERT_THREAD = int(os.environ["ALERT_THREAD"])
+          LEADS_CHAT = os.environ["LEADS_CHAT"]
+          LEADS_THREAD = int(os.environ["LEADS_THREAD"])
 
           SERVICE = "https://sandow-lead-bot-standalone.onrender.com"
           EXPECTED = f"{SERVICE}/tg/{SECRET}"
@@ -81,8 +92,13 @@ jobs:
                   url += "?" + urllib.parse.urlencode(params)
               return json.loads(get(url, 60)[1])
 
-          def send(chat, text, token=None):
-              data = urllib.parse.urlencode({"chat_id": chat, "text": text}).encode()
+          def send(chat, text, token=None, thread=None):
+              # thread — номер темы внутри группы. У личных чатов тем нет,
+              # поэтому передаём только там, где адресат — группа.
+              поля = {"chat_id": chat, "text": text}
+              if thread:
+                  поля["message_thread_id"] = thread
+              data = urllib.parse.urlencode(поля).encode()
               urllib.request.urlopen(
                   f"https://api.telegram.org/bot{token or ALERT_BOT}/sendMessage",
                   data=data, timeout=60,
@@ -100,7 +116,7 @@ jobs:
               # лежит» нет. Ровно сценарий из lead-bot-v2-keepalive-gap.
               # Сейчас сторож и так ходит раз в 3 часа: этого достаточно,
               # отдельное подавление не нужно.
-              send(ALERT_CHAT, text)
+              send(ALERT_CHAT, text, thread=ALERT_THREAD)
               print("тревога отправлена")
 
           # --- 1. жив ли сервис. Холодный старт занимает до минуты, поэтому три попытки
@@ -164,7 +180,8 @@ jobs:
                   if r.get("ok"):
                       send(ALERT_CHAT,
                            "Вебхук лид-бота слетел — я вернул его на место.\n"
-                           "Заявки снова доходят. Так бывает после обновления бота.")
+                           "Заявки снова доходят. Так бывает после обновления бота.",
+                           thread=ALERT_THREAD)
                       print("вебхук восстановлен")
                   else:
                       alert("Вебхук лид-бота слетел, и вернуть его не вышло:\n"
@@ -222,7 +239,7 @@ jobs:
                   # чем передать заявку через Ольгу
                   карточка = (f"ЗАЯВКА (запасной приём, бот лежит)\n"
                               f"{кто}, {ник}\n\n{текст}")
-                  send(ALERT_CHAT, карточка)
+                  send(LEADS_CHAT, карточка, thread=LEADS_THREAD)
                   принято += 1
 
           print(f"запасной приём отработал, сообщений принято: {принято}")
@@ -231,6 +248,7 @@ jobs:
           r = api("setWebhook", url=EXPECTED)
           print("вебхук возвращён:", r.get("ok"))
           if принято:
-              send(ALERT_CHAT, f"Запасной приём: обработано обращений — {принято}. "
-                               "Все карточки выше — передайте менеджерам.")
+              send(LEADS_CHAT, f"Запасной приём: обработано обращений — {принято}. "
+                               "Все карточки выше — передайте менеджерам.",
+                   thread=LEADS_THREAD)
           PY
