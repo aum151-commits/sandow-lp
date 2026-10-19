@@ -50,7 +50,13 @@ jobs:
         run: |
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
-          git add data/call_tasks.json
+          # 19.10.2026: очередь задач больше не копируется в репозиторий — её
+          # основное хранилище теперь Россия, а файл внесён в .gitignore.
+          # Без `|| true` шаг падал с «pathspec did not match any files», и
+          # задача не доделывала работу. Остальное сохранение оставлено: если
+          # хранилище не приняло запись, копия здесь всё равно не появится, но
+          # и вреда от попытки нет.
+          git add data/call_tasks.json 2>/dev/null || true
           git diff --staged --quiet || (
             git commit -m "Задачи по звонкам: обновлена очередь" &&
             # Задачи идут одновременно и пишут состояние в один репозиторий.
