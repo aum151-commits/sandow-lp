@@ -89,6 +89,12 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     "data/call_tasks.json",
     "data/sla_escalations.json",
     "data/intake/queue.jsonl",
+    # Богородицк (19.10.2026): их пишут воркеры Cloudflare, основное хранилище —
+    # Россия. Копия в репозитории отстаёт, и зеркало затёрло бы свежие заявки.
+    "data/intake/bog_stoyka_log.jsonl",
+    "data/intake/bog_site_log.jsonl",
+    "data/intake/svodny_queue.jsonl",
+    "data/intake/bog_bot_known.json",
 )
 
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
