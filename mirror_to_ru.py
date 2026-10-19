@@ -88,6 +88,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     "data/staff/authors.jsonl",
     "data/call_tasks.json",
     "data/sla_escalations.json",
+    "data/intake/queue.jsonl",
 )
 
 ПРЕДЕЛ_ФАЙЛА = 5 * 1024 * 1024
