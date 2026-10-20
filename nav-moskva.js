@@ -35,13 +35,15 @@
     var с = document.createElement('style');
     с.id = 'sndw-nav-moskva-css';
     с.textContent = [
-      '.nav-moskva{display:flex;align-items:center;gap:18px;margin-left:auto}',
+      '.nav-moskva{display:flex;align-items:center;gap:18px;margin-left:auto;flex:0 0 auto}',
       '.nav-moskva a{color:#cfc3ae;text-decoration:none;font-size:14px;white-space:nowrap}',
       '.nav-moskva a:hover{color:#e9c77e}',
       '.nav-moskva .nav-cta{background:linear-gradient(180deg,#f3dca6,#e9c77e);color:#1a1408;',
       'border-radius:999px;padding:10px 16px;font-weight:600;font-size:13.5px}',
       '.nav-burger{display:none;width:42px;height:40px;border:1px solid #2e2415;border-radius:10px;',
       'background:transparent;padding:9px 10px;cursor:pointer;box-sizing:border-box}',
+      '.header-in{flex-wrap:nowrap;min-width:0}',
+      '.head-phone{white-space:nowrap}',
       '.nav-burger span{display:block;height:2px;background:#e9c77e;border-radius:2px;margin:3px 0;',
       'transition:transform .2s ease,opacity .2s ease}',
       '.nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5px) rotate(45deg)}',
@@ -56,7 +58,7 @@
       'color:#1a1408;border-radius:999px;padding:14px;text-align:center;font-weight:600;border-bottom:0}',
       '@media (max-width:900px){',
       '.nav-moskva{display:none}',
-      '.nav-burger{display:block;margin-left:auto;margin-right:-6px}',
+      '.nav-burger{display:block;margin-left:auto;margin-right:-6px;flex:0 0 42px}',
       '}',
       '@media (min-width:901px){.nav-drop{display:none !important}}'
     ].join('');
