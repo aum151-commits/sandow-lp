@@ -1468,12 +1468,22 @@
       setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 4800);
     });
 
-    // «Статьи» в меню клуба в Богородицке: пункт мог исчезнуть после
-    // перерисовки меню, поэтому догоняем двумя попытками.
-    window.addEventListener('load', function () {
-      setTimeout(function () { try { статьиВМеню(); } catch (e) {} }, 600);
-      setTimeout(function () { try { статьиВМеню(); } catch (e) {} }, 2400);
-    });
+    // «Статьи» в меню клуба в Богородицке. Меню Тильда дорисовывает позже,
+    // а её правки могут затереть добавленный пункт — поэтому не пара
+    // отложенных вызовов, а попытки каждые полсекунды, пока пункт не встанет.
+    (function () {
+      var попыток = 0;
+      var ставить = function () {
+        try { статьиВМеню(); } catch (e) {}
+        попыток += 1;
+        var меню = document.querySelector('.sndw2-nav-links');
+        var есть = меню && меню.querySelector('a[href*=bogoroditsk/]');
+        if (!есть && попыток < 40) setTimeout(ставить, 500);
+      };
+      if (document.readyState === 'complete') ставить();
+      else window.addEventListener('load', ставить);
+      document.addEventListener('DOMContentLoaded', ставить);
+    })();
 
   });
 })();
