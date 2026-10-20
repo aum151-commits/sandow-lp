@@ -35,20 +35,21 @@
     var с = document.createElement('style');
     с.id = 'sndw-nav-moskva-css';
     с.textContent = [
+      /* общий ряд шапки: не переносим, даём содержимому сжиматься */
+      '.header-in{flex-wrap:nowrap;gap:10px;min-width:0}',
       '.nav-moskva{display:flex;align-items:center;gap:18px;margin-left:auto;flex:0 0 auto}',
       '.nav-moskva a{color:#cfc3ae;text-decoration:none;font-size:14px;white-space:nowrap}',
       '.nav-moskva a:hover{color:#e9c77e}',
-      '.nav-moskva .nav-cta{background:linear-gradient(180deg,#f3dca6,#e9c77e);color:#1a1408;',
-      'border-radius:999px;padding:10px 16px;font-weight:600;font-size:13.5px}',
-      '.nav-burger{display:none;width:42px;height:40px;border:1px solid #2e2415;border-radius:10px;',
-      'background:transparent;padding:9px 10px;cursor:pointer;box-sizing:border-box}',
-      '.header-in{flex-wrap:nowrap;min-width:0}',
-      '.head-phone{white-space:nowrap}',
+      /* кнопка-гамбургер: тот же размер, что на главной сайте */
+      '.nav-burger{display:none;width:42px;height:40px;flex:0 0 42px;box-sizing:border-box;',
+      'border:1px solid #2e2415;border-radius:10px;background:transparent;',
+      'padding:9px 10px;cursor:pointer;margin-left:auto}',
       '.nav-burger span{display:block;height:2px;background:#e9c77e;border-radius:2px;margin:3px 0;',
       'transition:transform .2s ease,opacity .2s ease}',
       '.nav-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5px) rotate(45deg)}',
       '.nav-burger[aria-expanded="true"] span:nth-child(2){opacity:0}',
       '.nav-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}',
+      /* выпадающая панель */
       '.nav-drop{display:flex;flex-direction:column;gap:2px;position:absolute;left:0;right:0;top:100%;',
       'background:rgba(11,9,6,.98);border-bottom:1px solid #2e2415;padding:8px 16px 14px;z-index:60}',
       '.nav-drop[hidden]{display:none !important}',
@@ -58,7 +59,11 @@
       'color:#1a1408;border-radius:999px;padding:14px;text-align:center;font-weight:600;border-bottom:0}',
       '@media (max-width:900px){',
       '.nav-moskva{display:none}',
-      '.nav-burger{display:block;margin-left:auto;margin-right:-6px;flex:0 0 42px}',
+      '.nav-burger{display:block;margin-right:-6px}',
+      /* на телефоне строка узкая: название и телефон поджимаем, чтобы
+         гамбургер не выезжал за край */
+      '.logo{font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.head-phone{font-size:13px;white-space:nowrap}',
       '}',
       '@media (min-width:901px){.nav-drop{display:none !important}}'
     ].join('');
