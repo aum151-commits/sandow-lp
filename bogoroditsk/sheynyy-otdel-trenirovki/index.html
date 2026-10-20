@@ -879,6 +879,11 @@
     var кнопка = шапка.querySelector('.top-burger');
     var панель = шапка.querySelector('.top-drop');
     if (!кнопка || !панель) return;
+    // Защита от второго подключения: если обработчик уже навешен, второй
+    // переключит панель обратно, и кнопка будет выглядеть нерабочей
+    // (именно так и случилось на странице-списке 20.10.2026).
+    if (кнопка.dataset.связана === 'да') return;
+    кнопка.dataset.связана = 'да';
     кнопка.addEventListener('click', function () {
       var открыто = кнопка.getAttribute('aria-expanded') === 'true';
       кнопка.setAttribute('aria-expanded', String(!открыто));
