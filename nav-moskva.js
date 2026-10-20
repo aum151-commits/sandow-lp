@@ -56,7 +56,7 @@
       'color:#1a1408;border-radius:999px;padding:14px;text-align:center;font-weight:600;border-bottom:0}',
       '@media (max-width:900px){',
       '.nav-moskva{display:none}',
-      '.nav-burger{display:block;margin-left:auto}',
+      '.nav-burger{display:block;margin-left:auto;margin-right:-6px}',
       '}',
       '@media (min-width:901px){.nav-drop{display:none !important}}'
     ].join('');
