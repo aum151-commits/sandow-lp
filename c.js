@@ -41,6 +41,33 @@
   var ЧУЖИЕ_РАЗДЕЛЫ = ['/bogoroditsk'];
   var ЧУЖИЕ_ИМЕНА = /богородиц/i;
 
+  /* ---------- пункт «Статьи» в меню клуба в Богородицке (20.10.2026) ----
+   * Раздел статей лежит на lp.sandowfitness.ru/bogoroditsk/, но со страницы
+   * клуба ссылки на него не было: человек не мог найти статьи из меню.
+   * Ставим пункт в десктопное меню, бургер и подвал — везде, где у шаблона
+   * есть список. Только для страницы Богородицка: московские страницы
+   * шаблон использует другие, их не трогаем. */
+  function статьиВМеню() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '/bogoroditsk') return;
+
+    var ссылка = function () {
+      var a = document.createElement('a');
+      a.href = 'https://lp.sandowfitness.ru/bogoroditsk/';
+      a.textContent = 'Статьи';
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener');
+      return a;
+    };
+
+    ['.sndw2-nav-links', '.sndw2-nav-ovl', '.sndw2-footer-links'].forEach(function (сел) {
+      var список = document.querySelector(сел);
+      if (!список) return;
+      if (список.querySelector('a[href*="lp.sandowfitness.ru/bogoroditsk"]')) return;
+      список.appendChild(ссылка());
+    });
+  }
+
   function чужойПроект() {
     var путь = location.pathname.replace(/\/+$/, '').toLowerCase();
     for (var ч = 0; ч < ЧУЖИЕ_РАЗДЕЛЫ.length; ч++) {
@@ -1439,6 +1466,13 @@
       // после него, иначе пара «Telegram / MAX» распадается
       setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 2900);
       setTimeout(function () { try { ссылкаМаксВПодвал(); } catch (e) {} }, 4800);
+    });
+
+    // «Статьи» в меню клуба в Богородицке: пункт мог исчезнуть после
+    // перерисовки меню, поэтому догоняем двумя попытками.
+    window.addEventListener('load', function () {
+      setTimeout(function () { try { статьиВМеню(); } catch (e) {} }, 600);
+      setTimeout(function () { try { статьиВМеню(); } catch (e) {} }, 2400);
     });
 
   });
