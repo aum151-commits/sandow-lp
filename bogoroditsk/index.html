@@ -576,19 +576,7 @@
     <a href="https://sandowfitness.ru/bogoroditsk">Записаться и узнать про клуб</a>
   </div>
 </footer>
-<script>
-  (function () {
-    var к = document.querySelector('.top-burger'), п = document.querySelector('.top-drop');
-    if (!к || !п) return;
-    к.addEventListener('click', function () {
-      var о = к.getAttribute('aria-expanded') === 'true';
-      к.setAttribute('aria-expanded', String(!о)); п.hidden = о;
-    });
-    п.addEventListener('click', function (е) {
-      if (е.target.closest('a')) { к.setAttribute('aria-expanded','false'); п.hidden = true; }
-    });
-  })();
-</script>
+
 <!-- иконки мессенджеров: всегда под рукой -->
 <div class="bot-float">
   <a href="https://t.me/sandow_bogoroditsk_bot" target="_blank" rel="noopener"
