@@ -268,6 +268,9 @@
   .top-burger[aria-expanded="true"] span:nth-child(1){transform:translateY(5px) rotate(45deg)}
   .top-burger[aria-expanded="true"] span:nth-child(2){opacity:0}
   .top-burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-5px) rotate(-45deg)}
+  /* скрытая панель должна быть скрыта: без этого правила display:flex
+     перебивал атрибут hidden, и список висел вверху на пол-экрана */
+  .top-drop[hidden]{display:none !important}
   .top-drop{display:flex; flex-direction:column; gap:2px; background:rgba(11,9,6,.98);
     border-bottom:1px solid var(--line); padding:10px 20px 16px}
   .top-drop a{color:#e6dcc8; text-decoration:none; padding:12px 4px; font-size:16px;
@@ -276,8 +279,15 @@
     color:#1a1408; border:0; border-radius:999px; padding:14px; font:600 15px/1 "Archivo",Arial,sans-serif}
   @media (max-width:900px){
     nav.top-nav{display:none}
-    .top-burger{display:block; margin-left:auto}
-    header.top .brand{white-space:normal; font-size:11.5px}
+    /* телефон: гамбургер слева, название рядом — шапка занимает одну строку
+       вместо трёх, иначе она съедала верх экрана */
+    header.top .wrap{padding:10px 16px; gap:12px}
+    .top-burger{display:block; order:-1; margin:0; width:40px; height:36px; flex:0 0 auto}
+    header.top .wrap{flex-wrap:nowrap !important}
+    header.top .brand{flex:1 1 auto; min-width:0; font-size:10.5px; letter-spacing:.02em;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2}
+    .top-drop{padding:8px 16px 14px}
+    .top-drop a{padding:11px 2px; font-size:15.5px}
   }
   @media (min-width:901px){ .top-drop{display:none !important} }
 
