@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калькуляторы: калории и индекс массы тела</title>
+<meta name="description" content="Посчитайте суточные калории и индекс массы тела — и подберём тренировки под ваш результат. Два калькулятора с понятным разбором.">
+<link rel="canonical" href="https://lp.sandowfitness.ru/bogoroditsk/kalkulyatory/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Калькуляторы: калории и индекс массы тела">
+<meta property="og:description" content="Суточные калории и индекс массы тела — два калькулятора с разбором и подбором тренировок.">
+<meta property="og:url" content="https://lp.sandowfitness.ru/bogoroditsk/kalkulyatory/">
+<meta property="og:site_name" content="Сандов Премиум Фитнес, Богородицк">
+<meta name="theme-color" content="#0b0906">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0906;--panel:#151009;--line:#2e2415;--ink:#f0eade;--gold:#e9c77e;--gold2:#c08b4e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;line-height:1.65;padding-bottom:92px}
+.wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px}
+a{color:var(--gold)}
+.top-nav{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin-bottom:26px}
+h1{font-family:Unbounded,sans-serif;font-size:30px;line-height:1.25;margin:0 0 14px}
+h2{font-family:Unbounded,sans-serif;font-size:21px;margin:38px 0 12px;color:var(--gold)}
+.lead{font-size:16px;color:#cfc6b4;margin-bottom:26px}
+.calc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin:18px 0}
+.calc label{display:block;font-size:13px;color:#b8ae9c;margin:12px 0 6px}
+.calc input,.calc select{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:#0f0b06;color:var(--ink);font-size:15px;font-family:inherit}
+.ряды{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.calc > button{margin-top:18px;padding:13px 22px;border:0;border-radius:12px;background:linear-gradient(120deg,var(--gold),var(--gold2));color:#1a1206;font-weight:600;font-size:15px;font-family:inherit;cursor:pointer}
+.out{margin-top:18px;padding:16px;border-radius:12px;background:#0f0b06;border:1px solid var(--line);font-size:15px;display:none}
+.out b{color:var(--gold);font-size:22px}
+.out small{display:block;color:#a99f8c;margin-top:8px;line-height:1.55}
+.offer{display:none;margin-top:14px;padding:14px;border-radius:12px;background:rgba(233,199,126,.07);border:1px solid rgba(233,199,126,.28);font-size:14.5px}
+.offer p{margin:0 0 10px;color:#e6dcc6}
+.offer button{padding:11px 18px;border:0;border-radius:10px;cursor:pointer;font-weight:600;background:linear-gradient(120deg,var(--gold),var(--gold2));color:#1a1206}
+.note{font-size:14px;color:#a99f8c}
+.sticky{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;display:flex;justify-content:center;background:linear-gradient(180deg,rgba(11,9,6,0),rgba(11,9,6,.96));z-index:60}
+.sticky button{width:100%;max-width:520px;border:0;border-radius:999px;padding:16px 22px;cursor:pointer;font:600 15px/1 Archivo,sans-serif;color:#1a1408;background:linear-gradient(180deg,#f3dca6,var(--gold));box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.zmodal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,5,3,.78)}
+.zmodal[hidden]{display:none}
+.zmodal-card{width:100%;max-width:430px;background:linear-gradient(180deg,#1f1710,#100c07);border:1px solid rgba(233,199,126,.4);border-radius:18px;padding:26px 22px 22px;position:relative}
+.zmodal-card h3{margin:0 0 8px;font:700 20px/1.3 Unbounded,sans-serif}
+.zmodal-card p{margin:0 0 10px;font-size:14.5px;color:#c9bda6}
+.zmodal-close{position:absolute;top:8px;right:12px;background:none;border:0;color:#c9bda6;font-size:24px;cursor:pointer}
+.qform input[type=tel]{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0f0b06;color:var(--ink);font-size:16px;margin-bottom:10px}
+.qform .consent{display:flex;gap:9px;font-size:12.5px;color:#a99f8c;line-height:1.45;margin-bottom:12px}
+.qform button{width:100%;padding:14px;border:0;border-radius:12px;cursor:pointer;font-weight:600;background:linear-gradient(120deg,var(--gold),var(--gold2));color:#1a1206}
+.phone-row{display:flex;align-items:center;gap:0;margin-bottom:10px;border:1px solid var(--line);border-radius:12px;background:#0f0b06;overflow:hidden}
+.phone-prefix{padding:13px 12px;font-size:15px;color:#e6dcc6;background:#171009;white-space:nowrap;border-right:1px solid var(--line)}
+.phone-row input[type=tel]{border:0;border-radius:0;margin:0;background:transparent;flex:1}
+.policy-line{margin:10px 0 0;font-size:12px}
+.qform-err{color:#f0a08a;font-size:14px;display:none;margin-top:10px}
+.qform-ok{color:var(--gold);font-size:14.5px;display:none;margin-top:10px}
+@media(max-width:560px){.ряды{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top-nav"><a href="/bogoroditsk/">Все статьи</a><a href="https://sandowfitness.ru/bogoroditsk">Клуб в Богородицке</a></div>
+<h1>Калькуляторы: калории и индекс массы тела</h1>
+<p class="lead">Два расчёта, которые чаще всего нужны перед началом тренировок: сколько есть и с чего вы начинаете. Ничего не сохраняем и не просим почту — считайте сколько угодно раз.</p>
+
+<h2>Сколько калорий нужно в день</h2>
+<div class="calc">
+  <div class="ряды">
+    <div><label>Пол</label><select id="пол"><option value="ж">женский</option><option value="м">мужской</option></select></div>
+    <div><label>Возраст, лет</label><input id="возраст" type="number" min="14" max="90" value="30"></div>
+    <div><label>Вес, кг</label><input id="вес" type="number" min="30" max="250" value="70"></div>
+    <div><label>Рост, см</label><input id="рост" type="number" min="120" max="220" value="170"></div>
+  </div>
+  <label>Насколько вы двигаетесь</label>
+  <select id="активность">
+    <option value="1.2">почти не двигаюсь, сидячая работа</option>
+    <option value="1.375" selected>легкая активность, 1–2 тренировки в неделю</option>
+    <option value="1.55">3–4 тренировки в неделю</option>
+    <option value="1.725">5–6 тренировок в неделю</option>
+  </select>
+  <button onclick="посчитатьКалории()">Рассчитать</button>
+  <div class="out" id="ответ_калории"></div>
+  <div class="offer" id="предложение_калории">
+    <p>Хотите, разберём ваш расчёт вместе и подскажем, с чего начать без спешки?</p>
+    <button onclick="открытьЗаявку('после расчёта калорий')">Узнать условия открытия</button>
+  </div>
+</div>
+
+<h2>Индекс массы тела</h2>
+<div class="calc">
+  <div class="ряды">
+    <div><label>Вес, кг</label><input id="вес2" type="number" min="30" max="250" value="70"></div>
+    <div><label>Рост, см</label><input id="рост2" type="number" min="120" max="220" value="170"></div>
+  </div>
+  <button onclick="посчитатьИмт()">Рассчитать</button>
+  <div class="out" id="ответ_имт"></div>
+  <div class="offer" id="предложение_имт">
+    <p>Индекс — только начало. Расскажем, с чего начать и как подойти к тренировкам.</p>
+    <button onclick="открытьЗаявку('после индекса массы тела')">Узнать условия открытия</button>
+  </div>
+</div>
+
+<h2>Как читать результат</h2>
+<p class="note">Калории считаются по формуле, которую используют в медицинской практике: она учитывает пол, возраст, вес, рост и активность. Это ориентир для поддержания веса: чтобы вес снижался, обычно берут примерно на 15–20% меньше, чтобы рос — на 10–15% больше, но без резких шагов.</p>
+<p class="note">Индекс массы тела — грубая, но удобная проверка: он не отличает мышцы от жира, поэтому у людей с большим объёмом тренировок бывает высоким при низком проценте жира. Оценивать его стоит вместе с обхватом талии и самочувствием.</p>
+<p class="note">Если есть заболевания, беременность или вы принимаете лекарства — расчёт стоит обсудить с врачом. Расскажем, как всё будет устроено в клубе, и ответим на вопросы.</p>
+</div>
+
+<div class="sticky"><button onclick="открытьЗаявку('липкая кнопка')">Узнать условия открытия клуба</button></div>
+
+<div class="zmodal" id="заявка" hidden>
+  <div class="zmodal-card">
+    <button class="zmodal-close" onclick="закрытьЗаявку()" aria-label="Закрыть">×</button>
+    <h3>Расскажем об открытии клуба</h3>
+    <p>Оставьте номер — перезвоним, ответим на все вопросы и расскажем, как всё будет устроено.</p>
+    <form class="qform" data-source="Калькуляторы" novalidate>
+      <div class="phone-row"><span class="phone-prefix" aria-hidden="true">🇷🇺 +7</span><input type="tel" name="phone" placeholder="(900) 000-00-00" inputmode="tel" autocomplete="tel" aria-label="Ваш телефон"></div>
+      <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+      <label class="consent"><input type="checkbox" name="consent" value="да">
+        <span>Согласен на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение</span></label>
+      <button type="submit">Жду звонка</button>
+    </form>
+    <p class="policy-line"><a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">Политика обработки персональных данных</a></p>
+    <div class="qform-err"></div>
+    <div class="qform-ok"></div>
+  </div>
+</div>
+
+<script>
+function число(ид, минимум, максимум){
+  var з = parseFloat(document.getElementById(ид).value);
+  if (!з || з < минимум || з > максимум) return null;
+  return з;
+}
+function посчитатьКалории(){
+  var пол = document.getElementById('пол').value;
+  var возраст = число('возраст', 14, 90);
+  var вес = число('вес', 30, 250);
+  var рост = число('рост', 120, 220);
+  var активность = parseFloat(document.getElementById('активность').value);
+  var ответ = document.getElementById('ответ_калории');
+  ответ.style.display = 'block';
+  if (!возраст || !вес || !рост){
+    ответ.innerHTML = 'Проверьте, пожалуйста, возраст, вес и рост — какое-то значение вне разумных пределов.';
+    return;
+  }
+  var база = 10 * вес + 6.25 * рост - 5 * возраст + (пол === 'м' ? 5 : -161);
+  var поддержание = Math.round(база * активность);
+  var снижение = Math.round(поддержание * 0.82);
+  var набор = Math.round(поддержание * 1.12);
+  ответ.innerHTML = 'Ваша норма: <b>' + поддержание + ' ккал</b> в день, чтобы вес стоял на месте.'
+    + '<small>Чтобы вес снижался: около ' + снижение + ' ккал. Чтобы рос: около ' + набор + ' ккал.'
+    + ' Это ориентир: реальные цифры подгоняются по тому, как меняется вес за две-три недели.</small>';
+  document.getElementById('предложение_калории').style.display = 'block';
+}
+function посчитатьИмт(){
+  var вес = число('вес2', 30, 250);
+  var рост = число('рост2', 120, 220);
+  var ответ = document.getElementById('ответ_имт');
+  ответ.style.display = 'block';
+  if (!вес || !рост){
+    ответ.innerHTML = 'Проверьте, пожалуйста, вес и рост.';
+    return;
+  }
+  var имт = вес / Math.pow(рост / 100, 2);
+  var слово = 'в пределах нормы';
+  if (имт < 18.5) слово = 'ниже нормы';
+  else if (имт >= 25 && имт < 30) слово = 'выше нормы';
+  else if (имт >= 30) слово = 'в зоне ожирения';
+  ответ.innerHTML = 'Ваш индекс массы тела: <b>' + имт.toFixed(1) + '</b> — ' + слово + '.'
+    + '<small>Норма — от 18,5 до 24,9. Индекс не отличает мышцы от жира, поэтому у тренированных людей он бывает выше нормы без вреда для здоровья.</small>';
+  document.getElementById('предложение_имт').style.display = 'block';
+}
+(function(){
+  'use strict';
+  var ПРИЁМНИК = 'https://bron.sandowfitness.ru/lead';
+  var откуда = '';
+  function показать(куда, текст){ if(!куда) return; куда.textContent = текст; куда.style.display = 'block'; }
+  window.открытьЗаявку = function(источник){
+    откуда = источник || '';
+    document.getElementById('заявка').hidden = false;
+  };
+  window.закрытьЗаявку = function(){ document.getElementById('заявка').hidden = true; };
+  document.addEventListener('keydown', function(е){ if (е.key === 'Escape') window.закрытьЗаявку(); });
+  var форма = document.querySelector('form.qform');
+  форма.addEventListener('submit', function(е){
+    е.preventDefault();
+    var поле = форма.querySelector('input[type=tel]');
+    var кнопка = форма.querySelector('button[type=submit]');
+    var галочка = форма.querySelector('input[name=consent]');
+    var ок = document.querySelector('.qform-ok');
+    var ошибка = document.querySelector('.qform-err');
+    var цифры = (поле.value || '').replace(/\D/g, '').replace(/^[78]/, '');
+    if (ошибка) ошибка.style.display = 'none';
+    if (цифры.length !== 10) { показать(ошибка, 'Введите номер полностью — 10 цифр после +7.'); поле.focus(); return; }
+    if (галочка && !галочка.checked) { показать(ошибка, 'Отметьте согласие на обработку данных.'); return; }
+    кнопка.disabled = true; кнопка.textContent = 'Отправляем…';
+    fetch(ПРИЁМНИК, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ phone: поле.value, company: '', consent: 'да',
+        source: 'Калькуляторы · ' + (форма.getAttribute('data-source') || '') + (откуда ? ' · ' + откуда : ''),
+        page: location.pathname })
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if (!res || !res.ok) throw new Error('bad');
+      форма.style.display = 'none';
+      показать(ок, 'Записали номер — перезвоним, ответим на вопросы и расскажем об открытии.');
+    }).catch(function(){
+      кнопка.disabled = false; кнопка.textContent = 'Жду звонка';
+      показать(ошибка, 'Не получилось отправить. Позвоните нам или напишите в Телеграм — ответим.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
