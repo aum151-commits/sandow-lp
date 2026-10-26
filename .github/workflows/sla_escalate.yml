@@ -18,6 +18,13 @@ on:
 env:
   TZ: Europe/Moscow
 
+# 26.10.2026: два будильника (свой крон и Cloudflare) иногда попадали в одну
+# минуту, и одна заявка получала два одинаковых напоминания. Пусть идущий
+# прогон заканчивается, а новый ждёт своей очереди.
+concurrency:
+  group: sla-escalate
+  cancel-in-progress: false
+
 jobs:
   escalate:
     runs-on: ubuntu-latest
@@ -56,6 +63,11 @@ jobs:
           CLIENT_BOT_TOKEN: ${{ secrets.CLIENT_BOT_TOKEN }}
           TELEGRAM_REPORT_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_MANAGEMENT_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+          # 26.10.2026: без этих ключей состояние эскалаций не сохранялось, и
+          # одно и то же напоминание уходило в группу каждый прогон (каждые
+          # 5 минут). Теперь состояние живёт в России, как и журнал заявок.
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python sla_escalate.py
 
       - name: Сохранить состояние эскалаций
