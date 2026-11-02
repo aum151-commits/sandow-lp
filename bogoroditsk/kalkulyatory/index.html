@@ -37,8 +37,8 @@ h2{font-family:Unbounded,sans-serif;font-size:21px;margin:38px 0 12px;color:var(
 .offer p{margin:0 0 10px;color:#e6dcc6}
 .offer button{padding:11px 18px;border:0;border-radius:10px;cursor:pointer;font-weight:600;background:linear-gradient(120deg,var(--gold),var(--gold2));color:#1a1206}
 .note{font-size:14px;color:#a99f8c}
-.sticky{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;display:flex;justify-content:center;background:linear-gradient(180deg,rgba(11,9,6,0),rgba(11,9,6,.96));z-index:60}
-.sticky button{width:100%;max-width:520px;border:0;border-radius:999px;padding:16px 22px;cursor:pointer;font:600 15px/1 Archivo,sans-serif;color:#1a1408;background:linear-gradient(180deg,#f3dca6,var(--gold));box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.sticky-call{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;display:flex;justify-content:center;background:linear-gradient(180deg,rgba(11,9,6,0),rgba(11,9,6,.96));z-index:60}
+.sticky-call button{width:100%;max-width:520px;border:0;border-radius:999px;padding:16px 22px;cursor:pointer;font:600 15px/1 Archivo,sans-serif;color:#1a1408;background:linear-gradient(180deg,#f3dca6,var(--gold));box-shadow:0 10px 26px rgba(0,0,0,.5)}
 .zmodal{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,5,3,.78)}
 .zmodal[hidden]{display:none}
 .zmodal-card{width:100%;max-width:430px;background:linear-gradient(180deg,#1f1710,#100c07);border:1px solid rgba(233,199,126,.4);border-radius:18px;padding:26px 22px 22px;position:relative}
@@ -106,9 +106,10 @@ h2{font-family:Unbounded,sans-serif;font-size:21px;margin:38px 0 12px;color:var(
 <p class="note">Если есть заболевания, беременность или вы принимаете лекарства — расчёт стоит обсудить с врачом. Расскажем, как всё будет устроено в клубе, и ответим на вопросы.</p>
 </div>
 
-<div class="sticky"><button onclick="открытьЗаявку('липкая кнопка')">Узнать условия открытия клуба</button></div>
+<div class="bot-float" style="margin-top:22px;display:flex;gap:14px;font-size:14px"><a href="https://t.me/sandow_bogoroditsk_bot">Телеграм-бот клуба</a><a href="https://max.ru/id7722464364_1_bot">Бот в MAX</a></div>
+<div class="sticky-call"><button onclick="открытьЗаявку('липкая кнопка')">Узнать условия открытия клуба</button></div>
 
-<div class="zmodal" id="заявка" hidden>
+<div class="zmodal" id="zayavka" hidden>
   <div class="zmodal-card">
     <button class="zmodal-close" onclick="закрытьЗаявку()" aria-label="Закрыть">×</button>
     <h3>Расскажем об открытии клуба</h3>
@@ -178,9 +179,9 @@ function посчитатьИмт(){
   function показать(куда, текст){ if(!куда) return; куда.textContent = текст; куда.style.display = 'block'; }
   window.открытьЗаявку = function(источник){
     откуда = источник || '';
-    document.getElementById('заявка').hidden = false;
+    document.getElementById('zayavka').hidden = false;
   };
-  window.закрытьЗаявку = function(){ document.getElementById('заявка').hidden = true; };
+  window.закрытьЗаявку = function(){ document.getElementById('zayavka').hidden = true; };
   document.addEventListener('keydown', function(е){ if (е.key === 'Escape') window.закрытьЗаявку(); });
   var форма = document.querySelector('form.qform');
   форма.addEventListener('submit', function(е){
