@@ -134,13 +134,13 @@ jobs:
               # поэтому перед отправкой обязательно подтягиваем чужое: иначе
               # push отбивается «failed to push some refs» — так и вышло
               # 15.10.2026, трек не записался.
-              for попытка in 1 2 3; do
+              for attempt in 1 2 3; do
                 git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
                 if git push origin "HEAD:${GITHUB_REF_NAME}"; then
                   echo "трек отправлен"
                   break
                 fi
-                echo "попытка $попытка не удалась, ждём и повторяем"
+                echo "попытка $attempt не удалась, ждём и повторяем"
                 sleep 5
               done
             fi
