@@ -274,6 +274,25 @@ async function слепок(page, имя) {
 }
 
 
+// Стоим ли мы всё ещё на форме входа 1С.
+//
+// 03.11.2026: ночная выгрузка «работала» и ничего не собрала — на экране была
+// форма «Пользователь / Пароль / Войти / Отмена». loginAndSwitch не бросает
+// ошибку, если вход не состоялся, поэтому все этапы шли по пустому экрану.
+async function экранВхода(page) {
+  try {
+    return await сТаймаутом(page.evaluate(() => {
+      const поле = document.querySelector('#userPassword, input[type=password]');
+      const видно = поле && поле.getBoundingClientRect().width > 0;
+      const текст = (document.body && document.body.innerText) || '';
+      return Boolean(видно) || /Пароль|Password/i.test(текст) && /Войти|Log in/i.test(текст);
+    }), 20000, 'проверка формы входа');
+  } catch (e) {
+    return false;
+  }
+}
+
+
 async function этапЗадачи(page) {
   сказать('=== этап 2: вся история задач по месяцам ===');
   await page.mouse.click(29, 112);
@@ -431,6 +450,19 @@ async function этапЗаметки(page) {
     process.exit(1);
   }
 
+  // Вход состоялся? Если на экране всё ещё форма — дальше идти незачем:
+  // именно так 03.11.2026 оба этапа «прошли» по пустому экрану, а Ольга
+  // утром увидела старые данные. Говорим причину прямо и не жжём лицензию.
+  if (await экранВхода(page)) {
+    await слепок(page, 'вход не выполнен');
+    сказать('НЕ УДАЛОСЬ ВОЙТИ: 1С показывает форму входа. Вероятные причины — '
+            + 'аккаунт придержан за частые входы (лимит примерно 25–30 в сутки) '
+            + 'или сменился пароль в секретах ONEC_MOSCOW_LOGIN / ONEC_MOSCOW_PASSWORD.');
+    fs.writeFileSync(path.join(ПАПКА, `итог-${СЕГОДНЯ}.txt`), логи.join('\n'), 'utf8');
+    await browser.close();
+    process.exit(2);
+  }
+
   for (const [имя, шаг] of [
     ['клиенты', этапКлиенты],
     ['задачи', этапЗадачи],
@@ -457,7 +489,9 @@ async function этапЗаметки(page) {
           try {
             await page.reload({ timeout: 120000, waitUntil: 'domcontentloaded' });
             await page.waitForTimeout(15000);
-            await loginAndSwitch(page);
+            // Повторный вход — только если 1С его действительно просит: каждый
+            // вход тратит дневной лимит, из-за которого аккаунт и придерживают.
+            if (await экранВхода(page)) await loginAndSwitch(page);
             await page.waitForTimeout(6000);
           } catch (повтор) {
             сказать(`  перезагрузиться не удалось: ${повтор.message}`);
