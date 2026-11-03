@@ -1,0 +1,31 @@
+name: Проверка Диска клуба
+
+# 03.11.2026: выгрузка 1С падает с «402 Payment Required», хотя места на Диске
+# полно (новый Диск под корпоративную почту). Этот ручной прогон показывает,
+# что именно отвечает ВебДАВ: вход, список, создание папки.
+# Запускается только вручную из вкладки Actions — сам по расписанию не ходит.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: yadisk-check
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Что отвечает Диск
+        env:
+          YADISK_LOGIN: ${{ secrets.YADISK_LOGIN }}
+          YADISK_APP_PASSWORD: ${{ secrets.YADISK_APP_PASSWORD }}
+          YADISK_DIR: ${{ vars.YADISK_DIR || 'Сандов/выгрузки-1С' }}
+        run: python3 scripts/1c/проверка-диска.py
