@@ -97,20 +97,21 @@ jobs:
           echo "=== хвост журнала ==="
           tail -n 30 vygruzka/zhurnal.log 2>/dev/null || echo "журнала нет"
 
-      - name: Отдать выгрузку в Яндекс.Диск клуба
+      - name: Отдать выгрузку в хранилище клуба
         # Данные уходят в российское хранилище клуба, минуя GitHub.
-        # Пока не настроено — шаг честно падает, чтобы выгрузка не осталась
-        # висеть на чужой площадке.
+        # 03.11.2026: на новом Диске клуба (корпоративная почта) бесплатный
+        # тариф, а ВебДАВ на нём закрыт — «402 Payment Required». Выгрузка из
+        # 1С при этом собирается успешно и терялась целиком. Теперь: сначала
+        # Диск, а если он отказал — российское S3-хранилище клуба.
         if: always()
         env:
           YADISK_LOGIN: ${{ secrets.YADISK_LOGIN }}
           YADISK_APP_PASSWORD: ${{ secrets.YADISK_APP_PASSWORD }}
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
+          S3_BUCKET: sandow-lead-data
         run: |
-          if [ -z "$YADISK_LOGIN" ] || [ -z "$YADISK_APP_PASSWORD" ]; then
-            echo "Хранилище клуба не настроено (нет YADISK_LOGIN / YADISK_APP_PASSWORD)."
-            echo "Данные наружу намеренно НЕ отдаются."
-            exit 1
-          fi
+          python3 -m pip install --quiet boto3
           python3 scripts/1c/otdat-v-hranilishche.py vygruzka
 
       - name: Записать трек выгрузок в репозиторий
