@@ -23,8 +23,20 @@ async function loginAndSwitch(page) {
   const { login, pass } = readCreds();
   await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(4000);
-  await page.fill('#userName', login);
-  await page.fill('#userPassword', pass);
+  // 03.11.2026: поля входа ищем и по имени, и по смыслу. Если у формы сменились
+  // идентификаторы, page.fill('#userName') падал бы таймаутом, и было бы
+  // непонятно, что дело в разметке, а не в пароле.
+  const полеЛогин = await page.$('#userName')
+    || await page.$('input[name=userName]')
+    || await page.$('input[type=text]:visible');
+  const полеПароль = await page.$('#userPassword')
+    || await page.$('input[type=password]:visible');
+  if (!полеЛогин || !полеПароль) {
+    throw new Error('на странице входа 1С не нашлось полей «Пользователь» и «Пароль» — '
+      + 'изменилась форма входа, нужен разбор разметки');
+  }
+  await полеЛогин.fill(login);
+  await полеПароль.fill(pass);
   // 29.09.2026: форма входа 1С бывает НА АНГЛИЙСКОМ («User / Password /
   // Log in») — тогда поиск кнопки «Войти» не находил ничего, клик не
   // происходил, и скрипт молча оставался на экране логина: дальше он
