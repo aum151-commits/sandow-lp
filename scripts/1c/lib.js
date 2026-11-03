@@ -19,8 +19,25 @@ function readCreds() {
   };
 }
 
+// Журнал входа: внешний скрипт может подписаться на подробности (что набрано,
+// какая кнопка нажата, что стало после). Нужно, чтобы разбирать отказы 1С без
+// догадок: 03.11.2026 после «Войти» пароль в поле оказался пустым, и было
+// непонятно — его не приняли или его не набрали вовсе.
+let ЖУРНАЛ = null;
+function журналировать(функция) { ЖУРНАЛ = функция; }
+function сказать(что) { if (ЖУРНАЛ) { try { ЖУРНАЛ(что); } catch (e) { /* не мешаем входу */ } } }
+
+function длиныПолей(page) {
+  return page.evaluate(() => {
+    const л = document.querySelector('#userName');
+    const п = document.querySelector('#userPassword');
+    return { логин: л ? (л.value || '').length : null, пароль: п ? (п.value || '').length : null };
+  }).catch(() => ({ логин: null, пароль: null }));
+}
+
 async function loginAndSwitch(page) {
   const { login, pass } = readCreds();
+  сказать(`вход: логин ${login ? login.length : 0} знаков, пароль ${pass ? pass.length : 0} знаков`);
   await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForTimeout(4000);
   // 03.11.2026: поля входа ищем и по имени, и по смыслу. Если у формы сменились
@@ -37,6 +54,8 @@ async function loginAndSwitch(page) {
   }
   await полеЛогин.fill(login);
   await полеПароль.fill(pass);
+  const после = await длиныПолей(page);
+  сказать(`после набора: логин ${после.логин} знаков, пароль ${после.пароль} знаков`);
   // 29.09.2026: форма входа 1С бывает НА АНГЛИЙСКОМ («User / Password /
   // Log in») — тогда поиск кнопки «Войти» не находил ничего, клик не
   // происходил, и скрипт молча оставался на экране логина: дальше он
@@ -45,9 +64,22 @@ async function loginAndSwitch(page) {
   // если её нет — Enter в поле пароля.
   const enter = await page.$('text=Войти') || await page.$('text=Log in')
              || await page.$('input[type=submit], button[type=submit]');
-  if (enter) await enter.click();
-  else await page.keyboard.press('Enter');
+  if (enter) {
+    const подпись = await enter.evaluate((el) => (el.innerText || el.value || el.tagName || '').toString().trim()).catch(() => '?');
+    сказать(`нажимаю кнопку входа: «${подпись.slice(0, 40)}»`);
+    await enter.click();
+  } else {
+    сказать('кнопку входа не нашёл — жму Enter в поле пароля');
+    await page.keyboard.press('Enter');
+  }
   await page.waitForTimeout(15000);
+  const стало = await длиныПолей(page).catch(() => null);
+  if (стало) сказать(`после нажатия: логин ${стало.логин}, пароль ${стало.пароль}`);
+  const подсказка = await page.evaluate(() => {
+    const т = ((document.body && document.body.innerText) || '').replace(/\s+/g, ' ').trim();
+    return т.slice(0, 300);
+  }).catch(() => '');
+  сказать(`после нажатия на экране: ${подсказка || '(пусто)'}`);
 
   await page.mouse.click(319, 134);
   await page.waitForTimeout(4000);
@@ -132,4 +164,4 @@ async function ensureSandow(page) {
   return 'переключено на Sandow';
 }
 
-module.exports = { readCreds, loginAndSwitch, openMenuItem, ensureSandow, BASE };
+module.exports = { readCreds, loginAndSwitch, openMenuItem, ensureSandow, журналировать, BASE };
