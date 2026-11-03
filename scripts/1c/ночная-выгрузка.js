@@ -18,7 +18,8 @@
 //
 // Запуск: node ночная-выгрузка.js
 const { chromium } = require('playwright-core');
-const { loginAndSwitch } = require('./lib');
+const { loginAndSwitch, журналировать } = require('./lib');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -51,6 +52,10 @@ const сказать = (s) => {
   логи.push(строка);
   fs.writeFileSync(ЛОГ, логи.join('\n'), 'utf8');
 };
+
+// Подробности входа из lib.js пишем в тот же журнал, что и этапы: иначе при
+// отказе 1С в журнале остаётся только «форма входа», и причина неизвестна.
+журналировать((s) => сказать('  [вход] ' + s));
 
 const СЕГОДНЯ = new Date().toISOString().slice(0, 10);
 const МЕСЯЦЫ = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль',
