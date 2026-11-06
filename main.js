@@ -859,7 +859,12 @@
     if (!hero || !title) return;
     var offer = (title.textContent || '').replace(/\s+/g, ' ').trim();
     if (!offer) return;
-    var seg = offer.toUpperCase() + ' · ';
+    // Разделитель между повторами оффера. Раньше здесь стояло обычное
+    // « · » — в строке это читалось как одна сплошная лента букв
+    // (замечание Ольги 06.11.2026). Пробелы берём широкие (EN SPACE):
+    // обычные несколько подряд браузер склеивает в один.
+    var РАЗРЫВ = '\u2002\u2002\u00B7\u2002\u2002';
+    var seg = offer.toUpperCase() + РАЗРЫВ;
     if (!document.getElementById('sndw-hero-mq-css')) {
       var s = document.createElement('style');
       s.id = 'sndw-hero-mq-css';
@@ -875,7 +880,7 @@
         'letter-spacing:.02em;text-transform:uppercase;' +
         'font-size:clamp(30px,9vw,46px);line-height:1.1;' +
         'color:transparent;-webkit-text-stroke:1px rgba(233,199,126,.72);' +
-        'padding-right:.5em}';
+        'padding-right:0}';
       document.head.appendChild(s);
     }
     var mq = document.createElement('div');
