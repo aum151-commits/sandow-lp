@@ -864,9 +864,11 @@
       var s = document.createElement('style');
       s.id = 'sndw-hero-mq-css';
       s.textContent =
+        // Строка видна на ЛЮБОМ экране. До 04.11.2026 стояло display:none
+        // и включение только до 760px — поэтому с компьютера Ольга её не
+        // видела вовсе. Решение 04.11.2026: вернуть и на десктоп.
         '#sndw-hero-mq{position:absolute;left:0;right:0;' +
-        'overflow:hidden;pointer-events:none;display:none;z-index:3}' +
-        '@media(max-width:760px){#sndw-hero-mq{display:block}}' +
+        'overflow:hidden;pointer-events:none;display:block;z-index:3}' +
         '#sndw-hero-mq .in{display:flex;width:max-content;will-change:transform}' +
         '#sndw-hero-mq span{display:block;white-space:nowrap;' +
         'font-family:"Archivo",system-ui,sans-serif;font-weight:900;' +
@@ -930,12 +932,30 @@
         }
       }
       var lineH = mq.getBoundingClientRect().height || 60;
+      // Строка стоит сразу под формой — но на компьютере прямо под формой
+      // начинается пьедестал 3D-сцены, и строка шла по его светлой части
+      // (замечание Ольги 04.11.2026: «наехала на пьедестал»). Поэтому на
+      // широких экранах прижимаем строку к низу первого экрана: там сцена
+      // уже в тени, а на любой высоте окна строка остаётся под пьедесталом.
       var top = contentBottom + 22;
+      if (window.innerWidth > 760) {
+        var низЭкрана = Math.round(hr.height - lineH - 14);
+        if (низЭкрана > top) top = низЭкрана;
+        // Если первому экрану не хватает места под строку (низкие окна,
+        // 650 и меньше), строку на форму НЕ наезжаем — слегка вытягиваем
+        // сам экран: страница и так листается, а обрезанная форма и
+        // наложение на кнопки страшнее лишних 40 точек высоты.
+        if (top + lineH + 12 > hr.height) {
+          hero.style.setProperty('min-height',
+            Math.round(top + lineH + 12) + 'px', 'important');
+        }
+      }
       mq.style.top = Math.round(top) + 'px';
       mq.style.bottom = 'auto';
       if (window.innerWidth <= 760) {
+        // Телефон: высоту первого экрана поджимаем жёстко — там каждый
+        // пиксель на счету, и обрезанная форма страшнее, чем строка.
         // Берём большее из двух: место под строку и низ всего содержимого.
-        // Так строка остаётся на виду, а форма с кнопкой не обрезаются.
         var wantH = Math.round(Math.max(top + lineH + 26, реальныйНиз + 26));
         if (wantH < hr.height) {
           hero.style.setProperty('min-height', wantH + 'px', 'important');
