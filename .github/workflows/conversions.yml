@@ -62,6 +62,31 @@ jobs:
               print("сессии АТС нет — вход пойдёт по логину и паролю")
           PY
 
+      - name: Поставить браузер для входа в кабинет АТС
+        # Вход в кабинет Билайна делается браузером, как в стороже звонков.
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Освежить сессию АТС
+        # 10.11.2026: сессия из секрета просрочена — станция отвечала 403, и
+        # сводка по конверсиям не выходила с 4 ноября. Логинимся заново тем же
+        # способом, что и сторож пропущенных звонков, и обновляем файл сессии.
+        working-directory: work/rpa
+        env:
+          BEELINE_PBX_LOGIN: ${{ secrets.BEELINE_PBX_LOGIN }}
+          BEELINE_PBX_PASSWORD: ${{ secrets.BEELINE_PBX_PASSWORD }}
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timedelta
+          try:
+              from src.rpa import beeline_calls as bc
+              bc.fetch(datetime.now() - timedelta(minutes=30), datetime.now())
+              print("сессия АТС обновлена живым входом")
+          except Exception as ошибка:
+              print("вход не удался, пойдём на прежней сессии:", ошибка)
+          PY
+
       - run: pip install requests python-dotenv
 
       - name: Отправить сводку, если пришло время
