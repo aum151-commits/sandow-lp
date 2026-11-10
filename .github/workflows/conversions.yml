@@ -52,7 +52,13 @@ jobs:
           python - <<'PY'
           import base64, os, pathlib
           значение = os.environ.get("BEELINE_STORAGE_STATE", "").strip()
-          if значение:
+          # 10.11.2026: в секрете сессия просрочена, а живой вход с раннера не
+          # подтверждается. Если в репозитории лежит рабочая сессия — берём её
+          # и секретом не затираем.
+          готовая = pathlib.Path("data/beeline_storage_state.json")
+          if готовая.exists() and готовая.stat().st_size > 100:
+              print("сессия уже в репозитории — секрет не используем")
+          elif значение:
               данные = base64.b64decode(значение)
               if not данные.lstrip().startswith(b"{"):
                   данные = значение.encode("utf-8")
