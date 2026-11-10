@@ -41,6 +41,27 @@ jobs:
           git clone --depth 1 \
             "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
 
+      - name: Разложить сессию АТС
+        # 10.11.2026: без этой сессии отчёт падал с «станция не отдала звонки
+        # (403)» пять дней подряд, и сводка по конверсиям не выходила с 4 ноября.
+        working-directory: work/rpa
+        env:
+          BEELINE_STORAGE_STATE: ${{ secrets.BEELINE_STORAGE_STATE }}
+        run: |
+          mkdir -p data
+          python - <<'PY'
+          import base64, os, pathlib
+          значение = os.environ.get("BEELINE_STORAGE_STATE", "").strip()
+          if значение:
+              данные = base64.b64decode(значение)
+              if not данные.lstrip().startswith(b"{"):
+                  данные = значение.encode("utf-8")
+              pathlib.Path("data/beeline_storage_state.json").write_bytes(данные)
+              print("сессия АТС разложена")
+          else:
+              print("сессии АТС нет — вход пойдёт по логину и паролю")
+          PY
+
       - run: pip install requests python-dotenv
 
       - name: Отправить сводку, если пришло время
