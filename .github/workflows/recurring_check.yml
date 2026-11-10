@@ -1,0 +1,114 @@
+# Проверка удержаний за месяц: оплаты подписки из 1С → дни тренерам.
+#
+# Задача Ольги 10.11.2026: «каждый последний день месяца программа сама
+# запрашивает в 1С оплату подписки, и если клиент продлил — начисляет день
+# тренеру». Её же правка в тот же день: «надо проверять не каждый день, а в
+# последний день месяца».
+#
+# ПОЧЕМУ ЗАПУСКОВ ДВА, ХОТЯ ПРОВЕРКА В ПОСЛЕДНИЙ ДЕНЬ.
+#   * 18:00 последнего дня — это и есть проверка месяца, как просила Ольга;
+#   * 08:00 первого числа — догоняющий прогон на 3 минуты работы.
+# Причина не в удобстве: ночная выгрузка из 1С приходит в 22:30, то есть в
+# 18:00 последнего дня оплаты САМОГО последнего дня в файле ещё не лежат, а
+# платят люди как раз в последний день. Без догоняющего прогона эти тренеры
+# теряли бы день каждый месяц. Двойного начисления не будет: программа
+# проверяет и конкретную оплату, и месяц целиком.
+#
+# ПОЧЕМУ ВЫКЛЮЧЕНО РАСПИСАНИЕ (пока).
+# Шаг «забрать оплаты из 1С» ждёт ответа ночной разведки: в 1С три похожих
+# отчёта, и какой из них отдаёт строки оплат с датами, проверяется только
+# заходом в 1С (днём нельзя — живая лицензия). Как только название отчёта
+# подтвердится, добавляется шаг выгрузки и раскомментируется schedule.
+name: Проверка удержаний
+
+on:
+  # Расписание ВКЛЮЧИТЬ после того, как заработает выгрузка оплат.
+  # schedule:
+  #   # 15:00 UTC = 18:00 МСК, 05:00 UTC = 08:00 МСК. Скрипт сам решает,
+  #   # его ли сейчас день, и дважды за окно не начислит.
+  #   - cron: '0 5,15 * * *'
+  workflow_dispatch:
+    inputs:
+      period:
+        description: 'Месяц вида 2026-11 (пусто = текущий)'
+        required: false
+        default: ''
+      live:
+        description: '1 = начислить дни (пусто = только проверка)'
+        required: false
+        default: ''
+
+# Время внутри скриптов московское: раннеры GitHub живут по UTC.
+env:
+  TZ: Europe/Moscow
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Взять код
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
+
+      - name: Поставить зависимости
+        run: pip install requests openpyxl python-dotenv
+
+      - name: Забрать выгрузки 1С (клиенты и оплаты)
+        working-directory: work
+        env:
+          YADISK_LOGIN: ${{ secrets.YADISK_LOGIN }}
+          YADISK_APP_PASSWORD: ${{ secrets.YADISK_APP_PASSWORD }}
+        run: |
+          # Сюда добавляется шаг выгрузки отчёта по оплатам из 1С —
+          # название отчёта станет известно после ночной разведки.
+          # Пока забираем только клиентов (код → телефон).
+          python scripts/trener-hub/забрать-выгрузку.py || true
+
+      - name: Проверить, наш ли сегодня день
+        id: день
+        run: |
+          python - <<'PY'
+          import datetime as dt, os
+          сегодня = dt.date.today()
+          завтра = сегодня + dt.timedelta(days=1)
+          час = dt.datetime.now().hour
+          последний = завтра.month != сегодня.month
+          # 18:00 последнего дня или 08:00 первого числа
+          наш = (последний and час >= 18) or (сегодня.day == 1 and час >= 8)
+          print("день:", сегодня, "час:", час, "последний:", последний, "наш:", наш)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as ф:
+              ф.write(f"наш={'да' if наш else 'нет'}\n")
+              ф.write(f"период={сегодня.strftime('%Y-%m')}\n")
+          PY
+
+      - name: Проверка удержаний
+        if: steps.день.outputs.наш == 'да' || github.event_name == 'workflow_dispatch'
+        working-directory: work
+        env:
+          TRENER_HUB_URL: https://sandow-trener-hub.onrender.com
+          TRENER_HUB_AUTO_TOKEN: ${{ secrets.TRENER_HUB_AUTO_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
+          ПЕРИОД: ${{ github.event.inputs.period || steps.день.outputs.период }}
+          БОЕВОЙ: ${{ github.event.inputs.live }}
+        run: |
+          ФЛАГ=""
+          if [ "$БОЕВОЙ" = "1" ]; then ФЛАГ="--боевой"; fi
+          python scripts/trener-hub/_проверка-удержаний.py \
+            --оплаты "vygruzka/Оплаты-$ПЕРИОД.xlsx" \
+            --клиенты "vygruzka/Клиенты-$ПЕРИОД.xlsx" \
+            --период "$ПЕРИОД" $ФЛАГ \
+            --лог "vygruzka/проверка-удержаний-$ПЕРИОД.json"
+
+      - name: Отдать полный разбор в хранилище
+        if: always()
+        run: |
+          ls vygruzka/проверка-удержаний-*.json 2>/dev/null || echo "разбора нет"
