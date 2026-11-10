@@ -39,6 +39,13 @@ jobs:
           git clone --depth 1 \
             "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" work
 
+      - name: Поставить библиотеки
+        # 09.11.2026: задача падала три недели подряд с «No module named
+        # 'requests'» — sync_staff.py тянет хранилище_россия.py, а библиотек в
+        # образе раннера нет. Ставим явно, иначе сверка состава не работает
+        # вовсе, а её отсутствие никто не замечает.
+        run: python -m pip install --disable-pip-version-check requests
+
       - name: Сверить состав
         working-directory: work
         env:
