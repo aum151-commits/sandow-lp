@@ -65,7 +65,9 @@ jobs:
       - name: Поставить браузер для входа в кабинет АТС
         # Вход в кабинет Билайна делается браузером, как в стороже звонков.
         run: |
-          pip install playwright
+          # requests нужен самому коду сторожа звонков: без него шаг входа
+          # падал с «No module named 'requests'» и отчёт оставался без звонков.
+          pip install requests python-dotenv playwright
           python -m playwright install --with-deps chromium
 
       - name: Освежить сессию АТС
