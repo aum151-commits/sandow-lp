@@ -203,10 +203,10 @@ if (document.readyState === 'loading') {
 <div class="bf-steps">
 <span class="tag">Первый шаг</span>
 <h2>Как проходит первый визит</h2>
-<div class="bf-step"><div class="bf-step-n">01</div><p class="bf-step-b"><strong>Оставляете номер</strong>Перезваниваем, отвечаем на вопросы и подбираем удобное время. Можно написать в Телеграм или MAX.</p></div>
-<div class="bf-step"><div class="bf-step-n">02</div><p class="bf-step-b"><strong>Договариваемся о встрече</strong>Подскажем, что взять с собой и как удобнее добраться.</p></div>
-<div class="bf-step"><div class="bf-step-n">03</div><p class="bf-step-b"><strong>Знакомитесь с залом</strong>Тренер показывает зоны и тренажёры и снимает вопрос «что делать в зале».</p></div>
-<div class="bf-step"><div class="bf-step-n">04</div><p class="bf-step-b"><strong>Пробуете бесплатно</strong>Первое занятие в клубе бесплатное — по любому направлению. Дальше решаете сами, без обязательств.</p></div>
+<div class="bf-step"><div class="bf-step-img"><img src="/foto/vhod-noch.webp" alt="Вход в клуб" loading="lazy" width="96" height="96"></div><div class="bf-step-txt"><div class="bf-step-n">01</div><p class="bf-step-b"><strong>Оставляете номер</strong>Перезваниваем, отвечаем на вопросы и подбираем удобное время. Можно написать в Телеграм или MAX.</p></div></div>
+<div class="bf-step"><div class="bf-step-img"><img src="/foto/razdevalka.webp" alt="Раздевалка со шкафчиками" loading="lazy" width="96" height="96"></div><div class="bf-step-txt"><div class="bf-step-n">02</div><p class="bf-step-b"><strong>Договариваемся о встрече</strong>Подскажем, что взять с собой и как удобнее добраться.</p></div></div>
+<div class="bf-step"><div class="bf-step-img"><img src="/foto/zal-vdol.webp" alt="Зал вдоль тренажёров" loading="lazy" width="96" height="96"></div><div class="bf-step-txt"><div class="bf-step-n">03</div><p class="bf-step-b"><strong>Знакомитесь с залом</strong>Тренер показывает зоны и тренажёры и снимает вопрос «что делать в зале».</p></div></div>
+<div class="bf-step"><div class="bf-step-img"><img src="/foto/sauna.webp" alt="Сауна клуба" loading="lazy" width="96" height="96"></div><div class="bf-step-txt"><div class="bf-step-n">04</div><p class="bf-step-b"><strong>Пробуете бесплатно</strong>Первое занятие в клубе бесплатное — по любому направлению. Дальше решаете сами, без обязательств.</p></div></div>
 <div class="bf-steps-cta"><a class="btn" href="https://t.me/sandowclub_bot?start=article" rel="noopener">Хочу лучшие условия</a></div>
 </div>
 
@@ -321,18 +321,23 @@ if (document.readyState === 'loading') {
 <div class="sticky-call"><a class="sc-ic" href="https://t.me/sandowclub_bot" target="_blank" rel="noopener" aria-label="Написать в Telegram"><img src="https://lp.sandowfitness.ru/znak-telegram.png" alt="Telegram" width="30" height="30"></a><a class="sc-ic" href="https://max.ru/id7722464364_bot" target="_blank" rel="noopener" aria-label="Написать в MAX"><img src="https://lp.sandowfitness.ru/znak-max.png" alt="MAX" width="30" height="30"></a><a class="sc-ic sc-tel" href="tel:+74957956957" aria-label="Позвонить"><svg viewBox="0 0 24 24" width="20" height="20" fill="#0B0906" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.2 1l-2.3 2.2z"/></svg></a><a class="btn btn-gold" href="tel:+74957956957"><span class="sc-long">Хочу лучшие условия</span><span class="sc-short">Лучшие условия</span></a></div>
 
 <script>
-/* Прилипающую кнопку звонка показываем только после первого экрана —
-   на первом экране призыв и так есть. */
+/* Прилипающая кнопка звонка: показываем только после первого экрана и убираем,
+   когда в кадре форма заявки, — иначе она накрывает то заголовок, то форму
+   (находка оценщика по навыку taste, 11.11.2026). */
 (function(){
  var bar=document.querySelector('.sticky-call'),
- cta=document.querySelector('.cta-form, section.cta');
+ cta=document.querySelector('section.cta-form, .cta-form, section.cta');
  if(!bar) return;
- if(!('IntersectionObserver' in window)){bar.classList.add('is-on');return;}
  var ctaVisible=false;
- function apply(){bar.classList.toggle('is-on', !ctaVisible);}
- if(cta){new IntersectionObserver(function(e){ctaVisible=e[0].isIntersecting;apply();},{threshold:0.15}).observe(cta);}
+ function past(){ return window.scrollY > window.innerHeight*0.7; }
+ function apply(){ bar.classList.toggle('is-on', past() && !ctaVisible); }
+ if(cta && 'IntersectionObserver' in window){
+   new IntersectionObserver(function(e){ ctaVisible=e[0].isIntersecting; apply(); },
+     {threshold:0.15}).observe(cta);
+ }
+ window.addEventListener('scroll', apply, {passive:true});
+ window.addEventListener('resize', apply, {passive:true});
  apply();
- setTimeout(function(){ if(!cta) bar.classList.add('is-on'); }, 800);
 })();
 
 </script>

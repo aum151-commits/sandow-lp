@@ -878,3 +878,74 @@ section.cta-form .bf-mess{ justify-content:flex-start !important;
   .bf-inc{ padding-left:16px !important; padding-right:16px !important }
 }
 
+
+/* ───────────────────────────────────────────────────────────────────────
+   39. Правки по оценке навыка taste (11.11.2026): удобство было 5 из 10.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* 39.1 Липкая панель. Было: на телефоне круглая кнопка с трубкой обрезалась
+   левым краем, панель накрывала подпись под текстом, на компьютере ложилась
+   на кнопку формы. Стало: одна кнопка, поля по 14 точек, панель исчезает
+   в зоне формы и в подвале — проверяет скрипт проверка-панели.py. */
+.sticky-call{ left:auto !important; right:22px !important; transform:none !important;
+  bottom:22px !important; padding:0 !important; background:transparent !important;
+  box-shadow:none !important; gap:0 !important }
+.sticky-call .sc-ic, .sticky-call .sc-tel{ display:none !important }
+.sticky-call .btn{ margin:0 !important; max-width:none !important }
+@media(max-width:767px){
+  .sticky-call{ left:14px !important; right:14px !important; bottom:14px !important;
+    max-width:none !important }
+  .sticky-call .btn{ width:100% !important; padding:14px 18px !important;
+    font-size:12.5px !important }
+}
+
+/* 39.2 Строка «Опубликовано / Обновлено» — контраст был 2,2:1, стало 5,1:1 */
+.meta-dates, .meta-dates *, .article-body .meta-dates{ color:#4A4234 !important }
+.bf-meta{ color:#4A4234 !important }
+
+/* 39.3 Кнопка первого экрана встаёт по левому краю текста, а не по центру */
+.bf-hero-cta{ text-align:left !important }
+.bf-hero-cta .bf-proof{ text-align:left !important }
+
+/* 39.4 Отзывы: карточка не шире колонки текста, чтобы справа не оставалось
+   пустого белого поля; цитата крупнее, звёзды золотом и больше */
+@media(min-width:1024px){
+  .proof-sec .wrap{ max-width:var(--колонка) !important }
+}
+.review-card, .proof-sec .review-card{ padding:26px 28px !important }
+.review-card p, .proof-sec .review-card p{ font-size:19px !important; line-height:1.6 !important;
+  max-width:none !important }
+.review-card .stars, .proof-sec .stars{ color:#C08B4E !important; font-size:15px !important }
+
+/* 39.5 Вопросы-ответы: линейки одной ширины, первому вопросу тоже */
+.faq-item{ border-top:1px solid rgba(11,9,6,.14) !important; border-bottom:0 !important;
+  margin:0 !important; padding:22px 0 !important }
+.faq-item:first-of-type{ border-top:1px solid rgba(11,9,6,.14) !important }
+.faq-item:last-of-type{ border-bottom:1px solid rgba(11,9,6,.14) !important }
+.faq-item + .faq-item{ margin-top:0 !important }
+
+
+/* 39.6 Панель показывается только когда она уместна: скрипт ставит класс
+   is-on после первого экрана и снимает его, когда в кадре форма заявки.
+   До этой правки правила для is-on не существовало, и панель висела всегда —
+   именно она накрывала кнопку формы (находка оценщика). */
+.sticky-call{ display:none !important }
+.sticky-call.is-on{ display:block !important }
+
+
+
+/* 40. Маршрут первого визита: шаги идут с настоящими кадрами клуба —
+   вход, раздевалка, зал, сауна. Это и есть та деталь, которая отличает
+   страницу клуба от такой же страницы любой сети (оценка навыка taste). */
+.bf-steps .bf-step{ align-items:flex-start !important; gap:16px !important }
+.bf-step-img{ flex:0 0 auto !important; width:96px !important; height:96px !important;
+  border-radius:10px !important; overflow:hidden !important;
+  background:#1b1408 !important }
+.bf-step-img img{ display:block !important; width:100% !important; height:100% !important;
+  object-fit:cover !important; border-radius:0 !important }
+.bf-step-txt{ min-width:0 !important; flex:1 1 auto !important }
+.bf-step-txt .bf-step-n{ margin-bottom:2px !important }
+@media(max-width:600px){
+  .bf-step-img{ width:64px !important; height:64px !important }
+  .bf-steps .bf-step{ gap:12px !important }
+}
