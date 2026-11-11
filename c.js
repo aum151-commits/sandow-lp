@@ -826,13 +826,19 @@
   // 1–10 ноября дали одного нового человека с сайта.
   // Теперь форма раскрыта сразу, кнопка-раскрывашка не выводится вовсе.
   // Откат: поставить false и перезалить файл — вернётся прежний вид.
-  // ВНИМАНИЕ, 11.11.2026: сейчас ВЫКЛЮЧЕНО намеренно. Раскрытая форма встаёт
-  // на первом экране, но её нижняя часть (кнопка «Хочу лучшие условия») уходит
-  // под следующий блок сайта: в замере на телефоне в точке кнопки лежит
-  // DIV.sndw2-club-in, то есть нажать её нельзя. Пока не переделано на
-  // компактную форму внутри панели, выключатель остаётся false — включать
-  // только после проверки, что кнопка действительно нажимается.
-  var РАСКРЫВАТЬ_ФОРМУ_СРАЗУ = false;
+  // 11.11.2026, прямая просьба Ольги: «форма заявки — раскрывай уже!».
+  // До этого поле телефона было спрятано за мелкой строкой «или оставьте
+  // номер — перезвоним»: человек видел две большие кнопки мессенджеров и
+  // уходил, а форма оставалась за нажатием. Замер того же дня: 274 визита из
+  // Москвы за 1–10 ноября дали одного нового человека с сайта.
+  // Теперь форма открыта сразу. Чтобы она уместилась в первый экран:
+  //   * мессенджеры стали двумя компактными кнопками в одну строку;
+  //   * на телефоне скрыто поле «Ваше имя» (телефон — главное, имя спросит
+  //     менеджер), иначе кнопка отправки уезжала под следующий блок сайта;
+  //   * у формы своя тёмная подложка, иначе сквозь поля читалась бегущая строка.
+  // Нажимаемость кнопки проверена замером elementFromPoint на 390 и 1440 px.
+  // Откат: поставить false и перезалить файл — вернётся прежний вид.
+  var РАСКРЫВАТЬ_ФОРМУ_СРАЗУ = true;
   var ФОРМА_ПЕРВОГО_ЭКРАНА = 'form2478331411';
   var ВХОД_В_БОТ = 'https://t.me/sandowclub_bot?start=sayt';
 
@@ -897,22 +903,67 @@
         'border-color:rgba(233,199,126,.28) !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit{width:100% !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__inputsbox' +
-        '{padding-bottom:4px}';
+        '{padding-bottom:4px}' +
+        // Тесная версия панели: форма стоит первой и открыта, а мессенджеры
+        // уходят в одну строку двумя компактными кнопками. Замер 11.11.2026:
+        // в первом экране блока под контент есть ~320 px, а «две большие
+        // кнопки + форма» занимают 374 px — из-за этого нижняя часть формы
+        // уезжала под следующий блок сайта, и кнопка отправки не нажималась.
+        '#sndw-choice.sndw-choice-compact{margin:14px 0 0;padding:12px 12px 10px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-q{font-size:13px;' +
+        'font-weight:400;color:rgba(240,234,222,.75);margin:0 0 8px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-row{display:flex;gap:8px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn{flex:1;height:40px;' +
+        'margin-bottom:0;justify-content:center;font-size:13px;padding:0 10px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn img{width:19px;height:19px;' +
+        'flex:0 0 19px}' +
+        // Форма должна уместиться в первый экран целиком: панель поэтому тесная.
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]{margin-top:0}' +
+        // На телефоне места меньше всего: замер 11.11.2026 — кнопка отправки
+        // попадала под следующий блок (в её точке лежал SECTION.sndw2-club) и
+        // не нажималась. Здесь ужимаем отступы и убираем поясняющую строку над
+        // кнопками: две иконки и так понятны без подписи.
+        '@media (max-width:480px){' +
+        '#sndw-choice.sndw-choice-compact{margin-top:10px;padding:10px 10px 8px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-q{display:none}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]' +
+        '{padding:10px 10px 12px}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__item' +
+        '{margin-bottom:8px !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input' +
+        '{height:40px !important;padding-top:0 !important;padding-bottom:0 !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-checkbox__label' +
+        '{font-size:10px !important;line-height:1.25 !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
+        '{height:44px !important;line-height:44px !important}' +
+        // Поле «Ваше имя» на телефоне убираем: без него форма с кнопкой
+        // помещается в первый экран, а с ним кнопка уезжает под следующий блок.
+        // Имя менеджер всё равно спросит при звонке; телефон — главное.
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_nm' +
+        '{display:none !important}' +
+        '}';
       document.head.appendChild(стиль);
     }
 
     var панель = document.createElement('div');
     панель.id = 'sndw-choice';
+    if (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ) панель.className = 'sndw-choice-compact';
     панель.innerHTML =
-      '<div class="sndw-choice-q">Как удобнее продолжить?</div>' +
+      '<div class="sndw-choice-q">' +
+      (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ
+        ? 'Или напишите в мессенджер — ответим там'
+        : 'Как удобнее продолжить?') + '</div>' +
+      '<div class="sndw-choice-row">' +
       '<a class="sndw-choice-btn sndw-choice-tg" href="' + ВХОД_В_БОТ + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
-      '<span>Написать в Telegram</span></a>' +
+      '<span>' + (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? 'Telegram' : 'Написать в Telegram') +
+      '</span></a>' +
       '<a class="sndw-choice-btn sndw-choice-mx" href="' + МАКС + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">' +
-      '<span>Написать в MAX</span></a>' +
+      '<span>' + (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? 'MAX' : 'Написать в MAX') +
+      '</span></a></div>' +
       // Строка-раскрывашка нужна только там, где форма ещё спрятана.
       (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? '' :
         '<button type="button" class="sndw-choice-phone">' +
