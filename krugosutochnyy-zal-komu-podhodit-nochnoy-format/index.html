@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -158,6 +164,9 @@ if (document.readyState === 'loading') {
 <li>Плотный рабочий день: единственное свободное время — раннее утро или поздний вечер.</li>
 <li>Тем, кто не любит заниматься в загруженном зале: в неурочные часы снаряды свободны.</li>
 </ul>
+<figure class="bf-fig">
+<img src="/foto/kardio.webp" alt="Кардиогалерея: дорожки и кардиотренажёры" width="1700" height="1133" loading="lazy">
+</figure>
 
 <h2 id="r2">2. Что происходит в зале ночью</h2>
 <p>Людей в разы меньше, чем в вечерний пик, и это главный практический плюс: программа не подстраивается под занятые снаряды. Оборудование то же самое — тренажёрный зал 1100 м², кардиогалерея, сауна.</p>
@@ -312,6 +321,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
