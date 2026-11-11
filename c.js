@@ -923,6 +923,9 @@
         // занимают 374 px — из-за этого нижняя часть формы уезжала под
         // следующий блок сайта, и кнопка отправки не нажималась.
         '#sndw-choice.sndw-choice-compact{margin:14px 0 0;padding:12px 12px 10px}' +
+        // Первый экран удлиняем на 40 px на всех ширинах: раздел «01 — КЛУБ» и
+        // всё, что ниже, отъезжает вниз (просьба Ольги 11.11.2026).
+        '#sndw2-hero{padding-bottom:40px !important}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-q{font-size:13px;' +
         'font-weight:400;color:rgba(240,234,222,.75);margin:0 0 8px}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-row{display:flex;gap:8px}' +
@@ -943,15 +946,22 @@
         // не нажималась. Здесь ужимаем отступы и убираем поясняющую строку над
         // кнопками: две иконки и так понятны без подписи.
         '@media (max-width:480px){' +
-        '#sndw-choice.sndw-choice-compact{margin-top:4px;padding:10px 10px 8px}' +
+        // Воздух под кнопкой и отступ под первым экраном — правка Ольги
+        // 11.11.2026: «опустить блок про клуб и с ним всё дальше, бегущая
+        // строка не должна подпирать кнопку». Сделано статично: попытка
+        // считать отступы скриптом один раз дала на ноутбуке кнопку в 7 800 px
+        // от строки, пришлось откатывать. Здесь числа подобраны замерами.
+        //   1) блок «мессенджеры + форма» поднимаем — кнопка уходит от строки;
+        //   2) первый экран удлиняем — клуб и всё дальше отъезжает вниз.
+        '#sndw-choice.sndw-choice-compact{margin-top:-20px !important;padding:10px 10px 8px}' +
+        // 2) Обёртку первого экрана удлиняем: раздел «01 — КЛУБ» и всё, что
+        //    ниже, отъезжает вниз, а строка — вместе с низом обёртки.
+        '#sndw2-hero{padding-bottom:40px !important}' +
+        // 3) И сам блок с формой приподнимаем: кнопка уходит от строки.
+        '#sndw-choice.sndw-choice-compact{margin-top:-20px !important}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-q{display:none}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]' +
         '{padding:2px 10px 2px !important}' +
-        // Поднимаем весь блок «кнопки мессенджеров + форма» на 26 px: столько
-        // не хватало, чтобы кнопка отправки не налезала на бегущую строку.
-        // Заголовок при этом остаётся на месте, а промежуток под ним был
-        // большой (53 px) — уменьшается он, а не что-то нужное.
-        '#rec2478331411 .sndw2-hero-content .t-col{margin-top:-26px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__item' +
         '{margin-bottom:4px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input' +
@@ -963,18 +973,12 @@
         // Имя менеджер всё равно спросит при звонке; телефон — главное.
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_nm' +
         '{display:none !important}' +
-        // Воздух под кнопкой (правка Ольги 11.11.2026: «отпусти вниз хотя бы
-        // сантиметр»). Бегущая строка стоит на своём месте и не двигается,
-        // поэтому единственный способ дать воздух — ужать саму форму: кнопка
-        // заканчивается выше строки, а не поверх неё.
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_cb' +
         '{margin-top:0 !important;margin-bottom:0 !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_ph' +
         '{margin-bottom:0 !important;height:44px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-block' +
         '{padding:0 !important}' +
-        // Кнопку на телефоне делаем ещё ниже: место нужное не ей, а воздуху
-        // между ней и бегущей строкой (см. ниже).
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
         '{height:32px !important;line-height:32px !important;border-radius:16px !important}' +
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
