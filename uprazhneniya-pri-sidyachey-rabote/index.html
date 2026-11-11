@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -174,6 +180,9 @@ if (document.readyState === 'loading') {
 <h2 id="r3">3. Когда сначала нужен врач</h2>
 <p>Если боль постоянная, а не эпизодическая, отдаёт в руку или ногу, есть онемение или она усиливается от обычных бытовых движений — первый шаг не тренировка, а консультация. Это не отговорка от занятий: врач назовёт ограничения, а тренер их учтёт в программе.</p>
 <p>Лёгкая скованность после рабочего дня без острой боли — обычная ситуация, с ней постепенный старт работает хорошо. Если обследование уже было и противопоказаний нет, скажите об этом тренеру.</p>
+<figure class="bf-fig">
+<img src="/foto/dorozhka-funkcionalnaya.webp" alt="Зелёная дорожка в функциональной зоне, где начинают с собственного веса" width="1700" height="1133" loading="lazy">
+</figure>
 
 <h2 id="r4">4. Как встроить тренировки в день</h2>
 <p>Держите в голове два-три рабочих слота и выбирайте подходящий день ото дня.</p>
@@ -315,6 +324,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
