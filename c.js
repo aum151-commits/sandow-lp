@@ -865,7 +865,6 @@
       стиль.id = 'sndw-choice-css';
       стиль.textContent =
         '#sndw-choice{box-sizing:border-box;width:100% !important;margin:26px 0 0;' +
-        'border:1px solid rgba(233,199,126,.28);' +
         'border-radius:16px;background:rgba(240,234,222,.04);padding:16px 14px 12px}' +
         '#sndw-choice .sndw-choice-q{font-family:Archivo,Arial,sans-serif;font-weight:700;' +
         'font-size:15px;line-height:1.3;color:#F0EADE;margin:0 0 12px}' +
@@ -891,24 +890,37 @@
         // 11.11.2026: форма раскрыта с самого начала, и она стоит поверх бегущей
         // строки первого экрана. Без собственной подложки сквозь поля читалась
         // «ЧЁРНАЯ ПЯТНИЦА · ДО 15 НОЯБРЯ», а строка согласия сливалась с ней в
-        // кашу — видно на снимке до правки. Даём форме плотный тёмный фон,
-        // рамку и отступы в тон панели мессенджеров.
+        // кашу — видно на снимке до правки. Даём форме плотный тёмный фон.
+        // Рамку вокруг убрали по правке Ольги того же дня: «убери рамку вокруг».
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]' +
         '{position:relative;z-index:3;background:' + ТЁМНЫЙ + ';' +
-        'border:1px solid rgba(233,199,126,.28);border-radius:16px;' +
+        'border:0;border-radius:16px;' +
         'padding:14px 12px 16px;margin-top:10px}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input,' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-phonemask' +
         '{background:#161310 !important;color:#F0EADE !important;' +
         'border-color:rgba(233,199,126,.28) !important}' +
-        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit{width:100% !important}' +
+        // Кнопка отправки: не «сарделька» на всю ширину, а аккуратная пилюля
+        // по центру. Правка Ольги 11.11.2026: «основную кнопку-пилюлю надо
+        // сделать поменьше, более деликатно».
+        // Селектор намеренно с id блока впереди: Тильда вставляет внутрь самой
+        // кнопки свой стиль вида «#rec2478331411 .t-btnflex…» с !important, и
+        // правка без id не применялась вовсе (проверено замером 11.11.2026:
+        // кнопка оставалась 330x62 с отступами 12/20).
+        '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
+        '{display:inline-flex !important;width:auto !important;min-width:0 !important;' +
+        'height:36px !important;padding:0 24px !important;' +
+        'line-height:36px !important;font-size:13.5px !important;' +
+        'border-radius:18px !important;margin:0 auto !important}' +
+        '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
+        '{text-align:center !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__inputsbox' +
         '{padding-bottom:4px}' +
-        // Тесная версия панели: форма стоит первой и открыта, а мессенджеры
-        // уходят в одну строку двумя компактными кнопками. Замер 11.11.2026:
-        // в первом экране блока под контент есть ~320 px, а «две большие
-        // кнопки + форма» занимают 374 px — из-за этого нижняя часть формы
-        // уезжала под следующий блок сайта, и кнопка отправки не нажималась.
+        // Тесная версия панели: форма открыта, а мессенджеры уходят в одну
+        // строку двумя компактными кнопками. Замер 11.11.2026: в первом экране
+        // блока под контент есть ~320 px, а «две большие кнопки + форма»
+        // занимают 374 px — из-за этого нижняя часть формы уезжала под
+        // следующий блок сайта, и кнопка отправки не нажималась.
         '#sndw-choice.sndw-choice-compact{margin:14px 0 0;padding:12px 12px 10px}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-q{font-size:13px;' +
         'font-weight:400;color:rgba(240,234,222,.75);margin:0 0 8px}' +
@@ -917,6 +929,12 @@
         'margin-bottom:0;justify-content:center;font-size:13px;padding:0 10px}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-btn img{width:19px;height:19px;' +
         'flex:0 0 19px}' +
+        // Обе кнопки мессенджеров одинаковые и прозрачные: правка Ольги
+        // 11.11.2026 — «кнопку тг сделай как у макса, прозрачную».
+        '#sndw-choice.sndw-choice-compact .sndw-choice-tg,' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-mx' +
+        '{background:none;border:1px solid rgba(233,199,126,.45);color:#F0EADE;' +
+        'margin-bottom:0}' +
         // Форма должна уместиться в первый экран целиком: панель поэтому тесная.
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]{margin-top:0}' +
         // На телефоне места меньше всего: замер 11.11.2026 — кнопка отправки
@@ -934,8 +952,6 @@
         '{height:40px !important;padding-top:0 !important;padding-bottom:0 !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-checkbox__label' +
         '{font-size:10px !important;line-height:1.25 !important}' +
-        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
-        '{height:44px !important;line-height:44px !important}' +
         // Поле «Ваше имя» на телефоне убираем: без него форма с кнопкой
         // помещается в первый экран, а с ним кнопка уезжает под следующий блок.
         // Имя менеджер всё равно спросит при звонке; телефон — главное.
