@@ -842,97 +842,6 @@
   var ФОРМА_ПЕРВОГО_ЭКРАНА = 'form2478331411';
   var ВХОД_В_БОТ = 'https://t.me/sandowclub_bot?start=sayt';
 
-  /* Воздух между формой и бегущей строкой ---------------------------------
-   * Правка 11.11.2026, замечание Ольги: «бегущая строка наползла на кнопку,
-   * всё смешалось и склеилось — отпусти вниз хотя бы сантиметр».
-   *
-   * Бегущая строка «ЧЁРНАЯ ПЯТНИЦА · ДО 15 НОЯБРЯ» — отдельный слой страницы
-   * Тильды, и после раскрытия формы она оказалась вплотную к кнопке отправки.
-   * Здесь считаем отступ по живым размерам, а не на глаз: сколько не хватает
-   * до 56 px воздуха (это ~1,5 см), столько и отодвигаем строку вниз, а блок
-   * первого экрана удлиняем ровно на столько же — иначе следующий раздел
-   * наехал бы на строку сверху.
-   *
-   * Пересчитывается на загрузке и при повороте/сужении экрана: вёрстка
-   * первого экрана на телефоне и на ноутбуке разная по высоте.
-   */
-  var ВОЗДУХ_ПОД_ФОРМОЙ = 56;
-  function отодвинутьБегущуюСтроку(форма) {
-    var попыток = 0;
-    var применено = 0;
-    var поставить = function () {
-      попыток += 1;
-      try {
-        var низ = форма.getBoundingClientRect().bottom;
-        var строка = document.querySelector('[data-sndw-сдвиг]');
-        if (!строка) {
-          // Ищем не «первый подходящий», а ближайший к форме сверху-снизу:
-          // на телефоне строка лежит слоем (absolute), на ноутбуке она в общем
-          // потоке, и жёсткое условие по position не находило её вовсе —
-          // на ноутбуке строка так и оставалась вплотную к строке согласия.
-          var узлы = document.querySelectorAll('div');
-          var лучший = null;
-          var лучшийЗазор = 1e9;
-          for (var i = 0; i < узлы.length; i++) {
-            // Слово ищем по одному, без пробелов внутри: в тексте страницы стоят
-            // неразрывные пробелы, и шаблон «BLACK FRIDAY» с обычным пробелом не
-            // совпадал — правка молча не находила строку (проверено 11.11.2026).
-            if (!/FRIDAY|ПЯТНИЦА/i.test(узлы[i].textContent || '')) continue;
-            var б = узлы[i].getBoundingClientRect();
-            if (б.height < 8 || б.height > 200) continue;
-            var з = б.top - низ;
-            if (з < -120 || з > 400) continue;      // только то, что рядом с формой
-            if (з < лучшийЗазор) { лучшийЗазор = з; лучший = узлы[i]; }
-          }
-          строка = лучший;
-        }
-        if (строка) {
-          var зазор = строка.getBoundingClientRect().top - низ;
-          // Страховка от первого расчёта «на ещё не разложенной странице»:
-          // в первом заходе 11.11.2026 строка измерилась выше экрана, и сдвиг
-          // получился 7803 px — она улетала в самый низ сайта. Разумный сдвиг
-          // для первого экрана — от нуля до 160 px, всё остальное не наш случай.
-          if (зазор > 200) return;           // воздух уже есть или строка не на месте
-          var нужно = Math.ceil(ВОЗДУХ_ПОД_ФОРМОЙ - зазор);
-          if (нужно > 0 && нужно <= 160) {
-            var уже = parseInt(строка.getAttribute('data-sndw-сдвиг') || '0', 10) || 0;
-            var сдвиг = уже + нужно;   // добираем недостающее, а не «не меньше прежнего»
-            строка.setAttribute('data-sndw-сдвиг', String(сдвиг));
-            строка.style.transform = 'translateY(' + сдвиг + 'px)';
-            // Раздел «01 — КЛУБ» подтянут вверх и накрывает строку своей тёмной
-            // подложкой (замер 11.11.2026: строка 586 px, раздел начинался с
-            // 575 px). Поэтому раздел отпускаем ровно на столько же, на сколько
-            // сдвинули строку. Исходный отступ запоминаем, чтобы при повторном
-            // расчёте (поворот экрана) он не накапливался.
-            var клуб = document.querySelector('.sndw2-club');
-            if (клуб) {
-              if (клуб.getAttribute('data-sndw-отступ') === null) {
-                клуб.setAttribute('data-sndw-отступ',
-                  String(parseFloat(window.getComputedStyle(клуб).marginTop) || 0));
-              }
-              var исходный = parseFloat(клуб.getAttribute('data-sndw-отступ')) || 0;
-              клуб.style.setProperty('margin-top', (исходный + сдвиг) + 'px', 'important');
-            }
-            применено += 1;
-          }
-          // Первый расчёт может прийтись на ещё не устоявшуюся вёрстку: на
-          // ноутбуке так вышло 21 px воздуха вместо 56. Поэтому добираем
-          // отступ ещё до двух раз — сдвиг от повтора только растёт.
-          if (применено > 0 && применено < 3) setTimeout(поставить, 700);
-          return;
-        }
-      } catch (e) { return; }
-      // Строку строит Тильда после своих скриптов — ждём её появления.
-      if (попыток < 40) setTimeout(поставить, 500);
-    };
-    готово(поставить);
-    window.addEventListener('load', function () { setTimeout(поставить, 300); });
-    window.addEventListener('resize', function () {
-      попыток = 0;
-      setTimeout(поставить, 400);
-    });
-  }
-
   function выборМессенджера() {
     // 1. Строка под формой — прямая правка Ольги 14.10.2026: текста на
     //    первом экране слишком много, оффер из-за неё не читается.
@@ -1004,7 +913,8 @@
         'line-height:36px !important;font-size:13.5px !important;' +
         'border-radius:18px !important;margin:0 auto !important}' +
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
-        '{text-align:center !important}' +
+        '{display:flex !important;justify-content:center !important;' +
+        'padding:0 !important;margin:0 !important;text-align:center !important;width:100% !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__inputsbox' +
         '{padding-bottom:4px}' +
         // Тесная версия панели: форма открыта, а мессенджеры уходят в одну
@@ -1033,21 +943,42 @@
         // не нажималась. Здесь ужимаем отступы и убираем поясняющую строку над
         // кнопками: две иконки и так понятны без подписи.
         '@media (max-width:480px){' +
-        '#sndw-choice.sndw-choice-compact{margin-top:10px;padding:10px 10px 8px}' +
+        '#sndw-choice.sndw-choice-compact{margin-top:4px;padding:10px 10px 8px}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-q{display:none}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"]' +
-        '{padding:10px 10px 12px}' +
+        '{padding:2px 10px 2px !important}' +
+        // Поднимаем весь блок «кнопки мессенджеров + форма» на 26 px: столько
+        // не хватало, чтобы кнопка отправки не налезала на бегущую строку.
+        // Заголовок при этом остаётся на месте, а промежуток под ним был
+        // большой (53 px) — уменьшается он, а не что-то нужное.
+        '#rec2478331411 .sndw2-hero-content .t-col{margin-top:-26px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__item' +
-        '{margin-bottom:8px !important}' +
+        '{margin-bottom:4px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input' +
         '{height:40px !important;padding-top:0 !important;padding-bottom:0 !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-checkbox__label' +
-        '{font-size:10px !important;line-height:1.25 !important}' +
+        '{font-size:9.5px !important;line-height:1.15 !important}' +
         // Поле «Ваше имя» на телефоне убираем: без него форма с кнопкой
         // помещается в первый экран, а с ним кнопка уезжает под следующий блок.
         // Имя менеджер всё равно спросит при звонке; телефон — главное.
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_nm' +
         '{display:none !important}' +
+        // Воздух под кнопкой (правка Ольги 11.11.2026: «отпусти вниз хотя бы
+        // сантиметр»). Бегущая строка стоит на своём месте и не двигается,
+        // поэтому единственный способ дать воздух — ужать саму форму: кнопка
+        // заканчивается выше строки, а не поверх неё.
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_cb' +
+        '{margin-top:0 !important;margin-bottom:0 !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_ph' +
+        '{margin-bottom:0 !important;height:44px !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-block' +
+        '{padding:0 !important}' +
+        // Кнопку на телефоне делаем ещё ниже: место нужное не ей, а воздуху
+        // между ней и бегущей строкой (см. ниже).
+        '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
+        '{height:32px !important;line-height:32px !important;border-radius:16px !important}' +
+        '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
+        '{margin-top:2px !important}' +
         '}';
       document.head.appendChild(стиль);
     }
@@ -1082,7 +1013,10 @@
     if (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ) {
       // Форма открыта с самого начала: нажатия не требуется.
       форма.setAttribute('data-sndw-mode', 'phone');
-      отодвинутьБегущуюСтроку(форма);
+      // Бегущую строку НЕ двигаем: она лежит отдельным слоем с обрезкой у
+      // родителя, и любая попытка сдвинуть её заканчивалась тем, что строка
+      // исчезала с сайта (11.11.2026: «бегущей строки теперь нет нигде»).
+      // Воздух под кнопкой делаем ужатием самой формы — см. стили ниже.
       return 1;
     }
 
