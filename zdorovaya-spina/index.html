@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -309,6 +315,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
