@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -154,6 +160,9 @@ if (document.readyState === 'loading') {
 <h2 id="r1">1. Почему снимок не приговор</h2>
 <p>Межпозвонковый диск состоит из внешнего кольца и внутреннего ядра. При грыже часть ядра выходит за пределы кольца, и если она давит на нервный корешок, появляется боль, отдающая в ногу или руку.</p>
 <p>Важная деталь: выявленная на снимке грыжа далеко не всегда объясняет боль. Изменения дисков находят и у людей без всяких жалоб, а частота таких находок растёт с возрастом. Поэтому смотрят на симптомы человека, а не на картинку.</p>
+<figure class="bf-fig">
+<img src="/foto/kardio.webp" alt="Кардиогалерея: дорожки и кардиотренажёры отдельным блоком" width="1700" height="1133" loading="lazy">
+</figure>
 
 <h2 id="r2">2. Что известно из обзоров</h2>
 <p>Подходы без операции сравнивали между собой в систематических обзорах. По их данным такие методы способны уменьшать связанную с грыжей боль и возвращать подвижность: наибольший объединённый размер эффекта показала тракционная терапия, следом шли упражнения и мануальная терапия.</p>
@@ -333,6 +342,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
