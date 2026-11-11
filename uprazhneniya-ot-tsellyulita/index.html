@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -170,6 +176,9 @@ if (document.readyState === 'loading') {
 <h2 id="r3">3. Чего ждать от тренировок</h2>
 <p>Честный ответ: тренировки улучшают вид, но не устраняют явление. Механизм понятный и не требует магии. Первое — снижение доли жировой ткани уменьшает выраженность рельефа: чем тоньше подкожный слой, тем меньше заметны перегородки.</p>
 <p>Второе — рост мышечной массы под кожей меняет форму бедра и ягодиц, и визуально это работает лучше, чем любое уменьшение объёма без силовой нагрузки. Третий эффект не про внешность: регулярная нагрузка улучшает переносимость работы, самочувствие и сон.</p>
+<figure class="bf-fig">
+<img src="/foto/zal-lyudi.webp" alt="Зал с занимающимися: силовая работа на ноги дважды в неделю" width="1700" height="1133" loading="lazy">
+</figure>
 
 <h2 id="r4">4. Что не работает</h2>
 <p>Общий знаменатель у этого списка один: обещание быстрого результата без изменения режима.</p>
@@ -326,6 +335,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
