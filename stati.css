@@ -949,3 +949,63 @@ section.cta-form .bf-mess{ justify-content:flex-start !important;
   .bf-step-img{ width:64px !important; height:64px !important }
   .bf-steps .bf-step{ gap:12px !important }
 }
+
+/* ───────────────────────────────────────────────────────────────────────
+   41. Телефон: правки по снимкам Ольги 11.11.2026.
+   Было: фото в блоке приглашения наезжало на кнопку (правило height:auto
+   перебивало высоту), кнопка в тёмной карточке уезжала за правый край,
+   липкая панель накрывала текст.
+   ─────────────────────────────────────────────────────────────────────── */
+
+/* 41.1 Кадр в блоке приглашения снова заполняет свою рамку */
+.bf-invite .bf-invite-photo img{ position:absolute !important; inset:0 !important;
+  width:100% !important; height:100% !important; object-fit:cover !important }
+
+/* 41.2 Кнопки внутри карточек не выходят за карточку и переносятся по словам */
+.bf-invite .btn, .bf-steps .btn, .bf-inc .btn{
+  max-width:100% !important; box-sizing:border-box !important;
+  white-space:normal !important; text-align:center !important; line-height:1.25 !important }
+
+@media(max-width:767px){
+  /* кадр приглашения — обычный блок сверху, ничего не накрывает */
+  .bf-invite .bf-invite-photo{ position:static !important; min-height:0 !important;
+    height:auto !important; aspect-ratio:3/2 !important }
+  .bf-invite .bf-invite-photo img{ position:static !important; inset:auto !important;
+    width:100% !important; height:100% !important; object-fit:cover !important }
+  .bf-invite{ overflow:hidden !important }
+  .bf-invite .btn, .bf-steps .btn{ font-size:13.5px !important; padding:15px 14px !important }
+
+  /* липкая панель перестаёт накрывать текст: под текстом остаётся место */
+  body{ padding-bottom:calc(96px + env(safe-area-inset-bottom, 0px)) !important }
+  .sticky-call{ bottom:calc(12px + env(safe-area-inset-bottom, 0px)) !important }
+
+  /* подписей под снимками больше нет — убираем и отступ под них */
+  figcaption{ display:none !important }
+}
+
+/* 41.3 Никаких подписей под фотографиями на всех экранах */
+figcaption{ display:none !important }
+
+
+/* 41.4 Шапка сайта: была полупрозрачной и на телефоне просвечивала текстом
+   статьи (видно на снимках Ольги). Делаем плотный фон и тень. */
+.site-header{ background:#16120C !important }
+.site-header *{ color:#F0EADE !important }
+@media(max-width:767px){
+  .site-header{ position:sticky !important; top:0 !important; z-index:70 !important;
+    box-shadow:0 2px 0 rgba(11,9,6,.25) !important }
+}
+
+/* 41.5 Липкая панель на телефоне — полоса у нижнего края, а не кнопка поверх
+   текста: под ней плотный фон, текст под панель не заезжает. */
+@media(max-width:767px){
+  .sticky-call{ left:0 !important; right:0 !important; bottom:0 !important;
+    padding:9px 14px calc(9px + env(safe-area-inset-bottom, 0px)) !important;
+    background:rgba(240,234,222,.97) !important;
+    border-top:1px solid rgba(11,9,6,.14) !important;
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px) !important }
+  .sticky-call .btn{ width:100% !important; margin:0 !important;
+    font-size:13px !important; padding:14px 12px !important }
+  body{ padding-bottom:calc(92px + env(safe-area-inset-bottom, 0px)) !important }
+}
+
