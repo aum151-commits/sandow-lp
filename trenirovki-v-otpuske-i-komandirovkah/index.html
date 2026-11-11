@@ -112,6 +112,12 @@ if (document.readyState === 'loading') {
 </script>
 <script src=/nav-moskva.js defer></script>
 <link rel="stylesheet" href="/stati.css">
+
+<style>/* ссылка на аренду для тренеров: для клиента почти не видна, для поиска — обычная ссылка */
+.foot .foot-baza a{color:inherit;opacity:.45;font-size:11px;text-decoration:none;letter-spacing:.02em}
+.foot .foot-baza a:hover{opacity:.8;text-decoration:underline;text-underline-offset:3px}
+@media (max-width:640px){.foot .foot-baza a{font-size:10.5px}}
+</style>
 </head>
 <body>
 
@@ -176,6 +182,9 @@ if (document.readyState === 'loading') {
 <h2 id="r3">3. Можно и просто отдохнуть</h2>
 <p>Отпуск не обязан быть ещё одним местом для тренировок. Пауза в зале — часть заботы о теле, а не потеря дисциплины. Если хочется просто отдохнуть, это нормальный выбор.</p>
 <p>После месяцев занятий одна-две недели без нагрузки нередко идут на пользу: восстанавливаются суставы и связки, возвращается желание тренироваться. Тело, которое хорошо отдохнуло, возвращается к нагрузке с большим запасом энергии. Отдых — это тоже часть тренировочного процесса, а не провал.</p>
+<figure class="bf-fig">
+<img src="/foto/zal-lyudi.webp" alt="Зал с занимающимися людьми" width="1700" height="1133" loading="lazy">
+</figure>
 
 <h2 id="r4">4. Как вернуться после поездки</h2>
 <p>Начинайте не с той интенсивности, на которой остановились, а мягче: веса процентов на десять-двадцать ниже прежних. К обычным цифрам вы вернётесь за одну-две тренировки. На первой тренировке после паузы не стоит проверять, на что вы способны.</p>
@@ -313,6 +322,7 @@ if (document.readyState === 'loading') {
 <div class="wrap foot">
  <div>«Сандов Фитнес» — Москва, Нижегородская ул., 29–33, стр. 3</div>
  <div><a href="tel:+74957956957">+7 (495) 795-69-57</a></div>
+ <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
 </div>
 </footer>
 
