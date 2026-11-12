@@ -36,7 +36,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      # persist-credentials: false обязателен. Иначе checkout оставляет в
+      # окружении ключ от ЭТОГО репозитория, и следующий `git clone` приватного
+      # репозитория по своему ключу получает отказ — именно на этом первый
+      # прогон после переезда упал 12.11.2026 («cp: cannot create ... No such
+      # file or directory»: папка не создалась, потому что клонирование молча
+      # не прошло).
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
