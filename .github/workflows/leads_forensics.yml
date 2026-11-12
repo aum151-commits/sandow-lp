@@ -86,4 +86,29 @@ jobs:
                       print(f"  {путь}: {ответ.status} {ответ.read()[:160].decode('utf-8', 'replace')}")
               except Exception as ошибка:
                   print(f"  {путь}: не ответил — {type(ошибка).__name__} {str(ошибка)[:100]}")
+
+          # Может ли форма со статьи отправлять заявку ПРЯМО боту, минуя
+          # pages.dev: важны и приём заявки, и разрешение для браузера (CORS).
+          # Без разрешения браузер отменит отправку ещё до того, как она уйдёт.
+          print("\n=== заявка прямо боту (с проверочным номером) ===")
+          бот = "https://sandow-lead-bot-standalone.onrender.com/site-lead"
+          for способ in ("OPTIONS", "POST"):
+              запрос = urllib.request.Request(бот, data=(тело if способ == "POST" else None), method=способ)
+              запрос.add_header("Origin", "https://lp.sandowfitness.ru")
+              запрос.add_header("Content-Type", "application/json")
+              if способ == "OPTIONS":
+                  запрос.add_header("Access-Control-Request-Method", "POST")
+                  запрос.add_header("Access-Control-Request-Headers", "content-type")
+              try:
+                  with urllib.request.urlopen(запрос, timeout=60) as ответ:
+                      print(f"  {способ}: {ответ.status} | разрешение для браузера: "
+                            f"{ответ.headers.get('Access-Control-Allow-Origin')}")
+                      if способ == "POST":
+                          print("    тело:", ответ.read()[:200].decode("utf-8", "replace"))
+              except urllib.error.HTTPError as ошибка:
+                  print(f"  {способ}: {ошибка.code} | разрешение для браузера: "
+                        f"{ошибка.headers.get('Access-Control-Allow-Origin')}")
+                  print("    тело:", ошибка.read()[:200].decode("utf-8", "replace"))
+              except Exception as ошибка:
+                  print(f"  {способ}: не прошёл — {type(ошибка).__name__} {str(ошибка)[:120]}")
           PY
