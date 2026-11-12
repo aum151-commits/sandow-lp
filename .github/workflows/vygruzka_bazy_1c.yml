@@ -50,9 +50,10 @@ env:
   VYGRUZKA_SHOTS: ${{ github.workspace }}/vygruzka/snimki/
 
 permissions:
-  # Нужно, чтобы закоммитить трек выгрузок. Данных клиентов в репозиторий
-  # не попадает — только даты и количества.
-  contents: write
+  # Правка 11.11.2026: писать в публичный репозиторий сайта задача больше не
+  # должна — каждый коммит там запускает пересборку сайта. Трек выгрузок
+  # теперь уходит в приватный репозиторий по отдельному ключу.
+  contents: read
 
 jobs:
   vygruzka:
@@ -114,40 +115,56 @@ jobs:
           python3 -m pip install --quiet boto3
           python3 scripts/1c/otdat-v-hranilishche.py vygruzka
 
-      - name: Записать трек выгрузок в репозиторий
+      - name: Записать трек выгрузок в приватный репозиторий
         # Трек — это журнал запусков: когда, что, сколько. Ни одного имени
-        # и ни одного телефона, поэтому его можно хранить в репозитории:
-        # так история выгрузок видна и её не потерять вместе с ноутбуком.
+        # и ни одного телефона, поэтому хранить его можно и нужно — так
+        # история выгрузок видна и её не потерять вместе с ноутбуком.
+        #
+        # Правка 11.11.2026: раньше трек коммитился в публичный репозиторий
+        # сайта, и каждый такой коммит запускал пересборку сайта. Вместе с
+        # другими задачами это забивало лимит GitHub: пересборки валились
+        # пачками и переставали запускаться задачи по заявкам. Теперь трек
+        # живёт в приватном репозитории state.
         if: always()
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          STATE_REPO: aum151-commits/sandow-automation.git
         run: |
-          if [ -f vygruzka/трек-выгрузок.md ]; then
-            mkdir -p трек
-            cp vygruzka/трек-выгрузок.md трек/выгрузки-1С.md
-            cp vygruzka/трек.jsonl трек/выгрузки-1С.jsonl 2>/dev/null || true
-            git config user.name "sandow-bot"
-            git config user.email "bot@sandowfitness.ru"
-            git add трек/
-            if git diff --staged --quiet; then
-              echo "трек не изменился"
-            else
-              git commit -m "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
-              # В репозиторий пишут и другие задачи (сторож, планы, рассылки),
-              # поэтому перед отправкой обязательно подтягиваем чужое: иначе
-              # push отбивается «failed to push some refs» — так и вышло
-              # 15.10.2026, трек не записался.
-              for attempt in 1 2 3; do
-                git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
-                if git push origin "HEAD:${GITHUB_REF_NAME}"; then
-                  echo "трек отправлен"
-                  break
-                fi
-                echo "попытка $attempt не удалась, ждём и повторяем"
-                sleep 5
-              done
-            fi
-          else
+          if [ ! -f vygruzka/трек-выгрузок.md ]; then
             echo "файла трека нет — пропускаю"
+            exit 0
           fi
+          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
+          mkdir -p отметки/трек
+          # В приватный репозиторий кладём и то, что успело накопиться раньше
+          # в публичном: история выгрузок не должна обрываться на переезде.
+          if [ -f трек/выгрузки-1С.md ]; then
+            cp трек/выгрузки-1С.md отметки/трек/выгрузки-1С.md
+          fi
+          if [ -f трек/выгрузки-1С.jsonl ]; then
+            cp трек/выгрузки-1С.jsonl отметки/трек/выгрузки-1С.jsonl
+          fi
+          cp vygruzka/трек-выгрузок.md отметки/трек/выгрузки-1С.md
+          cp vygruzka/трек.jsonl отметки/трек/выгрузки-1С.jsonl 2>/dev/null || true
+          cd отметки
+          git config user.name "sandow-bot"
+          git config user.email "bot@sandowfitness.ru"
+          git add трек/
+          if git diff --staged --quiet; then
+            echo "трек не изменился"
+            exit 0
+          fi
+          git commit -m "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main || true
+            if git push "https://x-access-token:${TOKEN}@${STATE_REPO}" HEAD:main; then
+              echo "трек отправлен"
+              exit 0
+            fi
+            echo "попытка ${attempt} не удалась, ждём и повторяем"
+            sleep 5
+          done
+          echo "трек не записался"; exit 1
 
       - name: Упасть, если выгрузки не было
         # Молчаливый пропуск хуже падения: о падении GitHub напишет сам.

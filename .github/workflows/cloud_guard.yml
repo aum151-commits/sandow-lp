@@ -5,17 +5,20 @@
 # карточки Яндекса, и об этом не пришло ни одного сообщения.
 #
 # Живёт в публичном репозитории, поэтому не зависит ни от ноутбука, ни от
-# лимита минут — здесь они бесплатны. Состояние (о чём уже сообщали) хранится
-# рядом, персональных данных в нём нет.
+# лимита минут — здесь они бесплатны.
+#
+# ВАЖНО (правка 11.11.2026). Раньше отметка «о чём уже сообщили» коммитилась
+# в ЭТОТ репозиторий — тот же, из которого GitHub собирает сайт lp.sandowfitness.ru.
+# Каждый коммит запускал пересборку сайта, за час их набиралось столько, что
+# GitHub упирался в лимит: пересборки валились пачками, очередь забивалась, и
+# вместе с ними перестали запускаться задачи по заявкам («стартовый сбой»).
+# Теперь отметка живёт в приватном репозитории state, а сайт — только сайт.
 name: Сторож облачных задач
 
 on:
   schedule:
     - cron: '25 */3 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 # Время внутри задач — московское. Раннеры GitHub живут по UTC, а все
 # скрипты писались для ноутбука в Москве: «тихие часы 22:00–10:00»,
@@ -24,6 +27,9 @@ permissions:
 # Расписание cron ниже остаётся в UTC: GitHub считает его только так.
 env:
   TZ: Europe/Moscow
+  # Адрес приватного репозитория, где лежат отметки задач. В самом сайте
+  # отметок больше нет — см. объяснение в шапке файла.
+  STATE_REPO: aum151-commits/sandow-automation.git
 
 jobs:
   guard:
@@ -38,6 +44,21 @@ jobs:
 
       - run: pip install requests
 
+      - name: Взять отметку из приватного репозитория
+        # Если в приватном репозитории отметки ещё нет, остаётся та, что лежит
+        # рядом в рабочей папке: первый прогон после переезда не должен
+        # заново рассылать тревоги, о которых уже сообщали.
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
+          if [ -f отметки/state_cloud_guard.json ]; then
+            cp отметки/state_cloud_guard.json state_cloud_guard.json
+            echo "отметка взята из приватного репозитория"
+          else
+            echo "в приватном репозитории отметки нет — начну с той, что рядом"
+          fi
+
       - name: Проверить облачные задачи
         env:
           PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
@@ -46,9 +67,29 @@ jobs:
         run: python guard_cloud_tasks.py
 
       - name: Запомнить, о чём уже сообщили
+        # Пишем в приватный репозиторий: коммит в публичный запускал бы
+        # пересборку сайта и съедал лимит GitHub.
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: |
+          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
+          cp state_cloud_guard.json отметки/state_cloud_guard.json
+          cd отметки
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
           git add state_cloud_guard.json
-          git diff --staged --quiet || git commit -m "Сторож задач: отметка отправленных тревог"
-          git push
+          if git diff --staged --quiet; then
+            echo "отметка не изменилась — отправлять нечего"
+            exit 0
+          fi
+          git commit -m "Сторож задач: отметка отправленных тревог"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main || true
+            if git push "https://x-access-token:${TOKEN}@${STATE_REPO}" HEAD:main; then
+              echo "отметка сохранена"
+              exit 0
+            fi
+            echo "попытка ${attempt} не удалась, повторяю"
+            sleep 5
+          done
+          echo "не удалось сохранить отметку"; exit 1
