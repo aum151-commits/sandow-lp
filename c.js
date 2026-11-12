@@ -968,11 +968,18 @@
         '{height:40px !important;padding-top:0 !important;padding-bottom:0 !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-checkbox__label' +
         '{font-size:9.5px !important;line-height:1.15 !important}' +
-        // Поле «Ваше имя» на телефоне убираем: без него форма с кнопкой
-        // помещается в первый экран, а с ним кнопка уезжает под следующий блок.
-        // Имя менеджер всё равно спросит при звонке; телефон — главное.
+        // Поле «Ваше имя» ОСТАВЛЯЕМ ВИДИМЫМ. 12.11.2026 выяснилось: Тильда
+        // считает его обязательным, и пока оно было скрыто, КАЖДАЯ отправка
+        // формы заканчивалась ошибкой «Пожалуйста, заполните все обязательные
+        // поля». Заявки с главной страницы не создавались вовсе: в панели
+        // Тильды последняя — 10.11 в 21:03, а следующая появилась только
+        // после того, как поле вернули. Проверено вживую: без поля — ошибка,
+        // с полем — отправка проходит.
+        // Место в форме экономим высотой самого поля, а не его скрытием.
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_nm' +
-        '{display:none !important}' +
+        '{display:block !important;margin-bottom:4px !important}' +
+        '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_nm .t-input' +
+        '{height:40px !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_cb' +
         '{margin-top:0 !important;margin-bottom:0 !important}' +
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-group_ph' +
