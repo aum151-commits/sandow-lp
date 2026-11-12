@@ -125,51 +125,29 @@ jobs:
         # и ни одного телефона, поэтому хранить его можно и нужно — так
         # история выгрузок видна и её не потерять вместе с ноутбуком.
         #
-        # Правка 11.11.2026: раньше трек коммитился в публичный репозиторий
+        # Правка 12.11.2026: раньше трек коммитился в публичный репозиторий
         # сайта, и каждый такой коммит запускал пересборку сайта. Вместе с
         # другими задачами это забивало лимит GitHub: пересборки валились
         # пачками и переставали запускаться задачи по заявкам. Теперь трек
-        # живёт в приватном репозитории state.
+        # уходит в приватный репозиторий обычным запросом к GitHub — без
+        # клонирования и без коммитов.
         if: always()
         env:
-          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
-          STATE_REPO: aum151-commits/sandow-automation.git
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: |
           if [ ! -f vygruzka/трек-выгрузок.md ]; then
             echo "файла трека нет — пропускаю"
             exit 0
           fi
-          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
-          mkdir -p отметки/трек
-          # В приватный репозиторий кладём и то, что успело накопиться раньше
-          # в публичном: история выгрузок не должна обрываться на переезде.
-          if [ -f трек/выгрузки-1С.md ]; then
-            cp трек/выгрузки-1С.md отметки/трек/выгрузки-1С.md
-          fi
+          mkdir -p трек
+          cp vygruzka/трек-выгрузок.md трек/выгрузки-1С.md
+          cp vygruzka/трек.jsonl трек/выгрузки-1С.jsonl 2>/dev/null || true
+          python3 scripts/отметки/хранилище-отметок.py положить \
+            трек/выгрузки-1С.md "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
           if [ -f трек/выгрузки-1С.jsonl ]; then
-            cp трек/выгрузки-1С.jsonl отметки/трек/выгрузки-1С.jsonl
+            python3 scripts/отметки/хранилище-отметок.py положить \
+              трек/выгрузки-1С.jsonl "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
           fi
-          cp vygruzka/трек-выгрузок.md отметки/трек/выгрузки-1С.md
-          cp vygruzka/трек.jsonl отметки/трек/выгрузки-1С.jsonl 2>/dev/null || true
-          cd отметки
-          git config user.name "sandow-bot"
-          git config user.email "bot@sandowfitness.ru"
-          git add трек/
-          if git diff --staged --quiet; then
-            echo "трек не изменился"
-            exit 0
-          fi
-          git commit -m "трек выгрузок 1С: $(date -u +%Y-%m-%dT%H:%M)"
-          for attempt in 1 2 3; do
-            git pull --rebase origin main || true
-            if git push "https://x-access-token:${TOKEN}@${STATE_REPO}" HEAD:main; then
-              echo "трек отправлен"
-              exit 0
-            fi
-            echo "попытка ${attempt} не удалась, ждём и повторяем"
-            sleep 5
-          done
-          echo "трек не записался"; exit 1
 
       - name: Упасть, если выгрузки не было
         # Молчаливый пропуск хуже падения: о падении GitHub напишет сам.

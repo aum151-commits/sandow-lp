@@ -57,15 +57,8 @@ jobs:
         # рядом в рабочей папке: первый прогон после переезда не должен
         # заново рассылать тревоги, о которых уже сообщали.
         env:
-          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
-        run: |
-          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
-          if [ -f отметки/state_cloud_guard.json ]; then
-            cp отметки/state_cloud_guard.json state_cloud_guard.json
-            echo "отметка взята из приватного репозитория"
-          else
-            echo "в приватном репозитории отметки нет — начну с той, что рядом"
-          fi
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: python scripts/отметки/хранилище-отметок.py взять state_cloud_guard.json
 
       - name: Проверить облачные задачи
         env:
@@ -75,29 +68,12 @@ jobs:
         run: python guard_cloud_tasks.py
 
       - name: Запомнить, о чём уже сообщили
-        # Пишем в приватный репозиторий: коммит в публичный запускал бы
-        # пересборку сайта и съедал лимит GitHub.
+        # Пишем в приватный репозиторий обычным запросом к GitHub: коммит в
+        # публичный запускал бы пересборку сайта и съедал лимит GitHub, а
+        # `git push` конфликтовал бы с ключом самого сайта.
+        if: always()
         env:
-          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: |
-          git clone --depth 1 "https://x-access-token:${TOKEN}@${STATE_REPO}" отметки 2>/dev/null || true
-          cp state_cloud_guard.json отметки/state_cloud_guard.json
-          cd отметки
-          git config user.name "Sandow Bot"
-          git config user.email "bot@sandowfitness.ru"
-          git add state_cloud_guard.json
-          if git diff --staged --quiet; then
-            echo "отметка не изменилась — отправлять нечего"
-            exit 0
-          fi
-          git commit -m "Сторож задач: отметка отправленных тревог"
-          for attempt in 1 2 3; do
-            git pull --rebase origin main || true
-            if git push "https://x-access-token:${TOKEN}@${STATE_REPO}" HEAD:main; then
-              echo "отметка сохранена"
-              exit 0
-            fi
-            echo "попытка ${attempt} не удалась, повторяю"
-            sleep 5
-          done
-          echo "не удалось сохранить отметку"; exit 1
+          python scripts/отметки/хранилище-отметок.py положить \
+            state_cloud_guard.json "Сторож задач: отметка отправленных тревог"
