@@ -43,3 +43,47 @@ jobs:
           S3_SECRET: ${{ secrets.YC_S3_SECRET }}
           S3_BUCKET: sandow-lead-data
         run: python scripts/отметки/разведка-заявок.py
+
+      # Проверка живого канала. 12.11.2026 форма на статьях жмёт кнопку
+      # «Отправляем…» и НИЧЕГО не отправляет: браузер получает отказ на
+      # запрос к приёмнику на домене pages.dev. Отсюда два вопроса, и оба
+      # проверяются здесь, из облака (там нет российских блокировок):
+      #   * живой ли приёмник вообще;
+      #   * принимает ли он заявку и что отвечает.
+      # Номер проверочный (000…), поэтому такая заявка уходит только куратору
+      # в личку и не попадает ни в 1С, ни в рабочий чат.
+      - name: Проверить приёмник заявок
+        run: |
+          python - <<'PY'
+          import json, socket, urllib.error, urllib.request
+
+          print("=== приёмник на pages.dev ===")
+          try:
+              print("  имя разворачивается в:", socket.gethostbyname("sandow-emergency-leads.pages.dev"))
+          except Exception as ошибка:
+              print("  имя НЕ разворачивается:", type(ошибка).__name__)
+
+          адрес = "https://sandow-emergency-leads.pages.dev/site-lead"
+          тело = json.dumps({"phone": "0000000001", "name": "проверка",
+                             "test": True, "source": "статья-проверка"}).encode()
+          запрос = urllib.request.Request(адрес, data=тело, method="POST")
+          запрос.add_header("Content-Type", "application/json")
+          запрос.add_header("Origin", "https://lp.sandowfitness.ru")
+          try:
+              with urllib.request.urlopen(запрос, timeout=45) as ответ:
+                  print("  ответ:", ответ.status, ответ.read()[:200].decode("utf-8", "replace"))
+                  print("  CORS:", ответ.headers.get("Access-Control-Allow-Origin"))
+          except urllib.error.HTTPError as ошибка:
+              print("  ответ:", ошибка.code, ошибка.read()[:200].decode("utf-8", "replace"))
+              print("  CORS:", ошибка.headers.get("Access-Control-Allow-Origin"))
+          except Exception as ошибка:
+              print("  запрос не прошёл:", type(ошибка).__name__, str(ошибка)[:120])
+
+          print("\n=== бот на onrender.com ===")
+          for путь in ("/health", "/"):
+              try:
+                  with urllib.request.urlopen("https://sandow-lead-bot-standalone.onrender.com" + путь, timeout=60) as ответ:
+                      print(f"  {путь}: {ответ.status} {ответ.read()[:160].decode('utf-8', 'replace')}")
+              except Exception as ошибка:
+                  print(f"  {путь}: не ответил — {type(ошибка).__name__} {str(ошибка)[:100]}")
+          PY
