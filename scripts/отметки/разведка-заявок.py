@@ -115,6 +115,31 @@ def main() -> int:
     журнал = прочитать("data/lead_response_log.json", s3)
     if журнал:
         print(f"  размер: {len(журнал)} байт")
+        текст = журнал.decode("utf-8", "replace").strip()
+        try:
+            содержимое = json.loads(текст)
+        except json.JSONDecodeError:
+            содержимое = None
+        if isinstance(содержимое, dict):
+            print(f"  это словарь, ключей: {len(содержимое)}")
+            # Печатаем ТОЛЬКО имена полей верхнего уровня — по ним видно, что
+            # внутри, и при этом ни одного значения наружу не уходит.
+            print("  ключи:", ", ".join(str(к)[:24] for к in list(содержимое)[:10]))
+            for к, з in list(содержимое.items())[:3]:
+                if isinstance(з, dict):
+                    print(f"    внутри «{str(к)[:16]}» поля: " +
+                          ", ".join(str(п)[:20] for п in list(з)[:10]))
+                elif isinstance(з, list):
+                    print(f"    внутри «{str(к)[:16]}» список из {len(з)}")
+        elif isinstance(содержимое, list):
+            print(f"  это список, записей: {len(содержимое)}")
+            if содержимое and isinstance(содержимое[0], dict):
+                print("  поля записи:", ", ".join(str(п)[:20] for п in list(содержимое[0])[:12]))
+        else:
+            строки = текст.splitlines()
+            print("  построчный файл, строк:", len(строки))
+            if строки:
+                print("  первая строка начинается с:", строки[0].strip()[:40].split(":")[0])
         дни = дни_из_журнала(журнал)
         if дни:
             print("  заявок по дням:")
