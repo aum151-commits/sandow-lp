@@ -58,10 +58,38 @@ jobs:
           git config user.name "Sandow Bot"
           git config user.email "bot@sandowfitness.ru"
           git add state_sla.json 2>/dev/null || true
-          git diff --staged --quiet || (
-            git commit -m "Отметка отправленной SLA-сводки" &&
-            git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main || (
-              git pull --rebase "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" main &&
-              git push "https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git" HEAD:main
-            )
-          )
+          if git diff --staged --quiet; then
+            echo "отметка не менялась — сохранять нечего"
+            exit 0
+          fi
+          git commit -m "Отметка отправленной SLA-сводки"
+          URL="https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git"
+          # 14.11.2026. Разбор жалобы Ольги «бот прислал несколько раз
+          # одно и то же сообщение». Сообщение уходило в группу, а отметка
+          # «за сегодня отправлено» не сохранялась: сервер отклонял запись,
+          # потому что в этот же репозиторий пишут другие задачи, а
+          # повторная попытка срывалась из-за несохранённых файлов в
+          # рабочей папке. Без отметки следующий запуск слал ту же сводку
+          # снова и снова (12.11 — 3 копии, 13.11 — 2, 14.11 — 4).
+          # Теперь: запись повторяется до успеха, несохранённые файлы ей не
+          # мешают, и в конце отметка сверяется с сервером.
+          saved=0
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if git -c rebase.autoStash=true pull --rebase "$URL" main >/dev/null 2>&1 &&
+               git push "$URL" HEAD:main >/dev/null 2>&1; then
+              saved=1
+              echo "отметка сохранена с попытки ${attempt}"
+              break
+            fi
+            sleep 8
+          done
+          if [ "$saved" = "0" ]; then
+            echo "::error::отметка об отправке не сохранилась за восемь попыток"
+          fi
+          git fetch "$URL" main >/dev/null 2>&1
+          if diff -q <(git show FETCH_HEAD:state_sla.json 2>/dev/null | tr -d '\r') <(tr -d '\r' < state_sla.json) >/dev/null; then
+            echo "проверено: отметка на сервере совпадает с отправленной"
+          else
+            echo "::error::отметка на сервере не совпала — следующий запуск может повторить отправку"
+            exit 1
+          fi
