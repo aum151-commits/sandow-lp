@@ -103,6 +103,17 @@ section.cta-form a.btn-lead{display:inline-block !important;margin-top:24px}
 /* Список «Коротко»: пункты не уезжают вправо, длинные строки переносятся. */
 .tldr ul { padding-left: 1.1em !important; margin: 0 !important; }
 .tldr li { overflow-wrap: break-word !important; max-width: 100% !important; }
+/* Подписи в блоке заявки прилипали к краю экрана: текст начинался с нуля. */
+.qform-note, .cf-foot, .cta-form-note {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  box-sizing: border-box !important;
+}
+/* Заголовок статьи на телефоне: убираем разрядку, чтобы он не растягивался
+   на четыре строки. Размер и начертание не трогаем. */
+@media (max-width: 640px) {
+  .article-hero h1 { letter-spacing: 0.01em !important; }
+}
 </style>
 </head>
 <body>
