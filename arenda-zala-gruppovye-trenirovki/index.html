@@ -76,6 +76,35 @@ section.cta-form a.btn-lead{display:inline-block !important;margin-top:24px}
 .bf-step-txt{padding-left:0 !important}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Аренда зала для групповых тренировок", "areaServed": {"@type": "City", "name": "Москва"}, "provider": {"@type": "HealthClub", "name": "Сандов Фитнес", "address": {"@type": "PostalAddress", "streetAddress": "Нижегородская улица, 29–33, строение 3", "addressLocality": "Москва", "addressCountry": "RU"}}, "url": "https://lp.sandowfitness.ru/arenda-zala-gruppovye-trenirovki/"}</script>
+<style id="полировка-вёрстки">
+/* 16.11.2026. Блок «из соседних районов» был шире экрана и прижат влево —
+   на широком экране правый край срезал текст. Держим в колонке статьи. */
+.article-body .bf-inc {
+  width: auto !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+.article-body .bf-inc-list {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+}
+.article-body .bf-inc-list li {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+}
+/* Текст не прилипает к краю экрана на телефоне. */
+@media (max-width: 640px) {
+  .article-body .bf-inc { padding-left: 0 !important; padding-right: 0 !important; }
+  .bf-map-cap { padding-left: 24px !important; padding-right: 24px !important; }
+  .cta-form-note { padding-left: 24px !important; padding-right: 24px !important; }
+}
+/* Список «Коротко»: пункты не уезжают вправо, длинные строки переносятся. */
+.tldr ul { padding-left: 1.1em !important; margin: 0 !important; }
+.tldr li { overflow-wrap: break-word !important; max-width: 100% !important; }
+</style>
 </head>
 <body>
 
