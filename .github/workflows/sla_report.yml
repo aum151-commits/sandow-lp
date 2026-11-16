@@ -20,6 +20,14 @@ on:
 env:
   TZ: Europe/Moscow
 
+# 16.11.2026. Замок от двойной отправки — как у конверсий (conversions.yml).
+# Обе задачи поднимают расписание GitHub и будильник задач; когда они
+# попадают в одну минуту, второй прогон читает отметку «ещё не отправлено»
+# и шлёт ту же сводку в группу «SF отчеты» второй раз.
+concurrency:
+  group: sla-report-send
+  cancel-in-progress: false
+
 jobs:
   report:
     runs-on: ubuntu-latest
@@ -49,47 +57,23 @@ jobs:
           YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python report_sla.py
 
-      - name: Запомнить, что сводка отправлена
+      - name: Проверить, что отметка дошла до сервера
+        # 16.11.2026. Отметку пишет сам скрипт (отметка.py): коммит ложится на
+        # вершину серверной ветки, поэтому две одновременные задачи не затирают
+        # друг друга. Здесь только проверка и предупреждение.
         working-directory: work
         if: always()
-        env:
-          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
         run: |
-          git config user.name "Sandow Bot"
-          git config user.email "bot@sandowfitness.ru"
-          git add state_sla.json 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "отметка не менялась — сохранять нечего"
-            exit 0
-          fi
-          git commit -m "Отметка отправленной SLA-сводки"
-          URL="https://x-access-token:${TOKEN}@github.com/aum151-commits/sandow-automation.git"
-          # 14.11.2026. Разбор жалобы Ольги «бот прислал несколько раз
-          # одно и то же сообщение». Сообщение уходило в группу, а отметка
-          # «за сегодня отправлено» не сохранялась: сервер отклонял запись,
-          # потому что в этот же репозиторий пишут другие задачи, а
-          # повторная попытка срывалась из-за несохранённых файлов в
-          # рабочей папке. Без отметки следующий запуск слал ту же сводку
-          # снова и снова (12.11 — 3 копии, 13.11 — 2, 14.11 — 4).
-          # Теперь: запись повторяется до успеха, несохранённые файлы ей не
-          # мешают, и в конце отметка сверяется с сервером.
-          saved=0
-          for attempt in 1 2 3 4 5 6 7 8; do
-            if git -c rebase.autoStash=true pull --rebase "$URL" main >/dev/null 2>&1 &&
-               git push "$URL" HEAD:main >/dev/null 2>&1; then
-              saved=1
-              echo "отметка сохранена с попытки ${attempt}"
-              break
-            fi
-            sleep 8
-          done
-          if [ "$saved" = "0" ]; then
-            echo "::error::отметка об отправке не сохранилась за восемь попыток"
-          fi
-          git fetch "$URL" main >/dev/null 2>&1
-          if diff -q <(git show FETCH_HEAD:state_sla.json 2>/dev/null | tr -d '\r') <(tr -d '\r' < state_sla.json) >/dev/null; then
-            echo "проверено: отметка на сервере совпадает с отправленной"
-          else
-            echo "::error::отметка на сервере не совпала — следующий запуск может повторить отправку"
-            exit 1
-          fi
+          python - <<'PY'
+          import отметка
+          имя = "state_sla.json"
+          своя = отметка.прочитать(имя)
+          серверная = отметка.прочитать_с_сервера(имя)
+          if not своя.get("время"):
+              print("отметку ставить было нечего")
+          elif все(серверная.get(поле) == значение for поле, значение in своя.items()):
+              print("проверено: отметка на сервере совпадает с отправленной")
+          else:
+              print("::warning::отметка на сервере не совпала:", серверная,
+                    "ждали", своя)
+          PY
