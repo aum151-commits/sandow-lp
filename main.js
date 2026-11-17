@@ -859,6 +859,14 @@
     if (!hero || !title) return;
     var offer = (title.textContent || '').replace(/\s+/g, ' ').trim();
     if (!offer) return;
+    // 18.11.2026. Этот файл обслуживает и лендинги, и главную на Тильде.
+    // На Тильде (у страницы есть #allrecords) строка ставится ОТДЕЛЬНОЙ
+    // ПОЛОСОЙ сразу под первым экраном. Раньше она вставлялась внутрь
+    // первого экрана и делать так нельзя: там она попадала под форму,
+    // обрезалась низом блока и почти не читалась («попала прямо под кнопку,
+    // её вообще не видно»), а на телефоне ещё и поджимала первый экран
+    // с 844 до 615 точек — из-за этого блок «Клуб» вылезал на первый экран.
+    var наТильде = !!document.getElementById('allrecords');
     // Разделитель между повторами оффера. Раньше здесь стояло обычное
     // « · » — в строке это читалось как одна сплошная лента букв
     // (замечание Ольги 06.11.2026). Пробелы берём широкие (EN SPACE):
@@ -873,19 +881,41 @@
     if (!document.getElementById('sndw-hero-mq-css')) {
       var s = document.createElement('style');
       s.id = 'sndw-hero-mq-css';
-      s.textContent =
-        // Строка видна на ЛЮБОМ экране. До 04.11.2026 стояло display:none
-        // и включение только до 760px — поэтому с компьютера Ольга её не
-        // видела вовсе. Решение 04.11.2026: вернуть и на десктоп.
-        '#sndw-hero-mq{position:absolute;left:0;right:0;' +
-        'overflow:hidden;pointer-events:none;display:block;z-index:3}' +
-        '#sndw-hero-mq .in{display:flex;width:max-content;will-change:transform}' +
-        '#sndw-hero-mq span{display:block;white-space:nowrap;' +
-        'font-family:"Archivo",system-ui,sans-serif;font-weight:900;' +
-        'letter-spacing:.02em;text-transform:uppercase;' +
-        'font-size:clamp(30px,9vw,46px);line-height:1.1;' +
-        'color:transparent;-webkit-text-stroke:1px rgba(233,199,126,.72);' +
-        'padding-right:0}';
+      if (наТильде) {
+        // Полоса под первым экраном: свой фон и воздух 34 точки над и под
+        // текстом. Волосяные линии не рисуем — полоса читается как строка,
+        // а не как рамка; так же сделана строка в середине страницы
+        // (18.11.2026).
+        s.textContent =
+          '#sndw-hero-mq{position:relative;display:block;overflow:hidden;' +
+          'background:#0B0906;padding:34px 0}' +
+          '#sndw-hero-mq .in{display:flex;width:max-content;will-change:transform}' +
+          '#sndw-hero-mq span{display:block;white-space:nowrap;' +
+          'font-family:"Archivo",system-ui,sans-serif;font-weight:900;' +
+          'letter-spacing:.02em;text-transform:uppercase;' +
+          'font-size:clamp(26px,4.2vw,44px);line-height:1.15;' +
+          // обводка чуть плотнее, чем у большой строки в середине страницы:
+          // при меньшем кегле волос в 1 точку читался как «строки нет»
+          // (замечание Ольги 18.11.2026 «её вообще не видно»).
+          'color:transparent;-webkit-text-stroke:1.4px rgba(233,199,126,.9);' +
+          'padding-right:0}' +
+          '@media(max-width:640px){#sndw-hero-mq{padding:22px 0}' +
+          '#sndw-hero-mq span{font-size:26px}}';
+      } else {
+        s.textContent =
+          // Строка видна на ЛЮБОМ экране. До 04.11.2026 стояло display:none
+          // и включение только до 760px — поэтому с компьютера Ольга её не
+          // видела вовсе. Решение 04.11.2026: вернуть и на десктоп.
+          '#sndw-hero-mq{position:absolute;left:0;right:0;' +
+          'overflow:hidden;pointer-events:none;display:block;z-index:3}' +
+          '#sndw-hero-mq .in{display:flex;width:max-content;will-change:transform}' +
+          '#sndw-hero-mq span{display:block;white-space:nowrap;' +
+          'font-family:"Archivo",system-ui,sans-serif;font-weight:900;' +
+          'letter-spacing:.02em;text-transform:uppercase;' +
+          'font-size:clamp(30px,9vw,46px);line-height:1.1;' +
+          'color:transparent;-webkit-text-stroke:1px rgba(233,199,126,.72);' +
+          'padding-right:0}';
+      }
       document.head.appendChild(s);
     }
     var mq = document.createElement('div');
@@ -899,6 +929,30 @@
       track.appendChild(sp);
     }
     mq.appendChild(track);
+    if (наТильде) {
+      // Ставим полосу сразу ПОСЛЕ первого экрана и на этом заканчиваем:
+      // высоту и отступы первого экрана не трогаем вовсе.
+      if (hero.parentNode) {
+        hero.parentNode.insertBefore(mq, hero.nextSibling);
+      } else {
+        document.body.appendChild(mq);
+      }
+      var pos2 = 0;
+      var prev2 = null;
+      var SPEED2 = 60;
+      var step2 = function (ts) {
+        if (prev2 !== null) {
+          pos2 -= SPEED2 * (ts - prev2) / 1000;
+          var half2 = track.scrollWidth / 2;
+          if (half2 > 0 && -pos2 >= half2) pos2 += half2;
+          track.style.transform = 'translate3d(' + pos2.toFixed(1) + 'px,0,0)';
+        }
+        prev2 = ts;
+        requestAnimationFrame(step2);
+      };
+      requestAnimationFrame(step2);
+      return;
+    }
     if (getComputedStyle(hero).position === 'static') {
       hero.style.position = 'relative';
     }
