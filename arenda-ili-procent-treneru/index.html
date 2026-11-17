@@ -75,6 +75,72 @@ section.cta-form a.btn-lead{display:inline-block !important;margin-top:24px}
 .bf-step{grid-template-columns:1fr !important}
 .bf-step-txt{padding-left:0 !important}
 </style>
+/* 17.11.2026. Блоки для поиска («Читай дальше») — тихо и мелко:
+   они нужны поисковику, а не читателю, поэтому не должны спорить с текстом. */
+section[data-blok="chitay-dalshe"] { margin: 30px 0 6px !important; }
+section[data-blok="chitay-dalshe"] h2 {
+  font-size: 11px !important; font-weight: 600 !important; letter-spacing: .14em;
+  text-transform: uppercase; opacity: .6; margin: 0 0 8px !important; line-height: 1.4 !important;
+}
+section[data-blok="chitay-dalshe"] .bf-inc { margin: 0 !important; max-width: 100% !important; }
+section[data-blok="chitay-dalshe"] .bf-inc-list {
+  display: flex !important; flex-wrap: wrap; gap: 6px 16px; padding: 0 !important;
+  margin: 0 !important; list-style: none !important; grid-template-columns: none !important;
+}
+section[data-blok="chitay-dalshe"] li {
+  font-size: 13px !important; line-height: 1.55 !important; opacity: .78; margin: 0 !important;
+}
+section[data-blok="chitay-dalshe"] a {
+  color: inherit !important; text-decoration: none; border-bottom: 1px solid rgba(233,199,126,.28);
+}
+@media (max-width: 640px) {
+  section[data-blok="chitay-dalshe"] li { font-size: 12px !important; }
+}
+
+/* 17.11.2026. Блоки для поиска («Читай дальше») — тихо и мелко:
+   они нужны поисковику, а не читателю, поэтому не должны спорить с текстом. */
+section[data-blok="chitay-dalshe"] { margin: 30px 0 6px !important; }
+section[data-blok="chitay-dalshe"] h2 {
+  font-size: 11px !important; font-weight: 600 !important; letter-spacing: .14em;
+  text-transform: uppercase; opacity: .6; margin: 0 0 8px !important; line-height: 1.4 !important;
+}
+section[data-blok="chitay-dalshe"] .bf-inc { margin: 0 !important; max-width: 100% !important; }
+section[data-blok="chitay-dalshe"] .bf-inc-list {
+  display: flex !important; flex-wrap: wrap; gap: 6px 16px; padding: 0 !important;
+  margin: 0 !important; list-style: none !important; grid-template-columns: none !important;
+}
+section[data-blok="chitay-dalshe"] li {
+  font-size: 13px !important; line-height: 1.55 !important; opacity: .78; margin: 0 !important;
+}
+section[data-blok="chitay-dalshe"] a {
+  color: inherit !important; text-decoration: none; border-bottom: 1px solid rgba(233,199,126,.28);
+}
+@media (max-width: 640px) {
+  section[data-blok="chitay-dalshe"] li { font-size: 12px !important; }
+}
+
+/* 17.11.2026. Блоки для поиска («Читай дальше») — тихо и мелко:
+   они нужны поисковику, а не читателю, поэтому не должны спорить с текстом. */
+section[data-blok="chitay-dalshe"] { margin: 30px 0 6px !important; }
+section[data-blok="chitay-dalshe"] h2 {
+  font-size: 11px !important; font-weight: 600 !important; letter-spacing: .14em;
+  text-transform: uppercase; opacity: .6; margin: 0 0 8px !important; line-height: 1.4 !important;
+}
+section[data-blok="chitay-dalshe"] .bf-inc { margin: 0 !important; max-width: 100% !important; }
+section[data-blok="chitay-dalshe"] .bf-inc-list {
+  display: flex !important; flex-wrap: wrap; gap: 6px 16px; padding: 0 !important;
+  margin: 0 !important; list-style: none !important; grid-template-columns: none !important;
+}
+section[data-blok="chitay-dalshe"] li {
+  font-size: 13px !important; line-height: 1.55 !important; opacity: .78; margin: 0 !important;
+}
+section[data-blok="chitay-dalshe"] a {
+  color: inherit !important; text-decoration: none; border-bottom: 1px solid rgba(233,199,126,.28);
+}
+@media (max-width: 640px) {
+  section[data-blok="chitay-dalshe"] li { font-size: 12px !important; }
+}
+
 <style id="полировка-вёрстки">
 /* 16.11.2026. Блок «из соседних районов» был шире экрана и прижат влево —
    на широком экране правый край срезал текст. Держим в колонке статьи. */
@@ -137,7 +203,8 @@ section.cta-form a.btn-lead{display:inline-block !important;margin-top:24px}
  <h1>Аренда или процент: что выгоднее тренеру</h1>
  <p class="article-lead">Пятница, восемь вечера, ты проводишь третью тренировку подряд — и знаешь, что от каждой из них клубу уходит доля. Знакомо? Тогда вопрос «аренда или процент» для тебя не теория, а деньги. В этом клубе работает вторая схема — процент с тренировок не берётся; но чтобы выбор был осознанным, разберём обе и посчитаем твоё, а не среднее.</p>
 <div class="bf-meta">Материал подготовил клуб «Сандов Фитнес» · 3 мин чтения</div>
-<div class="bf-hero-cta"><a class="btn" href="https://t.me/SandowBazaBot?start=baza" rel="noopener">Получить лучшие условия</a><p class="bf-proof">Условия и стоимость — на <a href="https://sandowfitness.ru/baza">странице предложения</a></p></div>
+<div class="bf-hero-cta"><a class="btn" href="https://t.me/SandowBazaBot?start=baza" rel="noopener">Получить лучшие условия</a><p class="bf-proof">4,6 на Яндекс Картах · 644 отзыва</p>
+ <p class="bf-proof">Условия и стоимость — на <a href="https://sandowfitness.ru/baza">странице предложения</a></p></div>
  <div class="cta-form-note" style="margin-top:14px">Пробное занятие бесплатное — приходи, пожалуйста, договорившись заранее, — посмотри зал, проведи тренировку и реши после.</div>
  </div>
 </div>
@@ -306,6 +373,5 @@ section.cta-form a.btn-lead{display:inline-block !important;margin-top:24px}
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "url": "https://lp.sandowfitness.ru/arenda-ili-procent-treneru/", "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", ".article-lead"]}}</script>
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"HealthClub","name":"Сандов Фитнес","url":"https://sandowfitness.ru/","telephone":"+7 495 795-69-57","address":{"@type":"PostalAddress","streetAddress":"Нижегородская улица, 29–33, стр. 3","addressLocality":"Москва","addressCountry":"RU"},"geo":{"@type":"GeoCoordinates","latitude":55.733701,"longitude":37.711725},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}],"amenityFeature":[{"@type":"LocationFeatureSpecification","name":"Тренажёрный зал 1100 м²","value":true},{"@type":"LocationFeatureSpecification","name":"Групповые программы","value":true},{"@type":"LocationFeatureSpecification","name":"Бойцовский клуб","value":true},{"@type":"LocationFeatureSpecification","name":"Финская сауна","value":true},{"@type":"LocationFeatureSpecification","name":"Раздевалки и душевые","value":true},{"@type":"LocationFeatureSpecification","name":"Охраняемая парковка","value":true}]}</script>
 </body>
 </html>
