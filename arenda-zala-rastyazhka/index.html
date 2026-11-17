@@ -141,6 +141,28 @@ section[data-blok="chitay-dalshe"] a {
   section[data-blok="chitay-dalshe"] li { font-size: 12px !important; }
 }
 
+/* 17.11.2026. Блоки для поиска («Читай дальше») — тихо и мелко:
+   они нужны поисковику, а не читателю, поэтому не должны спорить с текстом. */
+section[data-blok="chitay-dalshe"] { margin: 30px 0 6px !important; }
+section[data-blok="chitay-dalshe"] h2 {
+  font-size: 11px !important; font-weight: 600 !important; letter-spacing: .14em;
+  text-transform: uppercase; opacity: .6; margin: 0 0 8px !important; line-height: 1.4 !important;
+}
+section[data-blok="chitay-dalshe"] .bf-inc { margin: 0 !important; max-width: 100% !important; }
+section[data-blok="chitay-dalshe"] .bf-inc-list {
+  display: flex !important; flex-wrap: wrap; gap: 6px 16px; padding: 0 !important;
+  margin: 0 !important; list-style: none !important; grid-template-columns: none !important;
+}
+section[data-blok="chitay-dalshe"] li {
+  font-size: 13px !important; line-height: 1.55 !important; opacity: .78; margin: 0 !important;
+}
+section[data-blok="chitay-dalshe"] a {
+  color: inherit !important; text-decoration: none; border-bottom: 1px solid rgba(233,199,126,.28);
+}
+@media (max-width: 640px) {
+  section[data-blok="chitay-dalshe"] li { font-size: 12px !important; }
+}
+
 <style id="полировка-вёрстки">
 /* 16.11.2026. Блок «из соседних районов» был шире экрана и прижат влево —
    на широком экране правый край срезал текст. Держим в колонке статьи. */
@@ -423,7 +445,13 @@ section[data-blok="chitay-dalshe"] a {
 </div>
 
 <div class="meta-dates">Опубликовано 16.11.2026 · Обновлено 16.11.2026 · Материал носит информационный характер</div>
- </article>
+ <section data-blok="chitay-dalshe">
+<h2>Читай дальше</h2>
+<div class="bf-inc">
+<ul class="bf-inc-list"><li><a href="https://lp.sandowfitness.ru/arenda-zala-moskva/">Аренда зала для тренеров в Москве</a></li><li><a href="https://lp.sandowfitness.ru/arenda-zala-karacharovo/">Карачарово</a></li><li><a href="https://lp.sandowfitness.ru/arenda-ili-procent-treneru/">Аренда или процент</a></li><li><a href="https://lp.sandowfitness.ru/chek-list-12-voprosov/">Чек-лист: 12 вопросов перед арендой</a></li></ul>
+</div>
+</section>
+</article>
 </div>
 
 
@@ -463,12 +491,6 @@ section[data-blok="chitay-dalshe"] a {
  <div><a href="https://t.me/SandowBazaBot?start=baza" rel="noopener">Заявка на аренду — в Телеграм-боте</a></div>
  <div class="foot-baza"><a href="https://sandowfitness.ru/baza">Аренда для тренеров</a></div>
  </div>
-<section data-blok="chitay-dalshe">
-<h2>Читай дальше</h2>
-<div class="bf-inc">
-<ul class="bf-inc-list"><li><a href="https://lp.sandowfitness.ru/arenda-zala-pochasovo/">Почасовая аренда или плата за место: что выгоднее</a></li><li><a href="https://lp.sandowfitness.ru/arenda-zala-bez-procenta/">Аренда без процента с тренировок</a></li><li><a href="https://lp.sandowfitness.ru/snyat-zal-dlya-personalnyh-trenirovok/">Зал для персональных тренировок</a></li><li><a href="https://lp.sandowfitness.ru/chek-list-12-voprosov/">Чек-лист: 12 вопросов перед арендой</a></li></ul>
-</div>
-</section>
 <section data-кластер style="border-top:1px solid var(--line);padding:26px 0 10px">
 <div class="wrap">
 <div style="color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px">Все страницы про аренду зала</div>
