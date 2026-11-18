@@ -10,7 +10,7 @@
 # (после 11:40 МСК), тот же чат, но отдельное состояние (state_sla.json) —
 # сбой одного отчёта не должен молчать за счёт отметки другого.
 #
-# Ручной запуск с галочкой «проверка» собирает отчёт и печатает его в журнал,
+# Ручной запуск с галочкой dry_run собирает отчёт и печатает его в журнал,
 # ничего не отправляя: проверять надо чтением, а не «отправим и посмотрим».
 name: Заявки и скорость ответа
 
@@ -40,8 +40,9 @@ concurrency:
 
 jobs:
   report:
+    # Браузер для входа в кабинет АТС плюс сам вход — до десяти минут.
+    timeout-minutes: 15
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/setup-python@v5
         with:
@@ -56,6 +57,55 @@ jobs:
 
       - run: pip install requests
 
+      - name: Пора ли отправлять (окно 11:40 и отметка за сегодня)
+        # Зачем отдельный шаг. Задача поднимается каждый час, но нужна один раз
+        # в сутки. Без этого шага браузер и вход в кабинет АТС запускались бы
+        # 24 раза в день ради одного отчёта.
+        id: gate
+        working-directory: work
+        env:
+          TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os
+          from datetime import datetime, timedelta, timezone
+          import отметка
+          сейчас = datetime.now(timezone(timedelta(hours=3)))
+          пора = сейчас.hour > 11 or (сейчас.hour == 11 and сейчас.minute >= 40)
+          уже = отметка.уже_отправлено("state_sla.json", "последний", f"{сейчас:%Y-%m-%d}")
+          нужно = "true" if (пора and not уже) else "false"
+          print(f"время МСК {сейчас:%d.%m %H:%M}; пора: {пора}; уже отправлено: {уже}; идём: {нужно}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as файл:
+              файл.write(f"ready={нужно}\n")
+          PY
+
+      - name: Поставить браузер для входа в кабинет АТС
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          pip install requests python-dotenv playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Освежить вход в кабинет АТС
+        # 18.11.2026. Проверка показала: снимок входа из секрета просрочен —
+        # кабинет отвечает 403, портал «IllegalAuthToken», и отчёт оставался
+        # без звонков. Входим заново тем же способом, что «Конверсии» и сторож
+        # пропущенных звонков, и обновляем файл входа.
+        if: steps.gate.outputs.ready == 'true'
+        working-directory: work/rpa
+        env:
+          BEELINE_PBX_LOGIN: ${{ secrets.BEELINE_PBX_LOGIN }}
+          BEELINE_PBX_PASSWORD: ${{ secrets.BEELINE_PBX_PASSWORD }}
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timedelta
+          try:
+              from src.rpa import beeline_calls as bc
+              bc.fetch(datetime.now() - timedelta(minutes=30), datetime.now())
+              print("вход в кабинет АТС обновлён")
+          except Exception as ошибка:
+              print("вход не удался, отчёт выйдет со строкой «данных нет»:", ошибка)
+          PY
+
       - name: Отправить сводку, если пришло время
         working-directory: work
         env:
@@ -66,8 +116,8 @@ jobs:
           YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
           YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
           # 18.11.2026. В отчёт добавлены звонки в клуб (без них он почти
-          # каждый день был пустым). Вход в кабинет АТС — тем же секретом,
-          # что у «Конверсий»: снимок входа, а не логин с паролем.
+          # каждый день был пустым). Снимок входа — тем же секретом, что у
+          # «Конверсий»; если он устарел, шаг выше входит заново.
           BEELINE_STORAGE_STATE: ${{ secrets.BEELINE_STORAGE_STATE }}
         run: python report_sla.py ${{ inputs.dry_run && '--проверка' || '' }}
 
