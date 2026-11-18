@@ -1250,6 +1250,188 @@
   }
 
 
+  /* ---------- ОДНА ПИЛЮЛЯ ВМЕСТО ПОЛОТНА ССЫЛОК (18.11.2026) ----------
+   * Ольга, 18.11.2026: «в подвале основного московского сайта надо
+   * группировать в пилюлю список полезных статей, а то опять полотно».
+   *
+   * Замер живого сайта до правки: в конце главной шли подряд список
+   * «Полезные статьи», тихая строка ссылок, пилюля «Тренажёрный зал и
+   * клуб рядом» и подвал с 28 ссылками. Полотно из четырёх наборов.
+   *
+   * Что делает эта функция — сводит ВСЁ в одну закрытую строку-пилюлю
+   * (details/summary) перед оффером:
+   *   статьи → направления → залы и районы → клуб и документы.
+   * Внутри ссылки живут полным списком: поисковики видят их как раньше,
+   * человек видит одну строку и раскрывает её сам.
+   *
+   * Старые наборы прячутся стилем: их ссылки целиком перенесены сюда,
+   * поэтому ничего не теряется.
+   *
+   * Список ссылок — единственное место, где он правится. Добавили статью
+   * или зал — впишите строку сюда.
+   *
+   * Откат: ПОКАЗЫВАТЬ_ПИЛЮЛЮ = false и перезалить файл.
+   */
+  var ПОКАЗЫВАТЬ_ПИЛЮЛЮ = true;
+  var ЛП = 'https://lp.sandowfitness.ru/';
+  var САЙТ = 'https://sandowfitness.ru';
+
+  var ПИЛЮЛЯ_ГРУППЫ = [
+    ['Полезные статьи', [
+      [ЛП + 'kak-vybrat-trenazhernyy-zal-ryadom-s-domom/', 'Как выбрать тренажёрный зал'],
+      [ЛП + 'boks-i-kikboksing-s-nulya/', 'Бокс и кикбоксинг с нуля'],
+      [ЛП + 'kikboksing-ili-boks-chto-vybrat/', 'Кикбоксинг или бокс: что выбрать'],
+      [ЛП + 'abonement-v-trenazhernyy-zal-na-mesyac-ili-na-dolshe/', 'Абонемент в зал: что важно знать'],
+      [ЛП + 'beg-dlya-nachinayuschih/', 'Бег для начинающих'],
+      [ЛП + 'rastyazhka-dlya-edinoborstv-zachem-nuzhna-gibkost/', 'Растяжка для бокса и кикбоксинга'],
+      [ЛП + 'sushka-tela/', 'Сушка тела: как это работает'],
+      [ЛП + 'aktivnoe-i-passivnoe-vosstanovlenie-raznitsa/', 'Восстановление: активное и пассивное'],
+      [ЛП + 'nalogovyy-vychet-za-fitnes/', 'Налоговый вычет за фитнес'],
+      [ЛП + 'stati/', 'Все статьи о тренировках →']
+    ]],
+    ['Направления и услуги', [
+      [ЛП + 'trenazherny-zal-nizhegorodskaya/', 'Тренажёрный зал'],
+      [ЛП + 'personalnye-trenirovki-moskva/', 'Персональные тренировки'],
+      [ЛП + 'gruppovye-programmy-moskva/', 'Групповые программы'],
+      [ЛП + 'boytsovsky-klub-moskva/', 'Бокс и кикбоксинг'],
+      [ЛП + 'boks-metro-nizhegorodskaya/', 'Бокс'],
+      [ЛП + 'kikboksing-moskva/', 'Кикбоксинг'],
+      [ЛП + 'boks-dlya-zhenshchin-moskva/', 'Бокс для женщин'],
+      [ЛП + 'yoga-moskva/', 'Йога'],
+      [ЛП + 'zumba-moskva/', 'Зумба'],
+      [ЛП + 'rastyazhka-moskva/', 'Растяжка'],
+      [ЛП + 'zdorovaya-spina/', 'Здоровая спина'],
+      [ЛП + 'tyazhelaya-atletika-moskva/', 'Тяжёлая атлетика'],
+      [ЛП + 'fitnes-dlya-zhenshchin-moskva/', 'Фитнес для женщин'],
+      [ЛП + 'fitness-klub-s-saunoy-moskva/', 'Клуб с сауной'],
+      [ЛП + 'krugosutochny-fitness-klub-metro/', 'Круглосуточно для членов клуба'],
+      [ЛП + 'razovoe-poseschenie-sportzala/', 'Разовое посещение'],
+      [ЛП + 'sportivny-klub-moskva/', 'Спортивный клуб']
+    ]],
+    ['Залы и районы рядом', [
+      [САЙТ + '/trenazherny-zal-lefortovo', 'Тренажёрный зал в Лефортове'],
+      [САЙТ + '/trenazherny-zal-dubrovka', 'Тренажёрный зал в районе Дубровки'],
+      [САЙТ + '/trenazherny-zal-taganskaya', 'Тренажёрный зал недалеко от Таганской'],
+      [САЙТ + '/trenazherny-zal-kozhuhovskaya', 'Тренажёрный зал недалеко от Кожуховской'],
+      [САЙТ + '/trenazherny-zal-ryazanskiy', 'Тренажёрный зал на Рязанском проспекте'],
+      [САЙТ + '/trenazherny-zal-proletarskaya', 'Тренажёрный зал недалеко от Пролетарской'],
+      [САЙТ + '/trenazherny-zal-marino', 'Тренажёрный зал в районе Марьина'],
+      [САЙТ + '/trenazherny-zal-lyublino', 'Тренажёрный зал в Люблине'],
+      [САЙТ + '/trenazherny-zal-yuzhnoportovaya', 'Тренажёрный зал недалеко от метро Южнопортовая']
+    ]],
+    ['Клуб и документы', [
+      ['#club', 'Клуб'],
+      ['#zones', 'Залы'],
+      ['#trainers', 'Тренеры'],
+      ['/zamorozka', 'Заморозка абонемента'],
+      ['https://t.me/sandowclub_bot', 'Telegram'],
+      [МАКС, 'MAX'],
+      ['/oferta', 'Публичная оферта'],
+      ['/policy', 'Политика конфиденциальности'],
+      ['/bogoroditsk', 'Клуб в Богородицке']
+    ]]
+  ];
+
+  function стильПилюли() {
+    if (document.getElementById('sndw-pill-css')) return;
+    var ст = document.createElement('style');
+    ст.id = 'sndw-pill-css';
+    ст.textContent =
+      /* старые наборы ссылок убираем с глаз: их ссылки перенесены в пилюлю */
+      '.snd-articles,.snd-tail{display:none !important}' +
+      '.sndw2-footer .sndw2-footer-links{display:none !important}' +
+      '.sndw-pill{background:#0B0906;padding:30px 20px 4px}' +
+      '.sndw-pill-in{max-width:1160px;margin:0 auto}' +
+      '.sndw-pill summary{display:inline-flex;align-items:center;gap:10px;' +
+        'cursor:pointer;list-style:none;padding:9px 18px;border-radius:999px;' +
+        'border:1px solid rgba(154,143,124,.34);' +
+        'font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;' +
+        'font-size:12.5px;letter-spacing:.06em;color:#9A8F7C;' +
+        'transition:color .25s ease,border-color .25s ease}' +
+      '.sndw-pill summary::-webkit-details-marker{display:none}' +
+      '.sndw-pill summary::marker{content:""}' +
+      '.sndw-pill summary::after{content:"\\25BE";font-size:10px;opacity:.75;' +
+        'transition:transform .25s ease;transform:rotate(-90deg)}' +
+      '.sndw-pill details[open] summary::after{transform:rotate(0)}' +
+      '.sndw-pill summary:hover{color:#E9C77E;border-color:rgba(233,199,126,.5)}' +
+      '.sndw-pill summary:focus-visible{outline:2px solid #E9C77E;outline-offset:3px}' +
+      '.sndw-pill-n{color:#8A8275;font-size:11px}' +
+      '.sndw-pill-body{display:grid;gap:26px;padding:24px 2px 10px}' +
+      '.sndw-pill-g b{display:block;margin-bottom:11px;color:#8A8275;' +
+        'font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;' +
+        'font-weight:500;letter-spacing:.14em;text-transform:uppercase}' +
+      '.sndw-pill-links{display:grid;gap:9px 24px;' +
+        'grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}' +
+      '.sndw-pill-links a{color:#9A8F7C;text-decoration:none;border-bottom:1px solid transparent;' +
+        'font-family:"Archivo",system-ui,Arial,sans-serif;font-size:13.5px;line-height:1.5;' +
+        'transition:color .25s ease,border-color .25s ease}' +
+      '.sndw-pill-links a:hover{color:#E9C77E;border-bottom-color:rgba(233,199,126,.45)}' +
+      '.sndw-pill-links a:focus-visible{outline:2px solid #E9C77E;outline-offset:2px}' +
+      '@media(max-width:640px){' +
+        '.sndw-pill{padding:24px 16px 2px}' +
+        '.sndw-pill summary{font-size:12px;padding:8px 15px}' +
+        '.sndw-pill-body{gap:22px;padding-top:20px}' +
+        '.sndw-pill-links{grid-template-columns:1fr;gap:8px}' +
+        '.sndw-pill-links a{font-size:14px}}';
+    document.head.appendChild(ст);
+  }
+
+  function однаПилюля() {
+    if (!ПОКАЗЫВАТЬ_ПИЛЮЛЮ) return;
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '') return;                       // только главная
+    стильПилюли();
+    if (document.getElementById('sndw-pill')) return;
+
+    var занято = {};
+    var всего = 0;
+    var тело = '';
+    ПИЛЮЛЯ_ГРУППЫ.forEach(function (группа) {
+      var ссылки = '';
+      var сколько = 0;
+      группа[1].forEach(function (п) {
+        var адрес = п[0];
+        if (занято[адрес]) return;                 // одна и та же ссылка — один раз
+        занято[адрес] = 1;
+        сколько++;
+        var вкладка = адрес.indexOf('http') === 0 && адрес.indexOf('sandowfitness.ru') === -1;
+        ссылки += '<a href="' + адрес + '"' +
+          (вкладка ? ' target="_blank" rel="noopener"' : '') + '>' + п[1] + '</a>';
+      });
+      if (!сколько) return;
+      всего += сколько;
+      тело += '<div class="sndw-pill-g"><b>' + группа[0] + '</b>' +
+              '<div class="sndw-pill-links">' + ссылки + '</div></div>';
+    });
+    if (!тело) return;
+
+    var сек = document.createElement('section');
+    сек.className = 'sndw-pill';
+    сек.id = 'sndw-pill';
+    сек.innerHTML =
+      '<div class="sndw-pill-in"><details>' +
+        '<summary>Полезные статьи и направления' +
+          '<span class="sndw-pill-n">' + всего + '</span></summary>' +
+        '<div class="sndw-pill-body">' + тело + '</div>' +
+      '</details></div>';
+
+    /* Место — перед оффером: с 18.11 сайт заканчивается оффером, а не
+       списком ссылок. Оффер дорисовывает Тильда, поэтому пробуем
+       несколько раз, пока он не появится. */
+    var оффер = document.getElementById('join') || document.querySelector('.sndw2-cta');
+    if (оффер && оффер.parentNode) {
+      оффер.parentNode.insertBefore(сек, оффер);
+      return true;
+    }
+    var подвал = document.querySelector('.sndw2-footer');
+    if (подвал && подвал.parentNode) {
+      подвал.parentNode.insertBefore(сек, подвал);
+      return true;
+    }
+    return false;
+  }
+
+
   /* ---------- ссылка на клуб в Богородицке с главной (27.09.2026) ----
    * На главной не было ни одного упоминания второго клуба — страница
    * /bogoroditsk оставалась сиротой внутри собственного домена. */
@@ -1651,6 +1833,12 @@
       [300, 1200, 2600].forEach(function (з) {
         setTimeout(function () { try { офферГодВПодарок(); } catch (e) {} }, з);
       });
+    });
+
+    // Одна пилюля в конце главной. Оффер и подвал Тильда дорисовывает
+    // поздно, поэтому три попытки: секция встаёт, как только оффер есть.
+    [1200, 2600, 5200].forEach(function (з) {
+      setTimeout(function () { try { однаПилюля(); } catch (e) {} }, з);
     });
 
     // Сворачивание подвала — ПОСЛЕ всех дорисовок ссылок (самая поздняя —
