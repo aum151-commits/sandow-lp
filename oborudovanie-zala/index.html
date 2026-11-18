@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оборудование зала для тренировок — Сандов Фитнес</title>
+<meta name="description" content="Оборудование зала 1100 м²: грифы Eleiko и помосты, гантельный ряд, станки Nautilus, Hammer, Precor, Panatta. Секторы по группам мышц.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://lp.sandowfitness.ru/oborudovanie-zala/">
+<meta property="og:title" content="Оборудование зала для тренировок">
+<meta property="og:description" content="Плата за место без процента, свой график, клиенты остаются вашими.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600&family=Unbounded:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#0B0906;
+  --slab:#191510;
+  --ink:#F0EADE;
+  --muted:#B3A996;
+  --accent:#E9C77E;
+  --accent-ink:#0B0906;
+  --pad:clamp(20px,4.5vw,64px);
+  --step-small:clamp(1rem,.97rem + .12vw,1.0625rem);
+  --step-body:clamp(1.0938rem,1.03rem + .3vw,1.25rem);
+  --step-lead:clamp(1.25rem,1.1rem + .7vw,1.5rem);
+  --step-head:clamp(1.6rem,1.25rem + 1.4vw,2.25rem);
+  --radius:14px;
+  --measure:500px;
+}
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:var(--step-body);line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+
+.stage{display:grid;grid-template-columns:1fr}
+@media (min-width:900px){.stage{grid-template-columns:47% 53%}}
+
+/* закреплённая половина: фото живёт, пока читают */
+.fixed{position:relative;height:58svh;overflow:hidden;background:#12100C}
+@media (min-width:900px){.fixed{position:sticky;top:0;height:100svh}}
+.fixed img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transform:scale(1.04);
+  transition:opacity .8s ease, transform 9s linear;
+}
+.fixed img.on{opacity:1;transform:scale(1.1)}
+.fixed .scrim{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(11,9,6,.72),rgba(11,9,6,.05) 58%);
+}
+@media (max-width:899px){.fixed .label{display:none}}
+.fixed .label{
+  position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);z-index:2;
+  margin:0;font-size:var(--step-small);color:#F5EFE3;
+}
+
+/* читающая колонка: одна мера, равные поля — страница не съезжает влево */
+.read{padding:var(--pad) var(--pad) 0}
+.read{display:flex;flex-direction:column;align-items:center}
+.read > *{width:min(var(--measure),100%);flex:0 0 auto}
+.read > h1,.read > .cta{width:100%}
+@media (min-width:900px){
+  .read{padding:clamp(30px,5vw,64px) clamp(28px,4vw,56px) 0}
+}
+
+h1,h2,h3{margin:0;font-weight:400;letter-spacing:-.02em;line-height:1.05}
+h1{
+  max-width:100%;
+  font-family:Unbounded,Archivo,sans-serif;font-weight:700;
+  font-size:clamp(1.9rem,1.1rem + 3.4vw,3.1rem);line-height:1.06;letter-spacing:-.03em;
+}
+.standfirst{font-size:var(--step-lead);line-height:1.38;margin:16px 0 0}
+h2{font-size:var(--step-head);margin:0 0 12px}
+p{margin:0 0 12px}
+p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}
+
+section{padding:clamp(34px,5vw,60px) 0 0}
+.section-first{padding-top:clamp(24px,3.5vw,34px)}
+
+/* преимущества: полосы тона вместо линий */
+.rows{list-style:none;margin:0;padding:0}
+.rows li{
+  display:grid;grid-template-columns:1fr;gap:4px;
+  padding:16px 18px;background:var(--slab);border-radius:var(--radius);
+  margin-bottom:8px;
+}
+.rows b{font-weight:600;font-size:var(--step-body)}
+.rows span{color:var(--muted);font-size:var(--step-small);line-height:1.5}
+@media (min-width:640px){
+  .rows li{grid-template-columns:19ch 1fr;gap:20px;align-items:baseline}
+}
+
+.steps{counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{counter-increment:s;position:relative;padding:0 0 18px 40px;margin:0 0 4px}
+.steps li::before{
+  content:counter(s);position:absolute;left:0;top:2px;width:26px;height:26px;
+  display:grid;place-items:center;border-radius:50%;
+  background:var(--accent);color:var(--accent-ink);
+  font-size:var(--step-small);font-weight:600;
+}
+.steps b{display:block;font-weight:600;margin-bottom:3px}
+
+.faq details{padding:14px 16px;background:var(--slab);border-radius:var(--radius);margin-bottom:8px}
+.faq summary{cursor:pointer;font-weight:600;list-style:none;font-size:var(--step-body)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--accent);font-weight:400;margin-left:12px}
+.faq details[open] summary::after{content:"–"}
+.faq p{margin:10px 0 0;color:var(--muted);font-size:var(--step-small);line-height:1.55}
+
+.cta{
+  background:var(--accent);color:var(--accent-ink);padding:clamp(24px,3.6vw,40px);
+  border-radius:var(--radius);margin-top:clamp(34px,5vw,56px);
+}
+.cta h2{color:var(--accent-ink);margin-bottom:8px}
+.cta p{color:#2A2318;font-size:var(--step-body);max-width:38ch}
+.button{
+  display:inline-block;margin-top:18px;padding:16px 26px;min-height:48px;
+  border-radius:var(--radius);background:var(--accent);color:var(--accent-ink);
+  text-decoration:none;font-weight:600;font-size:var(--step-body);border:0;
+  transition:transform .18s ease, background .18s ease;
+}
+.button:hover{background:#F2D89B}
+.button:active{transform:translateY(1px) scale(.99)}
+.button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.cta .button{background:var(--paper);color:var(--ink)}
+.cta .button:hover{background:#1C1810}
+.cta .button:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+
+.подвал{display:flex;flex-direction:column;width:min(var(--measure),100%);padding-top:clamp(34px,5vw,56px);padding-bottom:clamp(34px,6vw,56px);color:var(--muted);font-size:var(--step-small)}
+.подвал a{color:var(--accent);text-decoration:none}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 16px;padding:0;list-style:none}
+.facts li{color:var(--ink)}
+
+/* появление разделов */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  .fixed img{transition:none;transform:none}
+  .fixed img.on{transform:none}
+  .reveal{opacity:1;transform:none;transition:none}
+  .button{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="fixed">
+    <img class="on" src="https://lp.sandowfitness.ru/foto/sektor-spina.webp" alt="Сектор спины в тренажёрном зале клуба «Сандов Фитнес»">
+    <img src="https://lp.sandowfitness.ru/foto/gruzobloki.webp" alt="Силовые тренажёры Nautilus, Bodystyle и Hammer в зале">
+    <img src="https://lp.sandowfitness.ru/foto/zal-blue.webp" alt="Общий вид тренажёрного зала площадью 1100 квадратных метров">
+    <img src="https://lp.sandowfitness.ru/foto/sauna-2.webp" alt="Финская сауна клуба, вход без доплат">
+    <div class="scrim"></div>
+    <p class="label">Нижегородская улица, 29–33 · два уровня</p>
+  </div>
+
+  <div class="read">
+
+    <section class="section-first">
+      <h1>Снаряды без очереди</h1>
+      <p class="standfirst">Два олимпийских грифа Eleiko и два помоста, гантельный ряд,
+      станки из США и Италии и секторы по группам мышц. Тренеру важно не «что стоит»,
+      а «что свободно в мой час» — об этом и страница.</p>
+      <a class="button" href="https://t.me/SandowBazaBot?start=baza" rel="noopener">Посмотреть зал</a>
+    </section>
+
+    <section class="reveal">
+      <h2>Тяжёлая работа</h2>
+      <ul class="rows">
+        <li><b>Грифы и помосты</b><span>Два олимпийских грифа Eleiko и два помоста — под тягу и толчок.</span></li>
+        <li><b>Свободные веса</b><span>Отдельный сектор: стойки, скамьи под жим, гантельный ряд.</span></li>
+        <li><b>Секторы</b><span>Спина, ноги, жимы, свободные веса, кардиогалерея — зал 1100 м².</span></li>
+        <li><b>Станки</b><span>Nautilus, Hammer, Precor с линейкой Icarian, Panatta, Technogym.</span></li>
+        <li><b>Ровный пол</b><span>Помосты стоят отдельно от проходов: клиент не ждёт, пока освободится место.</span></li>
+      </ul>
+    </section>
+
+    <section class="reveal">
+      <h2>Что это значит для тренировки</h2>
+      <p>Новичку нужна понятная последовательность: стойка, скамья, гантели, станок.
+      Тяжелоатлету — гриф и помост. Человеку с ограничением — станок, где мышца грузится
+      под другим углом.</p>
+      <p>На разных станках одна и та же мышца работает по-разному, поэтому под клиента
+      подбор есть: от тренажёров с фиксированной траекторией до свободных весов.</p>
+      <p class="muted">Раздевалки и душевые. Финская сауна, полотенца и вода — без доплат.
+      Парковка при бизнес-центре охраняемая, условия подскажем при заявке.</p>
+    </section>
+
+    <section class="reveal">
+      <h2>Как посмотреть</h2>
+      <ol class="steps">
+        <li><b>Приезжайте в свой час</b>Договоримся о времени — лучше приходить тогда, когда
+        вы обычно тренируете: видно реальную загрузку.</li>
+        <li><b>Проведите тренировку</b>Первое занятие бесплатное. Решаете после, по своим ощущениям.</li>
+        <li><b>Работайте по своему графику</b>График составляете сами, клиентов приводите вы.</li>
+      </ol>
+    </section>
+
+    <section class="reveal">
+      <h2>Спрашивают тренеры</h2>
+      <div class="faq">
+        <details>
+          <summary>Сколько грифов и помостов в зале?</summary>
+          <p>Два олимпийских грифа Eleiko и два помоста. Плюс гантельный ряд, стойки и скамьи под жим.</p>
+        </details>
+        <details>
+          <summary>Есть ли свободные веса отдельно от тренажёров?</summary>
+          <p>Да, это отдельный сектор: там же грифы, помосты и гантельный ряд.</p>
+        </details>
+        <details>
+          <summary>Что с очередью в вечерние часы?</summary>
+          <p>Зал 1100 м² разделён на секторы, оборудование стоит не в единственном экземпляре.
+          Точнее скажем на месте: покажем, что свободно в ваше время.</p>
+        </details>
+        <details>
+          <summary>Можно тренировать своих клиентов на этих снарядах?</summary>
+          <p>Да, схема — плата за место без процента с тренировок, клиентов приводите вы.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="cta">
+        <h2>Посмотрите снаряды вживую</h2>
+        <p>Напишите, пожалуйста, в бот клуба — договоримся о времени. Первое занятие
+        бесплатное, платить сейчас ничего не нужно.</p>
+        <a class="button" href="https://t.me/SandowBazaBot?start=baza" rel="noopener">Написать в бот клуба</a>
+      </div>
+    </section>
+
+    <footer class="подвал">
+  <ul class="facts">
+    <li>4,6 на Яндекс Картах</li>
+    <li>644 отзыва</li>
+    <li>Два уровня</li>
+    <li>Зал 1100 м²</li>
+  </ul>
+  <p>«Сандов Фитнес», Нижегородская улица, 29–33, строение 3, два уровня.
+  Метро «Нижегородская»: 15–20 минут пешком или 5 минут на автобусе.</p>
+  <p><a href="https://lp.sandowfitness.ru/baza">Условия аренды — на странице аренды</a></p>
+    </footer>
+
+  </div>
+</div>
+
+
+
+<script>
+(function(){
+  var уменьшить = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var фото = Array.prototype.slice.call(document.querySelectorAll('.fixed img'));
+  var разделы = Array.prototype.slice.call(document.querySelectorAll('.read section'));
+
+  document.querySelectorAll('.reveal').forEach(function(элемент){
+    Array.prototype.forEach.call(элемент.children, function(часть, номер){
+      часть.classList.add('reveal');
+      часть.style.transitionDelay = Math.min(номер * 70, 280) + 'ms';
+    });
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(function(э){ э.classList.add('in'); });
+    return;
+  }
+
+  var появление = new IntersectionObserver(function(записи){
+    записи.forEach(function(запись){
+      if (запись.isIntersecting) {
+        запись.target.classList.add('in');
+        появление.unobserve(запись.target);
+      }
+    });
+  }, {threshold: .12});
+  document.querySelectorAll('.reveal').forEach(function(э){ появление.observe(э); });
+
+  if (уменьшить || фото.length < 2) return;
+
+  var смена = new IntersectionObserver(function(записи){
+    записи.forEach(function(запись){
+      if (!запись.isIntersecting) return;
+      var номер = разделы.indexOf(запись.target);
+      if (номер < 0) return;
+      var индекс = Math.min(фото.length - 1, Math.floor(номер * фото.length / разделы.length));
+      фото.forEach(function(картинка, я){ картинка.classList.toggle('on', я === индекс); });
+    });
+  }, {rootMargin: '-42% 0px -42% 0px'});
+  разделы.forEach(function(раздел){ смена.observe(раздел); });
+})();
+</script>
+</body>
+</html>
