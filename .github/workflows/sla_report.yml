@@ -65,6 +65,7 @@ jobs:
         working-directory: work
         env:
           TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
           python - <<'PY'
           import os
@@ -73,8 +74,12 @@ jobs:
           сейчас = datetime.now(timezone(timedelta(hours=3)))
           пора = сейчас.hour > 11 or (сейчас.hour == 11 and сейчас.minute >= 40)
           уже = отметка.уже_отправлено("state_sla.json", "последний", f"{сейчас:%Y-%m-%d}")
-          нужно = "true" if (пора and not уже) else "false"
-          print(f"время МСК {сейчас:%d.%m %H:%M}; пора: {пора}; уже отправлено: {уже}; идём: {нужно}")
+          # Проверку запускают именно для того, чтобы увидеть настоящие цифры,
+          # в том числе после уже отправленного отчёта. Тогда отметка не мешает.
+          проверка = (os.environ.get("DRY_RUN") or "").strip().lower() == "true"
+          нужно = "true" if (пора and (not уже or проверка)) else "false"
+          print(f"время МСК {сейчас:%d.%m %H:%M}; пора: {пора}; уже отправлено: {уже}; "
+                f"проверка: {проверка}; идём: {нужно}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as файл:
               файл.write(f"ready={нужно}\n")
           PY
