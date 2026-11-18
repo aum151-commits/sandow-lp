@@ -54,6 +54,11 @@ jobs:
           YANDEX_STORAGE_STATE: ${{ secrets.YANDEX_STORAGE_STATE }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID_ORDERS_GROUP: ${{ secrets.TELEGRAM_CHAT_ID_ORDERS_GROUP }}
+          # 18.11.2026. Заявка с карточки теперь отмечается в журнале заявок
+          # (в России), чтобы ежедневный отчёт по заявкам видел этот канал.
+          # Ключи те же, что у отчёта «SLA заявок» и «Конверсии».
+          YC_S3_KEY_ID: ${{ secrets.YC_S3_KEY_ID }}
+          YC_S3_SECRET: ${{ secrets.YC_S3_SECRET }}
         run: python report_requests.py
 
       - name: Вернуть список обработанных заявок в приватный репозиторий
