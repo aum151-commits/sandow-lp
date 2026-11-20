@@ -279,6 +279,37 @@
     цель.insertAdjacentElement('afterend', подпись);
   }
 
+  /* Кнопка и согласие на первом экране главной. 20.11.2026 Ольга:
+   * «на кнопке текст в 2 строки и ни одну из них не видно» и «посмотри на
+   * кнопку на хиро». Причина: у кнопки фиксированная высота 32/36 px,
+   * overflow:hidden и подпись длиной ровно в доступную ширину — при крупном
+   * системном шрифте на телефоне хвост обрезался. Плюс строке согласия
+   * не хватало места: она уходила за край карточки.
+   * Лечим не подгонкой текста, а самой кнопкой: высота не меньше 44 px,
+   * перенос разрешён, кегль 15 px. Согласию разрешаем перенос и 12 px.
+   * Только главная страница — правило 0б. */
+  function кнопкаПервогоЭкрана() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    if (путь !== '' && путь !== '/index.html') return false;
+    if (document.getElementById('sndw-hero-fix')) return true;
+    var стиль = document.createElement('style');
+    стиль.id = 'sndw-hero-fix';
+    стиль.textContent =
+      '#form2478331411 button[type=submit]{min-height:44px!important;height:auto!important;' +
+      'padding:11px 18px!important;font-size:15px!important;line-height:1.25!important;' +
+      'white-space:normal!important;overflow:visible!important;text-overflow:clip!important}' +
+      '#form2478331411 button[type=submit] *{white-space:normal!important;' +
+      'overflow:visible!important;line-height:1.25!important}' +
+      '#form2478331411 .t-input{min-height:44px!important}' +
+      '#form2478331411 .t-checkbox__control{white-space:normal!important;' +
+      'align-items:flex-start!important;overflow:visible!important}' +
+      '#form2478331411 .t-checkbox__control span{white-space:normal!important;' +
+      'overflow-wrap:break-word!important;font-size:12px!important;line-height:1.35!important}' +
+      '#form2478331411 .t-checkbox__indicator{flex:0 0 auto!important;margin-top:2px!important}';
+    document.head.appendChild(стиль);
+    return true;
+  }
+
   /* Подпись кнопки-призыва. 20.11.2026 Ольга выбрала на главной
    * «Хочу попробовать бесплатно» (первое занятие бесплатно по всем
    * направлениям — правило от 02.10.2026) и потребовала, чтобы липкая
@@ -1769,6 +1800,7 @@
     try { ссылки_в_подвал(); } catch (e) {}
     try { ссылкаМаксВПодвал(); } catch (e) {}
     try { липкая_панель(); } catch (e) {}
+    try { кнопкаПервогоЭкрана(); } catch (e) {}
     try { панель_пк(); } catch (e) {}
     try { первый_экран(); } catch (e) {}
     try { выборМессенджера(); } catch (e) {}
