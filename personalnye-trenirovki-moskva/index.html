@@ -634,6 +634,13 @@ body>header .nav-drop a.nav-drop-cta{color:#0B0906!important}
   .header-in .logo .logo-icon{width:22px!important;height:22px!important;flex:none!important}
   .header-in .head-phone{font-size:11.5px!important;flex:none!important}
 }
+/* Декоративное слово на фоне секции должно быть прозрачным контуром.
+   Общее правило светлой темы делало его чёрным, и между блоками торчали
+   обрезанные чёрные буквы. Возвращаем контур и не даём слову лезть за край. */
+.path{overflow:hidden!important}
+.path .ghost{color:transparent!important;-webkit-text-stroke:1px rgba(233,199,126,.35)!important;
+  font-size:clamp(88px,17vw,260px)!important;max-width:100%!important}
+@media (max-width:430px){.path .ghost{font-size:clamp(78px,20vw,120px)!important;bottom:-24px!important}}
 </style>
 </head>
 <body>
@@ -834,8 +841,8 @@ body>header .nav-drop a.nav-drop-cta{color:#0B0906!important}
  <div class="cta-lines" aria-hidden="true"></div>
  <div class="wrap">
  <span class="label">Начнём</span>
- <h2>Год <span class="gold">в подарок</span></h2>
- <p>План тренировок в подарок. Оставьте номер — перезвоним и договоримся о визите. Заодно обсудим задачу и покажем клуб.</p>
+ <h2>План тренировок <span class="gold">в подарок</span></h2>
+ <p>Составим его на первом занятии — до 29 ноября. Оставьте номер: перезвоним и договоримся о визите, заодно обсудим задачу и покажем клуб.</p>
  <a class="cta-phone" href="tel:+74957956957">+7 (495) 795-69-57</a>
  <div class="cta-note">Позвоните — или напишите, мы ответим</div>
  <div class="cta-btns">
