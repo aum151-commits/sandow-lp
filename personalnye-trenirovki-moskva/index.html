@@ -680,10 +680,52 @@ section.capture.cta,footer.article-footer{border:0!important}.article-body{max-w
 <section class="capture cta"><h2>План в подарок</h2><p><strong>До 29 ноября</strong> действует акция «План тренировок в подарок»: тренер составляет для вас план на первом занятии.</p><p>Само первое занятие бесплатно независимо от акции. Дата 29 ноября относится к подарочному плану.</p><p>Если вы ещё не член клуба, оставьте, пожалуйста, номер — перезвоним, ответим на вопросы и поможем подобрать тренера.</p><div class="qform-wrap"><form class="qform" id="zayavka-final" novalidate><label class="field-label" for="phone-zayavka-final">Ваш телефон</label><input id="phone-zayavka-final" type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" aria-label="Ваш телефон"><input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="btn btn-gold" type="submit">Подобрать тренера</button></form><div class="qform-err" role="alert"></div><div class="qform-ok" role="status"></div><p class="consent">Нажимая кнопку, вы соглашаетесь на <a href="https://sandowfitness.ru/policy" target="_blank" rel="noopener">обработку персональных данных</a> для ответа на обращение. Мы не рассылаем рекламу.</p></div><p style="margin-top:24px">Удобнее позвонить? <a href="tel:+74957956957">+7 (495) 795-69-57</a></p></section>
 </article></div></main><footer class="article-footer"><div class="article-shell"><p>«Сандов Фитнес»<br>Москва, Нижегородская ул., 29–33, стр. 3</p><p><a href="tel:+74957956957">+7 (495) 795-69-57</a><br><a href="https://sandowfitness.ru/policy">Обработка персональных данных</a></p></div></footer><script>
 (function(){
+/* Маска телефона: «+7» стоит в поле всегда и не стирается, человек вводит
+   только свои цифры. Значение уходит строкой вида +7 (999) 123-45-67. */
+function маскаТелефона(input){
+ if (!input || input.dataset.mask) return;
+ input.dataset.mask = '1';
+ var префикс = '+7 ';
+ function цифры(v){
+  var д = (v || '').replace(/\D/g, '');
+  if (д.charAt(0) === '7' || д.charAt(0) === '8') д = д.slice(1);
+  return д.slice(0, 10);
+ }
+ function собрать(д){
+  if (!д.length) return префикс;
+  var s = '+7 (' + д.slice(0, 3);
+  if (д.length >= 3) s += ')';
+  if (д.length > 3) s += ' ' + д.slice(3, 6);
+  if (д.length > 6) s += '-' + д.slice(6, 8);
+  if (д.length > 8) s += '-' + д.slice(8, 10);
+  return s;
+ }
+ function обновить(){
+  var д = цифры(input.value);
+  var новое = собрать(д);
+  if (input.value !== новое) input.value = новое;
+ }
+ input.addEventListener('focus', function(){
+  if (!цифры(input.value).length) input.value = префикс;
+ });
+ input.addEventListener('input', обновить);
+ input.addEventListener('blur', function(){
+  if (!цифры(input.value).length) input.value = '';
+ });
+ input.addEventListener('keydown', function(e){
+  if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+  e.preventDefault();
+  var д = цифры(input.value);
+  if (!д.length) return;
+  // Скобка и дефисы не цифры: без этого удаление застревало на «+7 (999)».
+  input.value = собрать(д.slice(0, -1));
+ });
+}
 function initQuickForms(){
  document.querySelectorAll('.qform').forEach(function(form){
  if (form.dataset.ready) return;
  form.dataset.ready = '1';
+ маскаТелефона(form.querySelector('input[type=tel]'));
  form.addEventListener('submit', function(e){
  e.preventDefault();
  var input = form.querySelector('input[type=tel]');
@@ -692,6 +734,7 @@ function initQuickForms(){
  var ok = box.querySelector('.qform-ok');
  var err = box.querySelector('.qform-err');
  var digits = (input.value || '').replace(/\D/g, '');
+ if (digits.charAt(0) === '7' || digits.charAt(0) === '8') digits = digits.slice(1);
  if (digits.length < 10) {
  if (err) { err.textContent = 'Проверьте номер — нужно 10 цифр.'; err.style.display = 'block'; }
  input.focus(); return;
