@@ -279,6 +279,19 @@
     цель.insertAdjacentElement('afterend', подпись);
   }
 
+  /* Подпись кнопки-призыва. 20.11.2026 Ольга выбрала на главной
+   * «Хочу попробовать бесплатно» (первое занятие бесплатно по всем
+   * направлениям — правило от 02.10.2026) и потребовала, чтобы липкая
+   * панель и кнопки-якоря повторяли эту надпись слово в слово.
+   * На остальных страницах подпись НЕ меняется: правка согласована
+   * только для главной. */
+  function подписьCTA() {
+    var путь = location.pathname.replace(/\/+$/, '');
+    return (путь === '' || путь === '/index.html')
+      ? 'Хочу попробовать бесплатно'
+      : 'Хочу лучшие условия';
+  }
+
   /* 3. Липкая панель на мобильном -------------------------------------- */
   function липкая_панель() {
     if (window.innerWidth >= 900) return;
@@ -320,10 +333,13 @@
       '#sndw-bar .sndw-tg,#sndw-bar .sndw-mx,#sndw-bar .sndw-call{' +
       'flex:0 0 44px;width:44px;padding:0;border-radius:50%}' +
       '#sndw-bar .sndw-знак{width:30px;height:30px}' +
-      // оффер занимает всё оставшееся место, кегль подобран так, чтобы
-      // «Хочу лучшие условия» влезал в одну строку и не обрезался
-      '#sndw-bar .sndw-lead{flex:1 1 auto;min-width:0;font-size:12.5px;' +
-      'padding:0 10px;overflow:hidden;text-overflow:ellipsis}' +
+      // оффер занимает всё оставшееся место. 20.11.2026 подпись на главной
+      // стала длиннее («Хочу попробовать бесплатно»), поэтому вместо обрезки
+      // многоточием разрешаем две строки: кегль 11.5 px, высота кнопки 44 px,
+      // две строки по 13 px помещаются целиком и не режутся.
+      '#sndw-bar .sndw-lead{flex:1 1 auto;min-width:0;font-size:11.5px;line-height:1.15;' +
+      'padding:2px 8px;white-space:normal;overflow:visible;display:flex;' +
+      'align-items:center;justify-content:center;text-align:center}' +
       'body{padding-bottom:78px}}' +
       // на самых узких (360 px) обе иконки ужимаются до 44 px — запас на
       // случай, когда в первой строке окажется три элемента
@@ -389,7 +405,7 @@
       тг + макс +
       '<a class="sndw-call" href="tel:' + ТЕЛЕФОН + '" aria-label="Позвонить">' +
       ТРУБКА + '<span class="sndw-visually-hidden">Позвонить</span></a>' +
-      '<a class="sndw-lead" href="#sndw-form">Хочу лучшие условия</a>';
+      '<a class="sndw-lead" href="#sndw-form">' + подписьCTA() + '</a>';
     document.body.appendChild(панель);
 
     панель.querySelector('.sndw-lead').addEventListener('click', function (e) {
@@ -575,7 +591,7 @@
       блок.className = 'sndw-anchor';
       блок.innerHTML =
         '<p>Расскажем про условия и подберём удобное время</p>' +
-        '<a href="#sndw-form">Хочу лучшие условия</a>';
+        '<a href="#sndw-form">' + подписьCTA() + '</a>';
       блок.querySelector('a').addEventListener('click', function (e) {
         e.preventDefault();
         к_форме();
