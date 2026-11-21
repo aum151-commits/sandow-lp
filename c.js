@@ -955,10 +955,16 @@
         // правка без id не применялась вовсе (проверено замером 11.11.2026:
         // кнопка оставалась 330x62 с отступами 12/20).
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
-        '{display:inline-flex !important;width:auto !important;min-width:0 !important;' +
-        'height:36px !important;padding:0 24px !important;' +
-        'line-height:36px !important;font-size:13.5px !important;' +
-        'border-radius:18px !important;margin:0 auto !important}' +
+        '{display:flex !important;box-sizing:border-box !important;width:100% !important;min-width:0 !important;' +
+        'height:auto !important;min-height:48px !important;padding:12px 16px !important;' +
+        'align-items:center !important;justify-content:center !important;' +
+        'line-height:1.3 !important;font-size:15px !important;white-space:normal !important;' +
+        'overflow:visible !important;border-radius:24px !important;margin:0 auto !important}' +
+        '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit .t-btnflex__text' +
+        '{display:block !important;flex:1 1 auto !important;min-width:0 !important;max-width:100% !important;' +
+        'height:auto !important;line-height:1.3 !important;font-size:inherit !important;' +
+        'white-space:normal !important;overflow-wrap:normal !important;text-align:center !important;' +
+        'color:#0B0906 !important;-webkit-text-fill-color:#0B0906 !important}' +
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
         '{display:flex !important;justify-content:center !important;' +
         'padding:0 !important;margin:0 !important;text-align:center !important;width:100% !important}' +
@@ -1034,7 +1040,7 @@
         '.t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-input-block' +
         '{padding:0 !important}' +
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-submit' +
-        '{height:32px !important;line-height:32px !important;border-radius:16px !important}' +
+        '{height:auto !important;min-height:48px !important;line-height:1.3 !important;border-radius:24px !important}' +
         '#rec2478331411 .t-form[data-sndw-choice="1"][data-sndw-mode="phone"] .t-form__submit' +
         '{margin-top:2px !important}' +
         '}';
