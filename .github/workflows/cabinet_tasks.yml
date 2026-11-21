@@ -62,9 +62,14 @@ jobs:
         run: |
           # Скрипты ждут сессии файлами в data/. В облаке файлов нет —
           # раскладываем их из секретов один раз, до всех задач.
+          #
+          # 22.11.2026: сессии кладут в секрет двояко — в base64 и как есть,
+          # обычным JSON. Прежний код звал base64.b64decode без запасного
+          # пути, и на «как есть» вся задача падала ещё до первой проверки
+          # («Incorrect padding»). Теперь обе записи читаются одинаково.
           mkdir -p data
           python - <<'PY'
-          import base64, os, pathlib
+          import base64, binascii, os, pathlib
           пары = {
               "YANDEX_STORAGE_STATE": "data/storage_state.json",
               "GIS_STORAGE_STATE": "data/2gis_storage_state.json",
@@ -75,9 +80,17 @@ jobs:
               if not значение:
                   print(f"{файл}: секрета нет")
                   continue
-              данные = base64.b64decode(значение)
-              if not данные.lstrip().startswith(b"{"):
+              данные = None
+              try:
+                  разобрано = base64.b64decode(значение, validate=True)
+                  if разобрано.lstrip().startswith(b"{"):
+                      данные = разобрано
+              except (binascii.Error, ValueError):
+                  данные = None
+              if данные is None:
                   данные = значение.encode("utf-8")
+              if not данные.lstrip().startswith(b"{"):
+                  raise SystemExit(f"{файл}: в секрете не JSON — проверить {ключ}")
               pathlib.Path(файл).write_bytes(данные)
               print(f"{файл}: разложено, {len(данные)} байт")
           PY
