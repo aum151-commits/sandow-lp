@@ -2066,14 +2066,14 @@
         .then(function (r) { if (!r.ok) delete botRequest[meta.token]; }).catch(function () { delete botRequest[meta.token]; });
     } catch (_) { delete botRequest[meta.token]; }
   }
-  function makePointer(channel, legacy) {
+  function makePointer(channel, legacy, register) {
     var token = 'j_' + randomHex(), data = fields(null);
     data.channel = channel;
     data.token = token;
     data.legacy_start = legacy;
     var meta = {token: token, legacy: legacy, data: data, payload: token + (legacy ? '_' + legacy : '')};
     pointers[token] = meta;
-    registerPointer(meta);
+    if (register) registerPointer(meta);
     return meta;
   }
   function botHref(a, meta) {
@@ -2111,7 +2111,7 @@
     a.__sndwKind = channel;
     a.__sndwAccount = account;
     a.__sndwLegacy = legacy;
-    a.__sndwMeta = makePointer(channel, legacy);
+    a.__sndwMeta = makePointer(channel, legacy, false);
     a.setAttribute('href', botHref(a, a.__sndwMeta));
     a.__sndwBotLink = 'done';
     return true;
@@ -2142,9 +2142,8 @@
     if (!a) return;
     if (!a.__sndwMeta) rewriteBotLink(a);
     if (!a.__sndwMeta) return;
-    if (botRequest[a.__sndwMeta.token] === true) return;
-    a.__sndwMeta = makePointer(a.__sndwKind, a.__sndwLegacy || '');
-    a.setAttribute('href', botHref(a, a.__sndwMeta));
+    // Registered only when the visitor really goes to the bot, not on every page view.
+    registerPointer(a.__sndwMeta);
   }
   function attempt(form) {
     if (form.__sndwAccepted) { form.__sndwLeadId = id(); form.__sndwAccepted = false; }
