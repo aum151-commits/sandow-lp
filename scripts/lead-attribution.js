@@ -286,9 +286,13 @@
   function boot() {
     prepareAll(d); bindJquery();
     // Widgets replace bot buttons after load: keep watching instead of a one-off pass.
+    // They also reset href to the plain bot address, which must be re-bridged.
     if (w.MutationObserver) new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) prepareAll(n); }); });
-    }).observe(d.documentElement, {childList:true, subtree:true});
+      mutations.forEach(function (m) {
+        if (m.type === 'attributes') { if (m.target && m.target.tagName === 'A') rewriteBotLink(m.target); return; }
+        m.addedNodes.forEach(function (n) { if (n.nodeType === 1) prepareAll(n); });
+      });
+    }).observe(d.documentElement, {childList:true, subtree:true, attributes:true, attributeFilter:['href']});
   }
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot); else boot();
   var attempts = 0, timer = setInterval(function () {
