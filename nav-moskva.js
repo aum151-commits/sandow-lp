@@ -359,8 +359,21 @@
     var list = root.querySelectorAll('a[href*="t.me/"],a[href*="max.ru/"]');
     for (var i = 0; i < list.length; i++) rewriteBotLink(list[i]);
   }
-  // A cold receiver or a blocked request must not cost the visit its source: retry on click,
-  // with a fresh token when the earlier one was never confirmed.
+  // compiledPath also reaches links built inside the site's own shadow widgets.
+  function botAnchorFrom(e) {
+    var path = (e && e.composedPath && e.composedPath()) || [];
+    for (var i = 0; i < path.length; i++) {
+      var n = path[i];
+      if (n && n.tagName === 'A' && /(?:^|\.)(?:t\.me|max\.ru)$/i.test(n.hostname || '')) return n;
+    }
+    return null;
+  }
+  function onBotTap(e) {
+    var a = botAnchorFrom(e);
+    if (a) clickBotLink(a);
+    return a;
+  }
+  d.addEventListener('pointerdown', function (e) { onBotTap(e); }, true);
   function clickBotLink(a) {
     if (!a) return;
     if (!a.__sndwMeta) rewriteBotLink(a);
@@ -376,7 +389,7 @@
   // Native Tilda serializes before its asynchronous request: capture before target handlers.
   d.addEventListener('submit', function (e) { if (eligible(e.target)) attempt(e.target); }, true);
   d.addEventListener('click', function (e) {
-    var link = e.target.closest && e.target.closest('a[href*="t.me/"],a[href*="max.ru/"]');
+    var link = botAnchorFrom(e);
     if (link) { clickBotLink(link); return; }
     var b = e.target.closest && e.target.closest('button,input[type=submit]');
     if (b && b.form && eligible(b.form)) attempt(b.form);
