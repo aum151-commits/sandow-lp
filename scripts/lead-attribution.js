@@ -9,6 +9,9 @@
   if (w.SandowAttribution) return;
   var VERSION = '1', KEY = 'sndw_journey_v1', TTL = 30 * 86400000, MAX = 8;
   var counter = host === 'lp.sandowfitness.ru' ? 111841988 : 111438633;
+  var pointerEndpoint = 'https://sandow-lead-bot-standalone.onrender.com/lead-journey';
+  var botLinks = {telegram: /^(?:www\.)?t\.me$/i, max: /^(?:www\.)?max\.ru$/i};
+  var botPointer = '', pointers = Object.create(null), botRequest = Object.create(null);
   var clientId = '', storage = 'memory', state, lastClick = null;
   var sent = Object.create(null), observed = Object.create(null);
   function now() { return new Date().toISOString(); }
@@ -133,6 +136,87 @@
     try { if (typeof w.ym === 'function') w.ym(counter, 'reachGoal', 'sndw_lead_accepted', {version:VERSION, form_kind:form.classList.contains('t-form') ? 'tilda' : 'custom'}); } catch (_) {}
     form.__sndwAccepted = true;
   }
+  function randomHex() {
+    var bytes = new Uint8Array(12);
+    try { w.crypto.getRandomValues(bytes); } catch (_) { for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256); }
+    return Array.prototype.map.call(bytes, function (n) { return ('0' + n.toString(16)).slice(-2); }).join('');
+  }
+  // Registration never blocks the visit. If it fails, the token still opens the intended
+  // bot screen (old code rides in the link) and the bot records the source as unknown.
+  function registerPointer(meta) {
+    if (!meta || botRequest[meta.token] === true) return;
+    var data = meta.data;
+    botRequest[meta.token] = true;
+    try {
+      if (typeof w.fetch !== 'function') return;
+      w.fetch(pointerEndpoint, {method: 'POST', mode: 'cors', credentials: 'omit', keepalive: true,
+        headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+        .then(function (r) { if (!r.ok) delete botRequest[meta.token]; }).catch(function () { delete botRequest[meta.token]; });
+    } catch (_) { delete botRequest[meta.token]; }
+  }
+  function makePointer(channel, legacy) {
+    var token = 'j_' + randomHex(), data = fields(null);
+    data.channel = channel;
+    data.token = token;
+    data.legacy_start = legacy;
+    var meta = {token: token, legacy: legacy, data: data, payload: token + (legacy ? '_' + legacy : '')};
+    pointers[token] = meta;
+    registerPointer(meta);
+    return meta;
+  }
+  function botHref(a, meta) {
+    var c = new URL(a.getAttribute('href'), location.href);
+    if (a.__sndwKind === 'telegram') {
+      c.pathname = '/' + a.__sndwAccount + (a.__sndwPathStart ? '/start' : '');
+    }
+    c.search = '?start=' + meta.payload;
+    c.hash = '';
+    return c.toString();
+  }
+  function rewriteBotLink(a) {
+    if (!a || a.__sndwBotLink === 'done') return false;
+    var channel = '', c;
+    try { c = new URL(a.getAttribute('href'), location.href); } catch (_) { return false; }
+    if (!/^https?:$/.test(c.protocol)) return false;
+    if (botLinks.telegram.test(c.hostname)) channel = 'telegram';
+    else if (botLinks.max.test(c.hostname)) channel = 'max';
+    if (!channel) return false;
+    var parts = c.pathname.split('/').filter(Boolean), legacy = '', account = '', oldQuery = new URLSearchParams(c.search).get('start') || '';
+    // Only plain bot entry points are ours. Share/invite/QR/encoded links stay untouched.
+    var plain = /^\/[A-Za-z0-9_]{1,80}(?:\/start\/[A-Za-z0-9_-]{1,32})?\/?$/;
+    if (!plain.test(c.pathname)) { a.__sndwBotLink = 'done'; return false; }
+    oldQuery = /^[A-Za-z0-9_-]{1,32}$/.test(oldQuery) ? oldQuery.toLowerCase() : '';
+    if (channel === 'telegram') {
+      account = parts[0];
+      a.__sndwPathStart = parts.length === 2;
+      legacy = parts.length === 2 ? parts[1].toLowerCase() : oldQuery;
+    } else {
+      if (oldQuery === '' && new URLSearchParams(c.search).has('start')) { a.__sndwBotLink = 'done'; return false; }
+      legacy = oldQuery;
+    }
+    a.__sndwKind = channel;
+    a.__sndwAccount = account;
+    a.__sndwLegacy = legacy;
+    a.__sndwMeta = makePointer(channel, legacy);
+    a.setAttribute('href', botHref(a, a.__sndwMeta));
+    a.__sndwBotLink = 'done';
+    return true;
+  }
+  function botLinksIn(root) {
+    if (!root || !root.querySelectorAll) return;
+    // The added node can be the link itself, and querySelectorAll skips the root.
+    if (root.matches && root.matches('a[href*="t.me/"],a[href*="max.ru/"]')) rewriteBotLink(root);
+    var list = root.querySelectorAll('a[href*="t.me/"],a[href*="max.ru/"]');
+    for (var i = 0; i < list.length; i++) rewriteBotLink(list[i]);
+  }
+  // A cold receiver or a blocked request must not cost the visit its source: retry on click,
+  // with a fresh token when the earlier one was never confirmed.
+  function clickBotLink(a, e) {
+    if (!a || !a.__sndwMeta) return;
+    if (botRequest[a.__sndwMeta.token] === true) return;
+    a.__sndwMeta = makePointer(a.__sndwKind, a.__sndwLegacy || '');
+    a.setAttribute('href', botHref(a, a.__sndwMeta));
+  }
   function attempt(form) {
     if (form.__sndwAccepted) { form.__sndwLeadId = id(); form.__sndwAccepted = false; }
     lastClick = form; prepare(form);
@@ -140,6 +224,8 @@
   // Native Tilda serializes before its asynchronous request: capture before target handlers.
   d.addEventListener('submit', function (e) { if (eligible(e.target)) attempt(e.target); }, true);
   d.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[href*="t.me/"],a[href*="max.ru/"]');
+    if (link) { clickBotLink(link, e); return; }
     var b = e.target.closest && e.target.closest('button,input[type=submit]');
     if (b && b.form && eligible(b.form)) attempt(b.form);
   }, true);
@@ -179,20 +265,22 @@
     if (w.jQuery && !observed.jquery) { observed.jquery = true; w.jQuery(d).on('tildaform:aftersuccess.sndwAttribution', tildaSuccess); }
   }
   d.addEventListener('tildaform:aftersuccess', tildaSuccess);
+  function prepareAll(root) { scan(root); botLinksIn(root); }
   function boot() {
-    scan(d); bindJquery();
+    prepareAll(d); bindJquery();
+    // Widgets replace bot buttons after load: keep watching instead of a one-off pass.
     if (w.MutationObserver) new MutationObserver(function (mutations) {
-      mutations.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) scan(n); }); });
+      mutations.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) prepareAll(n); }); });
     }).observe(d.documentElement, {childList:true, subtree:true});
   }
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot); else boot();
   var attempts = 0, timer = setInterval(function () {
     bindJquery();
     try { if (!clientId && typeof w.ym === 'function') w.ym(counter, 'getClientID', function (value) {
-      if (/^(?:\d{5,30}|\d{1,20}\.\d{1,20})$/.test(String(value || ''))) { clientId = String(value); scan(d); }
+      if (/^(?:\d{5,30}|\d{1,20}\.\d{1,20})$/.test(String(value || ''))) { clientId = String(value); prepareAll(d); }
     }); } catch (_) {}
     if (++attempts >= 12 || clientId) clearInterval(timer);
   }, 1000);
-  w.addEventListener('pageshow', function () { scan(d); bindJquery(); });
-  w.SandowAttribution = {version:VERSION, fields:fields, prepare:prepare, accepted:accepted, snapshot:function () { return JSON.parse(JSON.stringify(state)); }};
+  w.addEventListener('pageshow', function () { prepareAll(d); bindJquery(); });
+  w.SandowAttribution = {version:VERSION, fields:fields, prepare:prepare, accepted:accepted, links:botLinksIn, click:clickBotLink, snapshot:function () { return JSON.parse(JSON.stringify(state)); }};
 })();
