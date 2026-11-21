@@ -1053,19 +1053,20 @@
     панель.innerHTML =
       '<div class="sndw-choice-q">' +
       (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ
-        ? 'Или напишите в мессенджер — ответим там'
+        ? 'Или заберите план тренировок в мессенджере — ответим там'
         : 'Как удобнее продолжить?') + '</div>' +
       '<div class="sndw-choice-row">' +
       '<a class="sndw-choice-btn sndw-choice-tg" href="' + ВХОД_В_БОТ + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
-      '<span>' + (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? 'Telegram' : 'Написать в Telegram') +
-      '</span></a>' +
+      // 22.11.2026: подпись называет действие и подарок, а не мессенджер.
+      // Разбор воронки: нажатий «Telegram» много, входов в бота — 41% от них:
+      // человек нажимал значок, не зная, что внутри дадут план тренировок.
+      '<span>Забрать в Телеграме</span></a>' +
       '<a class="sndw-choice-btn sndw-choice-mx" href="' + МАКС + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">' +
-      '<span>' + (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? 'MAX' : 'Написать в MAX') +
-      '</span></a></div>' +
+      '<span>Забрать в Максе</span></a></div>' +
       // Строка-раскрывашка нужна только там, где форма ещё спрятана.
       (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? '' :
         '<button type="button" class="sndw-choice-phone">' +
@@ -2138,6 +2139,34 @@
     return a;
   }
   d.addEventListener('pointerdown', function (e) { onBotTap(e); }, true);
+  // A phone tap is the only honest trace left when the call-tracking number is off.
+  var lastPhoneClick = 0;
+  function recordPhoneClick(a) {
+    var now = Date.now();
+    if (now - lastPhoneClick < 10000) return;   // one tap per ten seconds is enough
+    lastPhoneClick = now;
+    var data = fields(null);
+    data.at = new Date(now).toISOString();
+    data.page = page(location.href) || '';
+    try {
+      if (typeof w.fetch !== 'function') return;
+      w.fetch(pointerEndpoint.replace('/lead-journey', '/phone-click'), {method: 'POST', mode: 'cors',
+        credentials: 'omit', keepalive: true, headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)}).catch(function () {});
+    } catch (_) {}
+  }
+  function phoneAnchorFrom(e) {
+    var path = (e && e.composedPath && e.composedPath()) || [];
+    for (var i = 0; i < path.length; i++) {
+      var n = path[i];
+      if (n && n.tagName === 'A' && /^tel:/i.test(String(n.getAttribute('href') || ''))) return n;
+    }
+    return null;
+  }
+  d.addEventListener('click', function (e) {
+    var tel = phoneAnchorFrom(e);
+    if (tel) recordPhoneClick(tel);
+  }, true);
   function clickBotLink(a) {
     if (!a) return;
     if (!a.__sndwMeta) rewriteBotLink(a);

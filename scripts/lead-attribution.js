@@ -226,6 +226,34 @@
     return a;
   }
   d.addEventListener('pointerdown', function (e) { onBotTap(e); }, true);
+  // A phone tap is the only honest trace left when the call-tracking number is off.
+  var lastPhoneClick = 0;
+  function recordPhoneClick(a) {
+    var now = Date.now();
+    if (now - lastPhoneClick < 10000) return;   // one tap per ten seconds is enough
+    lastPhoneClick = now;
+    var data = fields(null);
+    data.at = new Date(now).toISOString();
+    data.page = page(location.href) || '';
+    try {
+      if (typeof w.fetch !== 'function') return;
+      w.fetch(pointerEndpoint.replace('/lead-journey', '/phone-click'), {method: 'POST', mode: 'cors',
+        credentials: 'omit', keepalive: true, headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)}).catch(function () {});
+    } catch (_) {}
+  }
+  function phoneAnchorFrom(e) {
+    var path = (e && e.composedPath && e.composedPath()) || [];
+    for (var i = 0; i < path.length; i++) {
+      var n = path[i];
+      if (n && n.tagName === 'A' && /^tel:/i.test(String(n.getAttribute('href') || ''))) return n;
+    }
+    return null;
+  }
+  d.addEventListener('click', function (e) {
+    var tel = phoneAnchorFrom(e);
+    if (tel) recordPhoneClick(tel);
+  }, true);
   function clickBotLink(a) {
     if (!a) return;
     if (!a.__sndwMeta) rewriteBotLink(a);
