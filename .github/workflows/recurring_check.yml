@@ -72,8 +72,16 @@ jobs:
           # Пока забираем только клиентов (код → телефон).
           python scripts/trener-hub/забрать-выгрузку.py || true
 
+      # ВНИМАНИЕ: служебные имена шагов и выходов — только латиницей.
+      # 21.11.2026 выяснилось, что весь этот файл GitHub не разбирал вовсе:
+      # в нём стояли `id: день` и `steps.день.outputs.наш`. GitHub не
+      # принимает кириллицу в выражениях (то же записано в one_c_clients.yml
+      # и calls_lookup_health.yml), из-за этого задача показывалась под
+      # именем файла, а на каждое изменение в проекте краснела, не запустив
+      # ни одного шага. Урок: кириллица живёт в подписях (name:) и в env —
+      # но не в id, не в outputs и не внутри ${{ }}.
       - name: Проверить, наш ли сегодня день
-        id: день
+        id: day
         run: |
           python - <<'PY'
           import datetime as dt, os
@@ -85,19 +93,19 @@ jobs:
           наш = (последний and час >= 18) or (сегодня.day == 1 and час >= 8)
           print("день:", сегодня, "час:", час, "последний:", последний, "наш:", наш)
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as ф:
-              ф.write(f"наш={'да' if наш else 'нет'}\n")
-              ф.write(f"период={сегодня.strftime('%Y-%m')}\n")
+              ф.write(f"ok={'1' if наш else '0'}\n")
+              ф.write(f"period={сегодня.strftime('%Y-%m')}\n")
           PY
 
       - name: Проверка удержаний
-        if: steps.день.outputs.наш == 'да' || github.event_name == 'workflow_dispatch'
+        if: steps.day.outputs.ok == '1' || github.event_name == 'workflow_dispatch'
         working-directory: work
         env:
           TRENER_HUB_URL: https://sandow-trener-hub.onrender.com
           TRENER_HUB_AUTO_TOKEN: ${{ secrets.TRENER_HUB_AUTO_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_REPORT_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_MANAGEMENT_CHAT_ID }}
-          ПЕРИОД: ${{ github.event.inputs.period || steps.день.outputs.период }}
+          ПЕРИОД: ${{ github.event.inputs.period || steps.day.outputs.period }}
           БОЕВОЙ: ${{ github.event.inputs.live }}
         run: |
           ФЛАГ=""
