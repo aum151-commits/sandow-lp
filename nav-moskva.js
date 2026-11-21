@@ -322,7 +322,9 @@
     return c.toString();
   }
   function rewriteBotLink(a) {
-    if (!a || a.__sndwBotLink === 'done') return false;
+    if (!a) return false;
+    // Site widgets may rebuild hrefs; re-bridge when our pointer is gone.
+    if (a.__sndwBotLink === 'done' && /[?&]start=j_/.test(String(a.getAttribute('href') || ''))) return false;
     var channel = '', c;
     try { c = new URL(a.getAttribute('href'), location.href); } catch (_) { return false; }
     if (!/^https?:$/.test(c.protocol)) return false;
@@ -359,8 +361,10 @@
   }
   // A cold receiver or a blocked request must not cost the visit its source: retry on click,
   // with a fresh token when the earlier one was never confirmed.
-  function clickBotLink(a, e) {
-    if (!a || !a.__sndwMeta) return;
+  function clickBotLink(a) {
+    if (!a) return;
+    if (!a.__sndwMeta) rewriteBotLink(a);
+    if (!a.__sndwMeta) return;
     if (botRequest[a.__sndwMeta.token] === true) return;
     a.__sndwMeta = makePointer(a.__sndwKind, a.__sndwLegacy || '');
     a.setAttribute('href', botHref(a, a.__sndwMeta));
@@ -373,7 +377,7 @@
   d.addEventListener('submit', function (e) { if (eligible(e.target)) attempt(e.target); }, true);
   d.addEventListener('click', function (e) {
     var link = e.target.closest && e.target.closest('a[href*="t.me/"],a[href*="max.ru/"]');
-    if (link) { clickBotLink(link, e); return; }
+    if (link) { clickBotLink(link); return; }
     var b = e.target.closest && e.target.closest('button,input[type=submit]');
     if (b && b.form && eligible(b.form)) attempt(b.form);
   }, true);
@@ -424,6 +428,8 @@
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot); else boot();
   var attempts = 0, timer = setInterval(function () {
     bindJquery();
+    // Floating messenger buttons are rebuilt by the site script: keep them bridged.
+    prepareAll(d);
     try { if (!clientId && typeof w.ym === 'function') w.ym(counter, 'getClientID', function (value) {
       if (/^(?:\d{5,30}|\d{1,20}\.\d{1,20})$/.test(String(value || ''))) { clientId = String(value); prepareAll(d); }
     }); } catch (_) {}
