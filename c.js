@@ -981,11 +981,38 @@
         '#sndw2-hero{padding-bottom:40px !important}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-q{font-size:13px;' +
         'font-weight:400;color:rgba(240,234,222,.75);margin:0 0 8px}' +
-        '#sndw-choice.sndw-choice-compact .sndw-choice-row{display:flex;gap:8px}' +
-        '#sndw-choice.sndw-choice-compact .sndw-choice-btn{flex:1;height:40px;' +
-        'margin-bottom:0;justify-content:center;font-size:13px;padding:0 10px}' +
+        // Ряд кнопок по центру блока и с переносом: если двум кнопкам тесно,
+        // они встают одна под другой, а не выезжают за правый край.
+        '#sndw-choice.sndw-choice-compact .sndw-choice-row{display:flex;gap:8px;' +
+        'justify-content:center;flex-wrap:wrap}' +
+        // 22.11.2026: подписи «Забрать в Телеграме» не влезали в два окна рядом —
+        // замер на 320 px: ряд 240 px, кнопки 184+156 вылезали за край (right 388).
+        // Поэтому действие переносим в строку над кнопками, а сами кнопки
+        // называют канал: «В Телеграме» / «В Максе». min-width:0 не даёт flex-
+        // элементу раздуться по тексту и выехать за блок.
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn{flex:1 1 0;min-width:0;height:40px;' +
+        'margin-bottom:0;justify-content:center;font-size:13px;padding:0 8px;gap:8px}' +
         '#sndw-choice.sndw-choice-compact .sndw-choice-btn img{width:19px;height:19px;' +
         'flex:0 0 19px}' +
+        // Надпись на кнопке не обрезается многоточием: если места мало, кнопка
+        // сжимает отступы, а на совсем узком экране ряд переходит в столбик
+        // (правила ниже). Многоточие оставлено только как крайняя мера.
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn span{white-space:nowrap}' +
+        // Узкий телефон: мельче подпись, уже отступы и иконка — так «В Телеграме»
+        // читается целиком. Пороги подобраны замером, а не на глаз
+        // (320 / 344 / 360 / 375 / 390 / 414 px).
+        '@media (max-width:380px){' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn{font-size:12px;padding:0 6px;gap:6px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn img{width:17px;height:17px;' +
+        'flex:0 0 17px}' +
+        '}' +
+        // Совсем узкий экран (320–339 px): двум кнопкам в строке не хватает
+        // места на подписи — ставим их одна под другой, обе во всю ширину.
+        '@media (max-width:339px){' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-row{flex-direction:column;gap:6px}' +
+        '#sndw-choice.sndw-choice-compact .sndw-choice-btn{width:100%;height:38px;' +
+        'flex:0 0 auto;font-size:13px;padding:0 10px;gap:8px}' +
+        '}' +
         // Обе кнопки мессенджеров одинаковые и прозрачные: правка Ольги
         // 11.11.2026 — «кнопку тг сделай как у макса, прозрачную».
         '#sndw-choice.sndw-choice-compact .sndw-choice-tg,' +
@@ -1053,20 +1080,19 @@
     панель.innerHTML =
       '<div class="sndw-choice-q">' +
       (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ
-        ? 'Или заберите план тренировок в мессенджере — ответим там'
+        ? 'Заберите план тренировок в мессенджере — ответим там'
         : 'Как удобнее продолжить?') + '</div>' +
       '<div class="sndw-choice-row">' +
       '<a class="sndw-choice-btn sndw-choice-tg" href="' + ВХОД_В_БОТ + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_ТЕЛЕГРАМА + '" alt="Telegram" loading="lazy">' +
-      // 22.11.2026: подпись называет действие и подарок, а не мессенджер.
-      // Разбор воронки: нажатий «Telegram» много, входов в бота — 41% от них:
-      // человек нажимал значок, не зная, что внутри дадут план тренировок.
-      '<span>Забрать в Телеграме</span></a>' +
+      // 22.11.2026: подпись короткая, а действие названо строкой выше. Длинная
+      // подпись раздувала кнопку и выталкивала вторую за край на узких экранах.
+      '<span>В Телеграме</span></a>' +
       '<a class="sndw-choice-btn sndw-choice-mx" href="' + МАКС + '"' +
       ' target="_blank" rel="noopener">' +
       '<img src="' + ЗНАК_МАКСА + '" alt="MAX" loading="lazy">' +
-      '<span>Забрать в Максе</span></a></div>' +
+      '<span>В Максе</span></a></div>' +
       // Строка-раскрывашка нужна только там, где форма ещё спрятана.
       (РАСКРЫВАТЬ_ФОРМУ_СРАЗУ ? '' :
         '<button type="button" class="sndw-choice-phone">' +
@@ -1799,7 +1825,51 @@
 
   try { снятьУстаревшуюРазметку(); } catch (e) {}
 
+  /* 22.11.2026 · шапка на узком телефоне -----------------------------------
+   *
+   * Ольга, 22.11.2026: «на телефоне на хиро московского сайта съехали вправо
+   * кнопки, надо центровать». Замер живого сайта: на ширине 320 px кнопка
+   * меню стоит на 334…376 px — то есть ЦЕЛИКОМ за правым краем экрана, до неё
+   * не добраться; на 360 px она обрезана на 16 px. Причина — шапка не сжимает
+   * надпись «САНДОВ ФИТНЕС»: логотип 213 px, телефон 40, заморозка 33, меню 42
+   * и отступы дают 380 px при экране 320.
+   *
+   * Лечим сжатием, а не прятаньем: на узком экране мельче надпись и знак,
+   * меньше отступы. Совсем узкий экран (до 340 px) дополнительно убирает
+   * значок «Заморозка» — та же ссылка есть в меню-гамбургере, ничего не
+   * теряется. Замер после правки — 320/344/360/375/390/414 px: ничего не
+   * выходит за край.
+   *
+   * Вызов — после гейта чужойПроект(), правило 0б соблюдено.
+   */
+  function узкаяШапка() {
+    if (document.getElementById('sndw-uzkaya-shapka')) return 0;
+    // !important здесь обязателен: стили шапки лежат не в head, а ВНУТРИ
+    // страницы Тильды, то есть ниже по документу. При равном весе селекторов
+    // побеждает тот, что ниже, — проверено замером 22.11.2026: без !important
+    // размеры оставались прежними (надпись 14,5 px, отступы 14 px).
+    var стиль = document.createElement('style');
+    стиль.id = 'sndw-uzkaya-shapka';
+    стиль.textContent =
+      '@media (max-width:380px){' +
+      '#sndw2-nav .sndw2-nav-in{padding:0 10px !important;gap:6px !important}' +
+      '#sndw2-nav .sndw2-nav-logo{gap:6px !important;font-size:10.5px !important}' +
+      '#sndw2-nav .sndw2-nav-emb{height:22px !important}' +
+      '#sndw2-nav .sndw2-nav-word{font-size:10.5px !important;letter-spacing:.03em !important}' +
+      '#sndw2-nav .sndw2-nav-tel{padding:9px !important}' +
+      '#sndw2-nav .sndw2-nav-freeze{width:30px !important;height:30px !important}' +
+      '#sndw2-nav .sndw2-nav-freeze svg{width:16px !important;height:16px !important}' +
+      '#sndw2-nav .sndw2-nav-burger{margin-left:2px !important;padding:8px 6px !important}' +
+      '}' +
+      '@media (max-width:340px){' +
+      '#sndw2-nav .sndw2-nav-freeze{display:none !important}' +
+      '}';
+    (document.head || document.documentElement).appendChild(стиль);
+    return 1;
+  }
+
   готово(function () {
+    try { узкаяШапка(); } catch (e) {}
     try { фавикон(); } catch (e) {}
     try { единый_телеграм(); } catch (e) {}
     try { единый_макс(); } catch (e) {}
