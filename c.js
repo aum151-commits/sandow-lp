@@ -150,6 +150,35 @@
     window.addEventListener('load', ставить);
   })();
 
+  /* 29.11.2026. Клубов больше одного нет: пункт «Наши клубы» и ссылки на
+   * Богородицк убираем из меню и подвала московских страниц. На самой
+   * странице Богородицка ничего не трогаем — там уведомление о закрытии.
+   * Вызов стоит ДО гейта чужойПроект(), как и соседние правки: на странице
+   * «Наши клубы» гейт обрывает файл, а убрать пункт нужно и там. */
+  function убратьКлубы() {
+    if (location.pathname.replace(/\/+$/, '') === '/bogoroditsk') return;
+    var ссылки = document.querySelectorAll(
+      'a[href="/clubs"], a[href$="/clubs/"], a[href="/bogoroditsk"], a[href$="/bogoroditsk/"]');
+    for (var i = 0; i < ссылки.length; i++) {
+      var а = ссылки[i];
+      var текст = (а.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!/наши клубы/i.test(текст) && !/богородиц/i.test(текст)) continue;
+      var вырезать = (а.parentNode && а.parentNode.tagName === 'LI') ? а.parentNode : а;
+      if (вырезать.parentNode) вырезать.parentNode.removeChild(вырезать);
+    }
+  }
+  (function () {
+    var попыток = 0;
+    var чистить = function () {
+      try { убратьКлубы(); } catch (e) {}
+      попыток += 1;
+      if (попыток < 12) setTimeout(чистить, 500);
+    };
+    чистить();
+    document.addEventListener('DOMContentLoaded', чистить);
+    window.addEventListener('load', чистить);
+  })();
+
   /* Кнопка оффера в шапке -----------------------------------------------
    * Правка 11.11.2026, просьба Ольги: «на сайте тоже поменяй». На главной в
    * шапке стоит «ХОЧУ ЛУЧШИЕ УСЛОВИЯ» — то есть текущий оффер, а на странице
