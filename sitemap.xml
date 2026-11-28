@@ -193,4 +193,9 @@
  <url><loc>https://lp.sandowfitness.ru/arenda-zala-chastnyy-trener/</loc><lastmod>2026-11-17</lastmod></url>
  <url><loc>https://lp.sandowfitness.ru/arenda-zala-na-chast/</loc><lastmod>2026-11-17</lastmod></url>
  <url><loc>https://lp.sandowfitness.ru/oborudovanie-zala/</loc><lastmod>2026-11-18</lastmod></url>
+  <url>
+    <loc>https://lp.sandowfitness.ru/otzyvy/</loc>
+    <lastmod>2026-11-28</lastmod>
+    <priority>0.7</priority>
+  </url>
 </urlset>
